@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-22T09:34:43Z",
+  "generatedAt": "2026-09-22T17:00:59Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
-  "packageCount": 144,
-  "rpmCount": 144,
+  "packageCount": 145,
+  "rpmCount": 145,
   "packages": [
     {
       "name": "arrow",
@@ -361,6 +361,33 @@
       "publishedAt": "",
       "portRepositoryUrl": "https://github.com/zopencommunity/check_python-DEVport",
       "releaseUrl": ""
+    },
+    {
+      "name": "clang-format",
+      "displayName": "clang-format",
+      "version": "23.1.2",
+      "release": "20260922.163159",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "clang-format package",
+      "description": "clang-format package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/c/clang-format-23.1.2-20260922.163159.s390x.rpm",
+      "buildTime": "2026-09-22T16:56:39Z",
+      "releaseKey": "clang-format",
+      "categories": [
+        "development"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-02-08T11:55:06Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/clang-formatport",
+      "releaseUrl": "https://github.com/zopencommunity/clang-formatport/releases/tag/STABLE_clang-formatport_3899b"
     },
     {
       "name": "cmake",
@@ -1186,20 +1213,20 @@
     {
       "name": "gnupg",
       "displayName": "gnupg",
-      "version": "2.5.22",
-      "release": "20260831.160941",
+      "version": "2.5.23",
+      "release": "20260922.162219",
       "epoch": "0",
       "architectures": [
         "s390x"
       ],
-      "summary": "gnupg-2.5.22 package",
-      "description": "gnupg-2.5.22 package",
+      "summary": "gnupg-2.5.23 package",
+      "description": "gnupg-2.5.23 package",
       "rpmCount": 1,
       "rpmDependencies": [
         "pinentry"
       ],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/gnupg-2.5.22-20260831.160941.s390x.rpm",
-      "buildTime": "2026-08-31T16:26:18Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/gnupg-2.5.23-20260922.162219.s390x.rpm",
+      "buildTime": "2026-09-22T16:49:46Z",
       "releaseKey": "gnupg",
       "categories": [],
       "runtimeDependencies": [],
@@ -1262,11 +1289,11 @@
         "pinentry"
       ],
       "passedTests": 109,
-      "totalTests": 116,
-      "verificationRate": 94.0,
-      "publishedAt": "2026-08-31T16:32:31Z",
+      "totalTests": 118,
+      "verificationRate": 92.4,
+      "publishedAt": "2026-09-22T16:54:22Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/gpgport",
-      "releaseUrl": "https://github.com/zopencommunity/gpgport/releases/tag/STABLE_gpgport_301"
+      "releaseUrl": "https://github.com/zopencommunity/gpgport/releases/tag/STABLE_gpgport_376"
     },
     {
       "name": "gpgme",
@@ -3270,12 +3297,12 @@
         "xz",
         "zstd"
       ],
-      "passedTests": 1,
-      "totalTests": 1,
-      "verificationRate": 100.0,
-      "publishedAt": "2026-09-10T16:42:40Z",
+      "passedTests": null,
+      "totalTests": null,
+      "verificationRate": null,
+      "publishedAt": "2026-09-22T16:00:43Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/rpmport",
-      "releaseUrl": "https://github.com/zopencommunity/rpmport/releases/tag/STABLE_rpmport_349"
+      "releaseUrl": "https://github.com/zopencommunity/rpmport/releases/tag/rpmpermtest2"
     },
     {
       "name": "rpmconfig",
