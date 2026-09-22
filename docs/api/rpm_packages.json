@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-21T16:52:28Z",
+  "generatedAt": "2026-09-22T09:34:43Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
-  "packageCount": 143,
-  "rpmCount": 143,
+  "packageCount": 144,
+  "rpmCount": 144,
   "packages": [
     {
       "name": "arrow",
@@ -2778,6 +2778,37 @@
       "publishedAt": "2026-07-01T16:12:36Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/pinentryport",
       "releaseUrl": "https://github.com/zopencommunity/pinentryport/releases/tag/STABLE_pinentryport_4397"
+    },
+    {
+      "name": "pkgconf",
+      "displayName": "pkgconf",
+      "version": "1.0.0",
+      "release": "20260922.092447",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "pkgconf-3.0.7 package",
+      "description": "pkgconf-3.0.7 package",
+      "rpmCount": 1,
+      "rpmDependencies": [],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/p/pkgconf-1.0.0-20260922.092447.s390x.rpm",
+      "buildTime": "2026-09-22T09:27:11Z",
+      "releaseKey": "pkgconf",
+      "categories": [
+        "development",
+        "build_system",
+        "core",
+        "utilities",
+        "library"
+      ],
+      "runtimeDependencies": [],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-22T09:28:21Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/pkgconfport",
+      "releaseUrl": "https://github.com/zopencommunity/pkgconfport/releases/tag/STABLE_pkgconfport_375"
     },
     {
       "name": "popt",
