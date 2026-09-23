@@ -4,19 +4,40 @@ on:
   workflow_dispatch:
 
 jobs:
-  rollout:
+  multi-gitter:
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
-      - name: Checkout meta
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: ./actions/multi-gitter-action
 
-      - name: Configure git
+      - name: Print version
+        run: multi-gitter version
+
+      # Trial run: 12 priority repos. Once verified, remove --org and --repo
+      # flags to let the config roll out to all port repos via org: zopencommunity.
+      - name: Rollout CodeQL workflow to port repos
         run: |
-          git config --global user.email "zopenCommunity@ibm.com"
-          git config --global user.name "Zopen Community"
-
-      - name: Rollout CodeQL workflow via gh
-        run: bash ./bulk-utils/rollout_codeql.sh
+          multi-gitter --config ./cicd/multi-gitter-config \
+            --fork=false \
+            --org="" \
+            --repo=zopencommunity/gitport \
+            --repo=zopencommunity/makeport \
+            --repo=zopencommunity/curlport \
+            --repo=zopencommunity/gpgport \
+            --repo=zopencommunity/pinentryport \
+            --repo=zopencommunity/perlport \
+            --repo=zopencommunity/lessport \
+            --repo=zopencommunity/ncursesport \
+            --repo=zopencommunity/rpmport \
+            --repo=zopencommunity/dnf5port \
+            --repo=zopencommunity/vimport \
+            --repo=zopencommunity/autoconfport \
+            --pr-title "Add CodeQL security scanning workflow" \
+            run ./bulk-utils/rollout_codeql.sh
         env:
           # Needs a PAT with repo scope to push to and open PRs on other repos
-          GH_TOKEN: ${{ secrets.BUMP_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.BUMP_TOKEN }}
+          # Absolute path to the template so the script doesn't have to resolve
+          # it relative to BASH_SOURCE[0] (which breaks when run via multi-gitter)
+          CODEQL_TEMPLATE: ${{ github.workspace }}/data/codeql-workflow.yml
