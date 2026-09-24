@@ -761,6 +761,39 @@ ${custom_functions}
 #zopen_pre_terminate(){
 #  ## This function runs before 'zopen build' terminates.
 #}
+#
+### The following hooks let you customize the RPM spec file that zopen build
+### generates when run with --generate-rpm, without modifying zopen-pax2rpm.
+### Each hook's stdout is spliced verbatim into the corresponding section of
+### the spec file; leave a hook commented out (or undefined) to skip it.
+#
+#zopen_rpmspec_header(){
+#  ## Extra header tags (Provides, Conflicts, Obsoletes, extra BuildRequires,
+#  ## etc.), emitted just before %description.
+#}
+#
+#zopen_rpmspec_pre_install(){
+#  ## Extra commands run at the start of %install, before the generic
+#  ## file-distribution logic.
+#}
+#
+#zopen_rpmspec_post_install(){
+#  ## Extra commands run at the end of %install, after the generic
+#  ## file-distribution logic and before the file list is finalized.
+#}
+#
+#zopen_rpmspec_files(){
+#  ## Extra %files directives (%config, %doc, %ghost, %attr, etc.) appended
+#  ## after the generated file list.
+#}
+#
+#zopen_rpmspec_post(){
+#  ## %post scriptlet body.
+#}
+#
+#zopen_rpmspec_preun(){
+#  ## %preun scriptlet body.
+#}
 "
 /bin/echo "${buildenvContents}" > "${buildenv}"
 printInfo "${buildenv} created"
