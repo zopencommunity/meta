@@ -244,6 +244,16 @@ parser.add_argument(
     default=MIN_RELEASE_YEAR,
     help='Ignore releases published before this year.'
 )
+parser.add_argument(
+    '--repo',
+    dest='single_repo',
+    help='Optional. Limit processing/updates to this specific repository name (e.g. curlport).'
+)
+parser.add_argument(
+    '--no-cache',
+    action='store_true',
+    help='Force a fresh rebuild of the cache, ignoring the existing output file.'
+)
 args = parser.parse_args()
 
 # Set logging level based on verbosity argument
@@ -255,6 +265,36 @@ if args.verbose:
     # logging.getLogger("requests").setLevel(logging.DEBUG)
 else:
     logger.setLevel(logging.INFO)
+
+def parse_date(date_str):
+    if not date_str:
+        return None
+    try:
+        if date_str.endswith('Z'):
+            date_str = date_str[:-1] + '+00:00'
+        return datetime.datetime.fromisoformat(date_str)
+    except Exception:
+        return None
+
+# --- Load Existing Cache ---
+existing_cache = {}
+if not args.no_cache and os.path.exists(args.output_file):
+    try:
+        logger.info(f"Loading existing cache from {args.output_file}...")
+        with open(args.output_file, 'r', encoding='utf-8') as f:
+            old_data = json.load(f)
+            for repo, releases in old_data.get("release_data", {}).items():
+                for release in releases:
+                    tag = release.get("tag_name")
+                    if tag:
+                        date_val = release.get("date")
+                        if isinstance(date_val, str):
+                            release["date"] = parse_date(date_val)
+                        existing_cache[(repo, tag)] = release
+        logger.info(f"Loaded {len(existing_cache)} cached releases.")
+    except Exception as e:
+        logger.warning(f"Could not load existing cache: {e}. Starting fresh.")
+
 
 # --- Environment Check & GitHub Instance Setup ---
 logger.info("Checking environment and initializing GitHub connection...")
@@ -289,6 +329,12 @@ try:
         logger.debug(f"Fetching repositories for organization: {org_obj.login}")
         # Materialize pagination inside the retry wrapper so later iteration does not bypass retries.
         return list(org_obj.get_repos())
+
+    @github_retry
+    def get_single_repo_with_retry(repo_fullname):
+        """Gets a single repository with retry logic."""
+        logger.debug(f"Fetching repository: {repo_fullname}")
+        return g.get_repo(repo_fullname)
 
     @github_retry
     def get_releases_with_retry(repo_obj):
@@ -431,8 +477,12 @@ def process_release(repo_name, release_obj):
     Returns a tuple: (filtered_release_dict, repo_name, failed_processing).
     The filtered_release_dict contains release metadata and a list of processed assets.
     """
-    release_title = release_obj.title
     release_tag = release_obj.tag_name
+    if (repo_name, release_tag) in existing_cache:
+        logger.debug(f"Cache hit for release '{release_obj.title}' (tag: {release_tag}) in repo: {repo_name}")
+        return existing_cache[(repo_name, release_tag)], repo_name, False
+
+    release_title = release_obj.title
     logger.debug(f"Processing release '{release_title}' (tag: {release_tag}) for repo: {repo_name}")
 
     assets = None # Initialize assets to None
@@ -508,6 +558,36 @@ release_data = {}
 # Dictionary to store descriptions { repo_name: description }
 repo_descriptions = {}
 
+# If doing a single repo update, pre-populate with existing cache and descriptions
+target_project_name = None
+if args.single_repo:
+    target_project_name = re.sub(rf"{REPO_SUFFIX_FILTER}$", "", args.single_repo)
+    logger.info(f"Single repository update mode. Target repository: {args.single_repo} (project: {target_project_name})")
+    
+    # Pre-populate release_data from existing_cache for all other repos
+    for (repo, tag), release in existing_cache.items():
+        if repo != target_project_name:
+            if repo not in release_data:
+                release_data[repo] = []
+            release_data[repo].append(release)
+            
+    # Pre-populate repo_descriptions from descriptions file
+    desc_output_file = args.output_file
+    if desc_output_file.lower().endswith('.json'):
+        desc_output_file = desc_output_file[:-5] + '_descriptions.json'
+    else:
+        desc_output_file += "_descriptions.json"
+        
+    if os.path.exists(desc_output_file):
+        try:
+            with open(desc_output_file, 'r', encoding='utf-8') as f:
+                old_desc_data = json.load(f)
+                for repo, desc in old_desc_data.get("descriptions", {}).items():
+                    if repo != target_project_name:
+                        repo_descriptions[repo] = desc
+        except Exception as e:
+            logger.warning(f"Could not load existing descriptions: {e}")
+
 # Counters for tracking progress and results
 total_repos_processed = 0
 skipped_old_releases = 0
@@ -519,17 +599,35 @@ try:
     # Get the organization object using decorated helper with retries
     org = get_org_with_retry(ORGANIZATION)
 
-    # Get the repositories iterator using decorated helper with retries
-    repositories = get_repos_with_retry(org)
-    logger.info(f"Fetching and filtering repositories from '{org.login}'...")
+    if args.single_repo:
+        repo_fullname = f"{ORGANIZATION}/{args.single_repo}"
+        logger.info(f"Fetching single repository: {repo_fullname}")
+        try:
+            repo_obj = get_single_repo_with_retry(repo_fullname)
+            repositories = [repo_obj]
+        except UnknownObjectException:
+            logger.error(f"Repository {repo_fullname} not found on GitHub.")
+            sys.exit(1)
+    else:
+        # Get the repositories iterator using decorated helper with retries
+        repositories = get_repos_with_retry(org)
+        logger.info(f"Fetching and filtering repositories from '{org.login}'...")
 
-    # Using ThreadPoolExecutor for concurrent processing of releases
+    # Using ThreadPoolExecutor for concurrent processing of releases and fetching of repo releases
     with concurrent.futures.ThreadPoolExecutor(
         max_workers=args.max_workers,
         thread_name_prefix="release_worker" # Helps identify threads in logs
     ) as executor:
-        futures = [] # List to hold Future objects representing submitted tasks
+        repo_tasks = []
         repo_count = 0 # Counter for total repos checked in the org
+
+        # Helper function to fetch releases for a repo in a thread
+        def fetch_repo_releases(p_name, r_obj):
+            try:
+                releases_list = get_releases_with_retry(r_obj)
+                return p_name, r_obj, releases_list, None
+            except Exception as e:
+                return p_name, r_obj, [], e
 
         # Iterate through repositories (PaginatedList fetches pages automatically)
         for repo in repositories:
@@ -556,47 +654,67 @@ try:
             elif repo_description: # Log truncated description otherwise
                  logger.debug(f"Repo description stored: '{repo_description[:70]}...'")
 
-            # --- Submit release processing tasks for this repo ---
-            try:
-                # Get releases iterator using decorated helper with retries
-                releases = get_releases_with_retry(repo)
-                release_count_in_repo = 0
-                # Submit each release object to the executor for processing
-                for release in releases: # Iterates through the PaginatedList
-                    release_count_in_repo += 1
-                    # 'process_release' function will be called in a worker thread
-                    # with 'project_name' and the 'release' object as arguments
-                    future = executor.submit(process_release, project_name, release)
-                    futures.append(future) # Keep track of the submitted task
+            # Submit fetching task to the executor
+            future = executor.submit(fetch_repo_releases, project_name, repo)
+            repo_tasks.append(future)
 
-                if release_count_in_repo == 0:
-                     logger.info(f"Repository {project_name} has no releases.")
+        logger.info(f"Submitted {len(repo_tasks)} repository release fetch tasks. Waiting for completion...")
+        
+        release_futures = []
+        
+        # Process results of repository release fetches
+        for future in concurrent.futures.as_completed(repo_tasks):
+            project_name, repo_obj, releases, err = future.result()
+            if err:
+                if isinstance(err, UnknownObjectException):
+                    logger.warning(f"Repository {repo_obj.name} seems to have disappeared or is inaccessible (404). Skipping.")
+                elif isinstance(err, GithubException):
+                    logger.error(f"Could not fetch releases for repository {repo_obj.name} after retries: {err}")
+                    repo_release_fetch_failures += 1
                 else:
-                     logger.debug(f"Submitted {release_count_in_repo} releases for {project_name} to process queue.")
+                    logger.error(f"Unexpected error processing repository {repo_obj.name}: {err}", exc_info=should_log_tracebacks())
+                    repo_release_fetch_failures += 1
+                continue
+            
+            uncached_submitted = 0
+            release_count_in_repo = len(releases)
+            
+            for release in releases:
+                release_tag = release.tag_name
+                
+                # Check cache check before submitting to the thread pool
+                if (project_name, release_tag) in existing_cache:
+                    logger.debug(f"Cache hit for release '{release.title}' (tag: {release_tag}) in repo: {project_name}")
+                    cached_release = existing_cache[(project_name, release_tag)]
+                    release_date = cached_release.get('date')
+                    if release_date and isinstance(release_date, datetime.datetime):
+                        if release_date.year >= args.min_year:
+                            if project_name not in release_data:
+                                release_data[project_name] = []
+                            release_data[project_name].append(cached_release)
+                        else:
+                            skipped_old_releases += 1
+                    continue
 
-            # Handle errors during the release fetching phase for a repo
-            except UnknownObjectException:
-                 # Repo might have been deleted between getting the repo list and fetching its releases
-                 logger.warning(f"Repository {repo_name} seems to have disappeared or is inaccessible (404). Skipping.")
-            except GithubException as e:
-                # Catch error if get_releases_with_retry fails definitively for this repo after all retries
-                logger.error(f"Could not fetch releases for repository {repo_name} after retries: {e}")
-                repo_release_fetch_failures += 1
-            except Exception as e:
-                 # Catch other unexpected errors during processing of a specific repository's releases
-                 logger.error(f"Unexpected error processing repository {repo_name}: {e}", exc_info=should_log_tracebacks())
-                 repo_release_fetch_failures += 1
+                # If not cached, submit to the executor for processing
+                future_rel = executor.submit(process_release, project_name, release)
+                release_futures.append(future_rel)
+                uncached_submitted += 1
 
-        # --- Process results from worker threads as they complete ---
-        total_futures = len(futures)
+            if release_count_in_repo == 0:
+                 logger.info(f"Repository {project_name} has no releases.")
+            else:
+                 logger.debug(f"Submitted {uncached_submitted} releases for {project_name} to process queue (Total in repo: {release_count_in_repo}).")
+
+        # Step 2: Wait for all uncached release processing tasks to complete
+        total_futures = len(release_futures)
         if total_futures == 0:
-             logger.warning(f"No releases were submitted for processing across all {total_repos_processed} repositories.")
+             logger.info("All releases were resolved from cache.")
         else:
-             logger.info(f"Submitted tasks for {total_futures} total releases across {total_repos_processed} repositories. Waiting for completion...")
+             logger.info(f"Submitted tasks for {total_futures} uncached releases. Waiting for completion...")
 
         processed_futures = 0
-        # Use as_completed to process results as soon as they are available
-        for future in concurrent.futures.as_completed(futures):
+        for future in concurrent.futures.as_completed(release_futures):
             processed_futures += 1
             # Log progress periodically or on completion
             if processed_futures % 50 == 0 or processed_futures == total_futures:
@@ -604,7 +722,6 @@ try:
 
             try:
                 # Get the result tuple from the completed future: (dict, str, bool) or (None, str, bool)
-                # .result() will re-raise any exception that occurred in the worker thread
                 filtered_release_dict, repo_name_result, release_failed = future.result()
 
                 if release_failed:
@@ -612,40 +729,26 @@ try:
                     continue
 
                 # --- Filter the result based on Date ---
-                # Check if the processing was successful (dict is not None) and repo name is valid
                 if filtered_release_dict and repo_name_result:
                     release_date = filtered_release_dict.get('date')
-                    # Ensure we have a valid datetime object for comparison
                     if release_date and isinstance(release_date, datetime.datetime):
-                        # Ensure date is timezone-aware for proper comparison if needed (should be UTC from GitHub)
                         if release_date.tzinfo is None:
                              release_date = release_date.replace(tzinfo=datetime.timezone.utc)
 
-                         # Apply the minimum year filter
                         if release_date.year >= args.min_year:
-                            # --- Add the valid, filtered release to our main data structure ---
-                            # Initialize the list for this repo if it's the first valid release found
                             if repo_name_result not in release_data:
                                 release_data[repo_name_result] = []
-                            # Append the release dict to the list for that repository
                             release_data[repo_name_result].append(filtered_release_dict)
-                            # Note: Actual count of included releases calculated later
                         else:
-                            # Log releases skipped due to the date filter (DEBUG level)
                             logger.debug(f"Skipping release '{filtered_release_dict.get('name', 'N/A')}' (tag: {filtered_release_dict.get('tag_name', 'N/A')}) from {repo_name_result} - Published in {release_date.year} (before {args.min_year})")
                             skipped_old_releases += 1
                     else:
-                        # Log if a successfully processed release is missing its date
                         logger.warning(f"Skipping release in {repo_name_result} due to missing or invalid date field: {filtered_release_dict.get('tag_name', 'N/A')}")
-                # else: The future returned None for filtered_release_dict, meaning processing failed
-                # or no relevant assets were found. Handled by exception logging below now.
 
             # --- Handle errors that occurred during future execution ---
             except concurrent.futures.CancelledError:
                  logger.warning("A release processing task was cancelled.")
                  skipped_failed_futures += 1
-            # Catch exceptions raised *within* the worker thread task execution (e.g., from process_release)
-            # This includes GitHub errors that exhausted retries in the decorator
             except Exception as e:
                 logger.error(f"Error retrieving result from a release processing future: {e}", exc_info=should_log_tracebacks())
                 skipped_failed_futures += 1
