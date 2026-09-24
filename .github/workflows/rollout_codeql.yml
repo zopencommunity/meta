@@ -25,6 +25,26 @@ jobs:
 
       # Trial run: 12 priority repos. Once verified, remove --org and --repo
       # flags to let the config roll out to all port repos via org: zopencommunity.
+      - name: Close existing CodeQL PRs
+        run: |
+          multi-gitter close \
+            --org="" \
+            --repo=zopencommunity/gitport \
+            --repo=zopencommunity/makeport \
+            --repo=zopencommunity/curlport \
+            --repo=zopencommunity/gpgport \
+            --repo=zopencommunity/pinentryport \
+            --repo=zopencommunity/perlport \
+            --repo=zopencommunity/lessport \
+            --repo=zopencommunity/ncursesport \
+            --repo=zopencommunity/rpmport \
+            --repo=zopencommunity/dnf5port \
+            --repo=zopencommunity/vimport \
+            --repo=zopencommunity/autoconfport \
+            --pr-title "Add CodeQL security scanning workflow"
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+
       - name: Rollout CodeQL workflow to port repos
         run: |
           multi-gitter --config ./cicd/multi-gitter-config \

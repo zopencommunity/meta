@@ -27,3 +27,5 @@ jobs:
     with:
       languages: "c-cpp"
       build-mode: "none"
+      repo: ${{ github.repository }}
+      branch: ${{ github.head_ref || github.ref_name }}
