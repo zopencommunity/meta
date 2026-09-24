@@ -42,8 +42,8 @@ jobs:
             --repo=zopencommunity/dnf5port \
             --repo=zopencommunity/vimport \
             --repo=zopencommunity/autoconfport \
-            --author-name "zopencommunity-bot" \
-            --author-email "zopencommunity-bot@users.noreply.github.com" \
+            --author-name "zopen-codeql" \
+            --author-email "zosopentools@ibm.com" \
             --pr-title "Add CodeQL security scanning workflow" \
             run ./bulk-utils/rollout_codeql.sh
         env:
