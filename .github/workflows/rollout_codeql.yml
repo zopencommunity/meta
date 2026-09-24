@@ -9,6 +9,15 @@ jobs:
     permissions: write-all
     steps:
       - uses: actions/checkout@v4
+
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.CODEQL_APP_ID }}
+          private-key: ${{ secrets.CODEQL_APP_PRIVATE_KEY }}
+          owner: zopencommunity
+
       - uses: ./actions/multi-gitter-action
 
       - name: Print version
@@ -38,8 +47,8 @@ jobs:
             --pr-title "Add CodeQL security scanning workflow" \
             run ./bulk-utils/rollout_codeql.sh
         env:
-          # Needs a PAT with repo scope to push to and open PRs on other repos
-          GITHUB_TOKEN: ${{ secrets.BUMP_TOKEN }}
+          # Uses GitHub App token to push to and open PRs on other repos
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           # Absolute path to the template so the script doesn't have to resolve
           # it relative to BASH_SOURCE[0] (which breaks when run via multi-gitter)
           CODEQL_TEMPLATE: ${{ github.workspace }}/data/codeql-workflow.yml
