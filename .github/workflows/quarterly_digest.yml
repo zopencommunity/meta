@@ -1,0 +1,74 @@
+name: "Quarterly Community Digest"
+
+on:
+  schedule:
+    # Runs at 12:00 UTC on the 1st day of Jan, Apr, Jul, Oct
+    - cron: "0 12 1 1,4,7,10 *"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Number of days to look back"
+        required: false
+        default: "90"
+      category:
+        description: "GitHub Discussion Category"
+        required: false
+        default: "Announcements"
+      publish:
+        description: "Publish directly to GitHub Discussions"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+  discussions: write
+
+jobs:
+  quarterly-digest:
+    name: Generate & Publish Quarterly Digest
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate Quarterly Digest Markdown
+        env:
+          COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DIGEST_PUBLISH: ${{ github.event.inputs.publish || 'false' }}
+          DIGEST_DAYS: ${{ github.event.inputs.days || '90' }}
+          DIGEST_CATEGORY: ${{ github.event.inputs.category || 'Announcements' }}
+        run: |
+          PUBLISH_FLAG=""
+          if [ "$DIGEST_PUBLISH" == "true" ]; then
+            PUBLISH_FLAG="--publish"
+          fi
+
+          python3 tools/generate_quarterly_digest.py \
+            --org zopencommunity \
+            --repo meta \
+            --days "$DIGEST_DAYS" \
+            --category "$DIGEST_CATEGORY" \
+            --output "$GITHUB_WORKSPACE/quarterly_digest.md" \
+            --print \
+            $PUBLISH_FLAG
+
+      - name: Append to Job Summary
+        run: |
+          cat "$GITHUB_WORKSPACE/quarterly_digest.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Quarterly Digest Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: quarterly-digest-report
+          path: quarterly_digest.md
+          if-no-files-found: error
