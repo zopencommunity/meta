@@ -32,12 +32,13 @@ jobs:
 
       - name: Generate Monthly Status Markdown
         env:
-          COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN || secrets.GITHUB_TOKEN }}
+          COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          STATUS_DAYS: ${{ github.event.inputs.days || '30' }}
         run: |
           python3 tools/generate_monthly_status.py \
             --org zopencommunity \
-            --days "${{ github.event.inputs.days || '30' }}" \
+            --days "$STATUS_DAYS" \
             --output "$GITHUB_WORKSPACE/monthly_status.md" \
             --print
 

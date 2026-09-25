@@ -42,19 +42,22 @@ jobs:
 
       - name: Generate Quarterly Digest Markdown
         env:
-          COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN || secrets.GITHUB_TOKEN }}
+          COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DIGEST_PUBLISH: ${{ github.event.inputs.publish || 'false' }}
+          DIGEST_DAYS: ${{ github.event.inputs.days || '90' }}
+          DIGEST_CATEGORY: ${{ github.event.inputs.category || 'Announcements' }}
         run: |
           PUBLISH_FLAG=""
-          if [ "${{ github.event.inputs.publish }}" == "true" ]; then
+          if [ "$DIGEST_PUBLISH" == "true" ]; then
             PUBLISH_FLAG="--publish"
           fi
 
           python3 tools/generate_quarterly_digest.py \
             --org zopencommunity \
             --repo meta \
-            --days "${{ github.event.inputs.days || '90' }}" \
-            --category "${{ github.event.inputs.category || 'Announcements' }}" \
+            --days "$DIGEST_DAYS" \
+            --category "$DIGEST_CATEGORY" \
             --output "$GITHUB_WORKSPACE/quarterly_digest.md" \
             --print \
             $PUBLISH_FLAG

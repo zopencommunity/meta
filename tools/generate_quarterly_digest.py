@@ -40,13 +40,19 @@ def is_valid_contributor(login: Optional[str]) -> bool:
     return True
 
 
-def get_token(args_token: Optional[str] = None) -> Optional[str]:
-    return args_token or os.getenv("COPILOT_TOKEN") or os.getenv("GH_TOKEN") or os.getenv("GITHUB_TOKEN")
+def get_gh_token(args_token: Optional[str] = None) -> Optional[str]:
+    """Get GitHub REST/GraphQL API token for querying repos/issues and creating Discussions."""
+    return args_token or os.getenv("GH_TOKEN") or os.getenv("GITHUB_TOKEN")
 
 
-def github_api_search(query_type: str, query: str, token: Optional[str] = None) -> List[Dict[str, Any]]:
+def get_copilot_token(args_copilot: Optional[str] = None) -> Optional[str]:
+    """Get Copilot LLM completion token."""
+    return args_copilot or os.getenv("COPILOT_TOKEN")
+
+
+def github_api_search(query_type: str, query: str, token: Optional[str] = None, max_pages: int = 5) -> List[Dict[str, Any]]:
+    """Fetch search results with pagination directly using GitHub REST API."""
     encoded_q = urllib.parse.quote(query)
-    url = f"https://api.github.com/search/{query_type}?q={encoded_q}&per_page=100&sort=created&order=desc"
     headers = {
         "User-Agent": "zopen-digest-generator",
         "Accept": "application/vnd.github+json"
@@ -54,14 +60,26 @@ def github_api_search(query_type: str, query: str, token: Optional[str] = None) 
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
-    try:
-        req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            data = json.loads(resp.read().decode())
-            return data.get("items", [])
-    except Exception as e:
-        print(f"Notice: GitHub API search failed: {e}", file=sys.stderr)
-        return []
+    all_items = []
+    page = 1
+    while page <= max_pages:
+        url = f"https://api.github.com/search/{query_type}?q={encoded_q}&per_page=100&page={page}&sort=created&order=desc"
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                data = json.loads(resp.read().decode())
+                items = data.get("items", [])
+                if not items:
+                    break
+                all_items.extend(items)
+                total_count = data.get("total_count", len(all_items))
+                if len(all_items) >= total_count or len(items) < 100:
+                    break
+                page += 1
+        except Exception as e:
+            print(f"Notice: GitHub API search failed: {e}", file=sys.stderr)
+            break
+    return all_items
 
 
 def get_quarterly_activity(org: str, since_date: str, token: Optional[str] = None) -> Dict[str, Any]:
@@ -487,13 +505,15 @@ def main():
     parser.add_argument("--org", default="zopencommunity", help="GitHub Organization (default: zopencommunity)")
     parser.add_argument("--repo", default="meta", help="Target repo for discussions (default: meta)")
     parser.add_argument("--category", default="Announcements", help="Discussion Category (e.g., 'Announcements' or 'Digests')")
-    parser.add_argument("--token", default=None, help="GitHub Token with discussions:write and copilot access")
+    parser.add_argument("--token", default=None, help="GitHub API Token for repo search and discussions (defaults to GH_TOKEN or GITHUB_TOKEN)")
+    parser.add_argument("--copilot-token", default=None, help="Copilot LLM Token for summarization (defaults to COPILOT_TOKEN)")
     parser.add_argument("--output", "-o", default="quarterly_digest.md", help="Output file path")
     parser.add_argument("--publish", action="store_true", help="Publish directly to GitHub Discussions")
     parser.add_argument("--print", "-p", action="store_true", help="Print digest to stdout")
     args = parser.parse_args()
 
-    token = get_token(args.token)
+    gh_token = get_gh_token(args.token)
+    copilot_token = get_copilot_token(args.copilot_token)
     since_date = (datetime.now(timezone.utc) - timedelta(days=args.days)).strftime("%Y-%m-%d")
 
     # Determine quarter title (e.g. Q3 2026)
@@ -502,7 +522,7 @@ def main():
     year = datetime.now(timezone.utc).year
     quarter_name = f"Q{quarter_num} {year}"
 
-    activity = get_quarterly_activity(args.org, since_date, token=token)
+    activity = get_quarterly_activity(args.org, since_date, token=gh_token)
 
     digest_md = generate_digest_markdown(
         org=args.org,
@@ -510,7 +530,7 @@ def main():
         days=args.days,
         since_date=since_date,
         activity=activity,
-        copilot_token=token
+        copilot_token=copilot_token
     )
 
     with open(args.output, "w", encoding="utf-8") as f:
@@ -522,11 +542,11 @@ def main():
         print(digest_md)
 
     if args.publish:
-        if not token:
-            print("Error: --publish requires a valid GITHUB_TOKEN / COPILOT_TOKEN with write permissions.", file=sys.stderr)
+        if not gh_token:
+            print("Error: --publish requires a valid GITHUB_TOKEN / GH_TOKEN with discussions:write permissions.", file=sys.stderr)
             sys.exit(1)
         title = f"🚀 zopen community Quarterly Digest — {quarter_name}"
-        publish_github_discussion(args.org, args.repo, title, digest_md, args.category, token)
+        publish_github_discussion(args.org, args.repo, title, digest_md, args.category, gh_token)
 
 
 if __name__ == "__main__":

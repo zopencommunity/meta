@@ -40,15 +40,19 @@ def is_valid_contributor(login: Optional[str]) -> bool:
     return True
 
 
-def get_auth_token(token_arg: Optional[str] = None) -> Optional[str]:
-    """Get GitHub Token from argument or environment."""
-    return token_arg or os.getenv("COPILOT_TOKEN") or os.getenv("GH_TOKEN") or os.getenv("GITHUB_TOKEN")
+def get_gh_token(token_arg: Optional[str] = None) -> Optional[str]:
+    """Get GitHub REST/GraphQL API token."""
+    return token_arg or os.getenv("GH_TOKEN") or os.getenv("GITHUB_TOKEN")
 
 
-def github_api_search(query_type: str, query: str, token: Optional[str] = None) -> List[Dict[str, Any]]:
-    """Fetch search results directly using GitHub REST API."""
+def get_copilot_token(copilot_arg: Optional[str] = None) -> Optional[str]:
+    """Get Copilot LLM completion token."""
+    return copilot_arg or os.getenv("COPILOT_TOKEN")
+
+
+def github_api_search(query_type: str, query: str, token: Optional[str] = None, max_pages: int = 5) -> List[Dict[str, Any]]:
+    """Fetch search results with pagination directly using GitHub REST API."""
     encoded_q = urllib.parse.quote(query)
-    url = f"https://api.github.com/search/{query_type}?q={encoded_q}&per_page=100&sort=created&order=desc"
     headers = {
         "User-Agent": "zopen-status-generator",
         "Accept": "application/vnd.github+json"
@@ -56,17 +60,28 @@ def github_api_search(query_type: str, query: str, token: Optional[str] = None) 
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
-    items = []
-    try:
-        req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            data = json.loads(resp.read().decode())
-            items = data.get("items", [])
-    except Exception as e:
-        print(f"Notice: GitHub API search ({query_type}) failed: {e}", file=sys.stderr)
-        if not token:
-            print("Tip: Pass a GitHub token via --token, GH_TOKEN, or GITHUB_TOKEN to avoid rate limits.", file=sys.stderr)
-    return items
+    all_items = []
+    page = 1
+    while page <= max_pages:
+        url = f"https://api.github.com/search/{query_type}?q={encoded_q}&per_page=100&page={page}&sort=created&order=desc"
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                data = json.loads(resp.read().decode())
+                items = data.get("items", [])
+                if not items:
+                    break
+                all_items.extend(items)
+                total_count = data.get("total_count", len(all_items))
+                if len(all_items) >= total_count or len(items) < 100:
+                    break
+                page += 1
+        except Exception as e:
+            print(f"Notice: GitHub API search ({query_type}, page {page}) failed: {e}", file=sys.stderr)
+            if not token:
+                print("Tip: Pass a GitHub token via --token, GH_TOKEN, or GITHUB_TOKEN to avoid rate limits.", file=sys.stderr)
+            break
+    return all_items
 
 
 def run_command(cmd: List[str], check: bool = True) -> str:
@@ -605,23 +620,25 @@ def main():
     parser = argparse.ArgumentParser(description="Generate monthly status report for zopencommunity.")
     parser.add_argument("--days", type=int, default=30, help="Number of days to look back (default: 30)")
     parser.add_argument("--org", default="zopencommunity", help="GitHub Organization (default: zopencommunity)")
-    parser.add_argument("--token", "-t", default=None, help="GitHub Personal Access / Copilot Token (defaults to COPILOT_TOKEN, GITHUB_TOKEN, or GH_TOKEN env var)")
+    parser.add_argument("--token", "-t", default=None, help="GitHub API Token for searching repos/issues (defaults to GH_TOKEN or GITHUB_TOKEN)")
+    parser.add_argument("--copilot-token", default=None, help="Copilot LLM Token for summarization (defaults to COPILOT_TOKEN)")
     parser.add_argument("--output", "-o", default="monthly_status.md", help="Output file path (default: monthly_status.md)")
     parser.add_argument("--print", "-p", action="store_true", help="Print report to stdout")
     args = parser.parse_args()
 
-    token = get_auth_token(args.token)
+    gh_token = get_gh_token(args.token)
+    copilot_token = get_copilot_token(args.copilot_token)
 
-    if not check_gh_installed() and not token:
+    if not check_gh_installed() and not gh_token:
         print("Notice: GitHub CLI (gh) not detected and no GITHUB_TOKEN provided. Querying public endpoints with standard rate limits.", file=sys.stderr)
 
     since_date = (datetime.now(timezone.utc) - timedelta(days=args.days)).strftime("%Y-%m-%d")
     print(f"Gathering {args.org} activity since {since_date} (past {args.days} days)...", file=sys.stderr)
 
-    prs = get_merged_prs(args.org, since_date, token=token)
-    issues = get_issues(args.org, since_date, token=token)
+    prs = get_merged_prs(args.org, since_date, token=gh_token)
+    issues = get_issues(args.org, since_date, token=gh_token)
     releases = get_recent_releases(since_date)
-    additional_contributors = get_additional_contributors(args.org, since_date, token=token)
+    additional_contributors = get_additional_contributors(args.org, since_date, token=gh_token)
 
     print(f"Found: {len(prs)} merged PRs, {len(issues)} issues, {len(releases)} releases.", file=sys.stderr)
 
@@ -633,7 +650,7 @@ def main():
         issues=issues,
         releases=releases,
         additional_contributors=additional_contributors,
-        copilot_token=token
+        copilot_token=copilot_token
     )
 
     with open(args.output, "w", encoding="utf-8") as f:
