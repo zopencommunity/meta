@@ -27,6 +27,9 @@ UpdateDocs() {
   # Generate a view of the vulnerabilities in package releases
   python3 tools/create_vulnerability_doc.py --md-output-file docs/Vulnerabilities.md --xml-output-file docs/vulnerabilities_rss.xml
 
+  # Generate a view of the newly released tools
+  python3 tools/create_latest_release_doc.py --output docs/newly_released.md
+
   set -x
   # Generate zopen API Reference
   mkdir -p docs/api

@@ -114,7 +114,7 @@ if github_token is None:
 
 g = Github(github_token)
 
-json_url = "https://raw.githubusercontent.com/ZOSOpenTools/meta/main/docs/api/zopen_releases_latest.json"
+json_url = "https://github.com/zopencommunity/meta/releases/download/api-cache/zopen_releases_latest.json"
 response = requests.get(json_url)
 data = json.loads(response.text)
 

@@ -85,7 +85,7 @@ if [ $upgrade = true ] && [ $remove = true ]; then
 fi
 
 JSON_VULNERABILITIES_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_vulnerability.json"
-LATEST_RELEASES_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases_latest.json"
+LATEST_RELEASES_URL="https://github.com/zopencommunity/meta/releases/download/api-cache/zopen_releases_latest.json"
 
 downloadJsonCaches()
 {

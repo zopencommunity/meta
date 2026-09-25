@@ -4,6 +4,7 @@ The resulting markdown will be added to the zopen community docs
 """
 
 import json
+import os
 import requests
 from datetime import datetime, timedelta
 import argparse
@@ -28,6 +29,10 @@ def generate_markdown(data, output_file):
 
     sorted_releases = sorted(release_info.items(), key=lambda x: datetime.strptime(x[0], '%Y-%m-%d'), reverse=True)
 
+    out_dir = os.path.dirname(output_file)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+
     with open(output_file, 'w') as md_file:
         md_file.write("# Newly Released Tools\n\n")
         first_week = True  # Initialize a flag for the first week
@@ -45,12 +50,17 @@ def generate_markdown(data, output_file):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate markdown file for newly released tools.')
-    parser.add_argument('--output', '-o', default='Newly_released_tools.md', help='Output markdown file path')
+    parser.add_argument('--input', '-i', default='https://github.com/zopencommunity/meta/releases/download/api-cache/zopen_releases.json', help='Input JSON file path or URL (default: api-cache release URL)')
+    parser.add_argument('--output', '-o', default='docs/newly_released.md', help='Output markdown file path (default: docs/newly_released.md)')
     args = parser.parse_args()
 
-    url = 'https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases.json'
-    response = requests.get(url)
-    data = response.json()['release_data']
+    if args.input.startswith(('http://', 'https://')):
+        response = requests.get(args.input)
+        response.raise_for_status()
+        data = response.json()['release_data']
+    else:
+        with open(args.input, 'r', encoding='utf-8') as f:
+            data = json.load(f)['release_data']
 
     generate_markdown(data, args.output)
 
