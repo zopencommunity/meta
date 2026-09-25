@@ -37,6 +37,7 @@ jobs:
 
       - name: Generate Monthly Status Markdown
         env:
+          COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN || secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 tools/generate_monthly_status.py \
