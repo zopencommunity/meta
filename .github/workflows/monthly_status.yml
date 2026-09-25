@@ -10,11 +10,6 @@ on:
         description: "Number of days to look back"
         required: false
         default: "30"
-      dry_run:
-        description: "Generate report only (do not publish external notifications)"
-        type: boolean
-        required: false
-        default: false
 
 permissions:
   contents: read
