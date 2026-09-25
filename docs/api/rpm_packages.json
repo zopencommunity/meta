@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-25T11:54:58Z",
+  "generatedAt": "2026-09-25T16:09:34Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
   "packageCount": 146,
   "rpmCount": 146,
@@ -1182,7 +1182,7 @@
       "name": "git-secrets",
       "displayName": "git-secrets",
       "version": "1.0.0",
-      "release": "20260925.113859",
+      "release": "20260925.133753",
       "epoch": "0",
       "architectures": [
         "s390x"
@@ -1194,8 +1194,8 @@
         "git",
         "bash"
       ],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/git-secrets-1.0.0-20260925.113859.s390x.rpm",
-      "buildTime": "2026-09-25T11:47:33Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/git-secrets-1.0.0-20260925.133753.s390x.rpm",
+      "buildTime": "2026-09-25T13:44:09Z",
       "releaseKey": "git-secrets",
       "categories": [
         "security",
@@ -1214,9 +1214,9 @@
       "passedTests": 1,
       "totalTests": 1,
       "verificationRate": 100.0,
-      "publishedAt": "2026-09-25T11:48:38Z",
+      "publishedAt": "2026-09-25T13:45:01Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/git-secretsport",
-      "releaseUrl": "https://github.com/zopencommunity/git-secretsport/releases/tag/STABLE_git-secretsport_379"
+      "releaseUrl": "https://github.com/zopencommunity/git-secretsport/releases/tag/STABLE_git-secretsport_380"
     },
     {
       "name": "githubcli",
@@ -2237,17 +2237,17 @@
       "name": "meta",
       "displayName": "meta",
       "version": "0.8.6",
-      "release": "20260918.105127",
+      "release": "20260925.133743",
       "epoch": "0",
       "architectures": [
         "s390x"
       ],
-      "summary": "meta-main package",
-      "description": "meta-main package",
+      "summary": "meta-api-cache package",
+      "description": "meta-api-cache package",
       "rpmCount": 1,
       "rpmDependencies": [],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/meta-0.8.6-20260918.105127.s390x.rpm",
-      "buildTime": "2026-09-18T11:01:40Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/m/meta-0.8.6-20260925.133743.s390x.rpm",
+      "buildTime": "2026-09-25T13:49:25Z",
       "releaseKey": "meta",
       "categories": [
         "utilities"
@@ -2256,9 +2256,9 @@
       "passedTests": 11,
       "totalTests": 11,
       "verificationRate": 100.0,
-      "publishedAt": "2026-09-18T11:06:07Z",
+      "publishedAt": "2026-09-25T13:53:56Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/metaport",
-      "releaseUrl": "https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_369"
+      "releaseUrl": "https://github.com/zopencommunity/metaport/releases/tag/STABLE_metaport_381"
     },
     {
       "name": "meta-main",
@@ -3742,18 +3742,18 @@
     {
       "name": "utf8proc",
       "displayName": "utf8proc",
-      "version": "2.11.3",
-      "release": "20260824.140004",
+      "version": "2.12.0",
+      "release": "20260925.153514",
       "epoch": "0",
       "architectures": [
         "s390x"
       ],
-      "summary": "utf8proc-master package",
-      "description": "utf8proc-master package",
+      "summary": "utf8proc-2.12.0 package",
+      "description": "utf8proc-2.12.0 package",
       "rpmCount": 1,
       "rpmDependencies": [],
-      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/u/utf8proc-2.11.3-20260824.140004.s390x.rpm",
-      "buildTime": "2026-08-24T14:00:25Z",
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/u/utf8proc-2.12.0-20260925.153514.s390x.rpm",
+      "buildTime": "2026-09-25T15:35:38Z",
       "releaseKey": "utf8proc",
       "categories": [
         "development",
@@ -3763,9 +3763,9 @@
       "passedTests": null,
       "totalTests": null,
       "verificationRate": null,
-      "publishedAt": "2026-08-24T14:01:21Z",
+      "publishedAt": "2026-09-25T15:36:51Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/utf8procport",
-      "releaseUrl": "https://github.com/zopencommunity/utf8procport/releases/tag/DEV_utf8procport_259"
+      "releaseUrl": "https://github.com/zopencommunity/utf8procport/releases/tag/DEV_utf8procport_383"
     },
     {
       "name": "uv",
