@@ -394,8 +394,20 @@ def generate_markdown_report(
         if is_valid_contributor(author):
             contributors.add(author)
 
-    # Separate meta PRs from port PRs
-    meta_prs = prs_by_repo.pop("meta", [])
+    # Separate meta PRs into documentation and core/infrastructure PRs
+    raw_meta_prs = prs_by_repo.pop("meta", [])
+    meta_prs = []
+    meta_doc_prs = []
+
+    doc_keywords = ["doc", "docs", "documentation", "blog", "guide", "readme", "quickstart", "website"]
+    for pr in raw_meta_prs:
+        title = pr.get("title", "")
+        # Check files if available or title keywords
+        if any(kw in title.lower() for kw in doc_keywords):
+            meta_doc_prs.append(pr)
+        else:
+            meta_prs.append(pr)
+
     port_prs = prs_by_repo
 
     # Sort repos alphabetically
@@ -482,21 +494,42 @@ def generate_markdown_report(
         if meta_summary:
             lines.append(meta_summary)
             lines.append("")
-            lines.append("<details><summary>View individual meta PRs</summary>\n")
+            lines.append("<details><summary>View individual core meta PRs</summary>\n")
             for pr in meta_prs:
                 author = pr.get("author", {}).get("login", "unknown") if isinstance(pr.get("author"), dict) else pr.get("author", "unknown")
                 lines.append(f"- [#{pr.get('number')}]({pr.get('url')}) {pr.get('title')} (*@{author}*)")
             lines.append("\n</details>\n")
         else:
-            lines.append(f"**{len(meta_prs)} changes merged into `meta`:**")
+            lines.append(f"**{len(meta_prs)} infrastructure/tooling changes merged into `meta`:**")
             lines.append("")
             for pr in meta_prs:
                 author = pr.get("author", {}).get("login", "unknown") if isinstance(pr.get("author"), dict) else pr.get("author", "unknown")
                 lines.append(f"- [#{pr.get('number')}]({pr.get('url')}) {pr.get('title')} (*@{author}*)")
             lines.append("")
     else:
-        lines.append("*No direct core meta changes in this period.*")
+        lines.append("*No direct core meta infrastructure changes in this period.*")
         lines.append("")
+
+    # 3. Documentation & Website Updates
+    if meta_doc_prs:
+        lines.append("## 📚 Documentation & Website Updates")
+        lines.append("")
+        doc_summary = summarize_with_copilot(org, "meta", meta_doc_prs, copilot_token)
+        if doc_summary:
+            lines.append(doc_summary)
+            lines.append("")
+            lines.append("<details><summary>View documentation PRs</summary>\n")
+            for pr in meta_doc_prs:
+                author = pr.get("author", {}).get("login", "unknown") if isinstance(pr.get("author"), dict) else pr.get("author", "unknown")
+                lines.append(f"- [#{pr.get('number')}]({pr.get('url')}) {pr.get('title')} (*@{author}*)")
+            lines.append("\n</details>\n")
+        else:
+            lines.append(f"**{len(meta_doc_prs)} documentation updates published in `meta/docs`:**")
+            lines.append("")
+            for pr in meta_doc_prs:
+                author = pr.get("author", {}).get("login", "unknown") if isinstance(pr.get("author"), dict) else pr.get("author", "unknown")
+                lines.append(f"- [#{pr.get('number')}]({pr.get('url')}) {pr.get('title')} (*@{author}*)")
+            lines.append("")
 
     # 3. Port Releases (deduplicated by latest version per tool)
     if releases:

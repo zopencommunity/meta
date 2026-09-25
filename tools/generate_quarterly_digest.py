@@ -349,14 +349,28 @@ def generate_digest_markdown(
     lines.append("Rather than listing individual commits, here are the key functional achievements by tool:")
     lines.append("")
 
-    # Meta Core
+    # Meta Core & Docs
     if "meta" in major_tool_prs:
-        meta_summary = summarize_with_copilot(org, "meta", major_tool_prs["meta"], copilot_token)
-        if not meta_summary:
-            meta_summary = fallback_heuristic_summary("meta", major_tool_prs["meta"])
-        lines.append("### 🛠️ **Core Infrastructure & Meta Tooling**")
-        lines.append(meta_summary)
-        lines.append("")
+        all_meta = major_tool_prs["meta"]
+        doc_keywords = ["doc", "docs", "documentation", "blog", "guide", "readme", "quickstart", "website"]
+        infra_prs = [p for p in all_meta if not any(kw in p["title"].lower() for kw in doc_keywords)]
+        doc_prs = [p for p in all_meta if any(kw in p["title"].lower() for kw in doc_keywords)]
+
+        if infra_prs:
+            meta_summary = summarize_with_copilot(org, "meta", infra_prs, copilot_token)
+            if not meta_summary:
+                meta_summary = fallback_heuristic_summary("meta", infra_prs)
+            lines.append("### 🛠️ **Core Infrastructure & Meta Tooling**")
+            lines.append(meta_summary)
+            lines.append("")
+
+        if doc_prs:
+            doc_summary = summarize_with_copilot(org, "meta", doc_prs, copilot_token)
+            if not doc_summary:
+                doc_summary = fallback_heuristic_summary("meta", doc_prs)
+            lines.append("### 📚 **Documentation & Guides (`meta/docs`)**")
+            lines.append(doc_summary)
+            lines.append("")
 
     # Port Repositories
     for repo, pr_list in sorted(major_tool_prs.items(), key=lambda x: len(x[1]), reverse=True):
