@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-09-24T15:48:37Z",
+  "generatedAt": "2026-09-25T11:54:58Z",
   "repositoryUrl": "http://163.74.83.190:8080/pulp/content/zopen/",
-  "packageCount": 145,
-  "rpmCount": 145,
+  "packageCount": 146,
+  "rpmCount": 146,
   "packages": [
     {
       "name": "arrow",
@@ -1177,6 +1177,46 @@
       "publishedAt": "2026-08-28T19:42:18Z",
       "portRepositoryUrl": "https://github.com/zopencommunity/git-lfsport",
       "releaseUrl": "https://github.com/zopencommunity/git-lfsport/releases/tag/STABLE_git-lfsport_288"
+    },
+    {
+      "name": "git-secrets",
+      "displayName": "git-secrets",
+      "version": "1.0.0",
+      "release": "20260925.113859",
+      "epoch": "0",
+      "architectures": [
+        "s390x"
+      ],
+      "summary": "git-secrets-1.3.0 package",
+      "description": "git-secrets-1.3.0 package",
+      "rpmCount": 1,
+      "rpmDependencies": [
+        "git",
+        "bash"
+      ],
+      "rpmUrl": "http://163.74.83.190:8080/pulp/content/zopen/Packages/g/git-secrets-1.0.0-20260925.113859.s390x.rpm",
+      "buildTime": "2026-09-25T11:47:33Z",
+      "releaseKey": "git-secrets",
+      "categories": [
+        "security",
+        "development",
+        "language",
+        "ai",
+        "core",
+        "utilities",
+        "editor",
+        "source_control"
+      ],
+      "runtimeDependencies": [
+        "bash",
+        "git"
+      ],
+      "passedTests": 1,
+      "totalTests": 1,
+      "verificationRate": 100.0,
+      "publishedAt": "2026-09-25T11:48:38Z",
+      "portRepositoryUrl": "https://github.com/zopencommunity/git-secretsport",
+      "releaseUrl": "https://github.com/zopencommunity/git-secretsport/releases/tag/STABLE_git-secretsport_379"
     },
     {
       "name": "githubcli",
