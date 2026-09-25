@@ -1,0 +1,57 @@
+name: "Monthly Community Status"
+
+on:
+  schedule:
+    # Runs at 12:00 UTC on the 1st of every month
+    - cron: "0 12 1 * *"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Number of days to look back"
+        required: false
+        default: "30"
+      dry_run:
+        description: "Generate report only (do not publish external notifications)"
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  monthly-status:
+    name: Generate Monthly Status
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate Monthly Status Markdown
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 tools/generate_monthly_status.py \
+            --org zopencommunity \
+            --days "${{ github.event.inputs.days || '30' }}" \
+            --output "$GITHUB_WORKSPACE/monthly_status.md" \
+            --print
+
+      - name: Append to Job Summary
+        run: |
+          cat "$GITHUB_WORKSPACE/monthly_status.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Monthly Status Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: monthly-status-report
+          path: monthly_status.md
+          if-no-files-found: error
