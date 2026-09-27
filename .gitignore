@@ -93,5 +93,4 @@ docs/vulnerabilities_rss.xml
 docs/newly_released.md
 docs/reference/*.md
 docs/api/zopen_files.json.sha256
-docs/api/zopen_vulnerability.json
 man/man1/

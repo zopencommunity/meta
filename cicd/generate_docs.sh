@@ -56,10 +56,7 @@ python3 tools/create_latest_release_doc.py --output docs/newly_released.md || ec
 # 6. Generate zopen command reference & man pages (docs/reference/*.md)
 echo "Generating CLI command reference..."
 export ZOPEN_ROOTFS="${ZOPEN_ROOTFS:-na}"
-if [ -f "./.env" ]; then
-  # shellcheck disable=SC1091
-  . ./.env
-fi
+export PATH="${REPO_ROOT}/bin:${PATH}"
 
 mkdir -p "man/man1/"
 if command -v zopen-help2man >/dev/null 2>&1; then
