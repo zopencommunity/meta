@@ -90,7 +90,8 @@ if command -v groff >/dev/null 2>&1; then
     body_content=$(echo "${body_content}" | sed 's|<tr|\'$'\n''<tr|g' | sed 's|</tr>|</tr>\'$'\n''|g')
     body_content=$(echo "${body_content}" | sed 's|<td|\'$'\n''<td|g' | sed 's|</td>|</td>\'$'\n''|g')
     body_content=$(echo "${body_content}" | sed 's|\([^<:]\)/|\1&#47;|g')
-    body_content=$(echo "${body_content}" | sed 's|<\(https\?://[^>]*\)>|<a href="\1" target="_blank">\1</a>|g' | sed 's|<\(ftp://[^>]*\)>|<a href="\1" target="_blank">\1</a>|g')
+    # Normalize headings: ensure <h2> tags are properly closed on a single line
+    body_content=$(echo "${body_content}" | perl -0777 -pe 's{<h2>\s*([^\n<]+)\s*(?:<a[^>]*>.*?</a>)?\s*</h2>}{<h2>$1</h2>\n<a name="$1"></a>}gs' 2>/dev/null || echo "${body_content}")
 
     orphaned_tags=$(echo "${body_content}" | grep -oE '</[a-z]+>' | sort | uniq || true)
     for closing_tag in ${orphaned_tags}; do
@@ -119,6 +120,20 @@ ${body_content}
 
 </div>
 EOF
+
+    # Validate the generated markdown file for unclosed opening tags
+    all_tags=$(grep -oE '<[a-z]+[^>]*>' "${md}" | grep -v '</' | sed 's|<||' | sed 's| .*||' | sed 's|>||' | sort | uniq || true)
+    for tag_name in ${all_tags}; do
+      if [[ "${tag_name}" =~ ^(br|hr|img|input|meta|link|[a-z]+[0-9]+)$ ]]; then
+        continue
+      fi
+      opening_count=$(grep -o "<${tag_name}" "${md}" | wc -l | tr -d ' ')
+      closing_count=$(grep -o "</${tag_name}>" "${md}" | wc -l | tr -d ' ')
+      if [ "${opening_count}" -ne "${closing_count}" ]; then
+        echo "WARNING: Tag mismatch in ${md}: ${opening_count} opening <${tag_name}> tags but ${closing_count} closing tags"
+      fi
+    done
+
     echo "* [${name}](./${name})" >> docs/reference/zopen-reference.md
   done
 else
