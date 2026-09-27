@@ -3,10 +3,13 @@
 name: Deploy VitePress site to Pages
 
 on:
-  # Runs on pushes targeting the `main` branch. Change this to `master` if you're
-  # using the `master` branch as the default branch.
+  # Runs on pushes targeting the `main` branch.
   push:
     branches: [main]
+
+  # Runs nightly at 02:00 UTC to rebuild with latest data
+  schedule:
+    - cron: '0 2 * * *'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -32,10 +35,24 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 0 # Not needed if lastUpdated is not enabled
-      # - uses: pnpm/action-setup@v4 # Uncomment this block if you're using pnpm
-      #   with:
-      #     version: 9 # Not needed if you've set "packageManager" in package.json
-      # - uses: oven-sh/setup-bun@v1 # Uncomment this if you're using Bun
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python & Doc Tooling Dependencies
+        run: |
+          pip install -r requirements.txt
+          sudo apt-get update && sudo apt-get install -y groff
+
+      - name: Generate Dynamic Documentation Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bash cicd/generate_docs.sh
+
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
