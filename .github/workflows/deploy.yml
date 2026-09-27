@@ -3,10 +3,6 @@
 name: Deploy VitePress site to Pages
 
 on:
-  # Runs on pushes targeting the `main` branch.
-  push:
-    branches: [main]
-
   # Runs nightly at 02:00 UTC to rebuild with latest data
   schedule:
     - cron: '0 2 * * *'
