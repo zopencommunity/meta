@@ -59,10 +59,14 @@ export ZOPEN_ROOTFS="${ZOPEN_ROOTFS:-na}"
 export PATH="${REPO_ROOT}/bin:${PATH}"
 
 mkdir -p "man/man1/"
-if command -v zopen-help2man >/dev/null 2>&1; then
-  zopen-help2man "man/man1/"
-elif [ -x "./bin/zopen-help2man" ]; then
-  ./bin/zopen-help2man "man/man1/"
+if command -v help2man >/dev/null 2>&1; then
+  if command -v zopen-help2man >/dev/null 2>&1; then
+    zopen-help2man "man/man1/" || echo "Warning: zopen-help2man reported errors; continuing."
+  elif [ -x "./bin/zopen-help2man" ]; then
+    ./bin/zopen-help2man "man/man1/" || echo "Warning: zopen-help2man reported errors; continuing."
+  fi
+else
+  echo "Warning: 'help2man' not found; skipping CLI man-page generation."
 fi
 
 cat <<EOF > docs/reference/zopen-reference.md

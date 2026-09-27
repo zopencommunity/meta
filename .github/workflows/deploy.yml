@@ -41,7 +41,7 @@ jobs:
       - name: Install Python & Doc Tooling Dependencies
         run: |
           pip install -r requirements.txt
-          sudo apt-get update && sudo apt-get install -y groff
+          sudo apt-get update && sudo apt-get install -y groff help2man
 
       - name: Generate Dynamic Documentation Pages
         env:
