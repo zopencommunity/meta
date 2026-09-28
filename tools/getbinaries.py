@@ -21,21 +21,58 @@ import tempfile
 import matplotlib.font_manager as fm
 
 def _load_ibm_plex_sans():
-    """Download IBM Plex Sans TTF files from the IBM/plex repo and register
-    them with matplotlib. Falls back silently to the default sans-serif font
-    if the download fails (e.g. no network on the build host)."""
-    PLEX_URLS = {
-        "IBMPlexSans-Regular":  "https://github.com/IBM/plex/raw/refs/heads/master/packages/plex-sans/fonts/complete/ttf/IBMPlexSans-Regular.ttf",
-        "IBMPlexSans-Bold":     "https://github.com/IBM/plex/raw/refs/heads/master/packages/plex-sans/fonts/complete/ttf/IBMPlexSans-Bold.ttf",
-        "IBMPlexSans-SemiBold": "https://github.com/IBM/plex/raw/refs/heads/master/packages/plex-sans/fonts/complete/ttf/IBMPlexSans-SemiBold.ttf",
+    """Optionally download IBM Plex Sans TTF files from a pinned release of
+    the IBM/plex repo and register them with matplotlib.
+
+    Download is opt-in: set the environment variable ZOPEN_DOWNLOAD_FONTS=1
+    to enable it.  This keeps offline and locked-down environments
+    deterministic and removes the unconditional network dependency at import
+    time.
+
+    Each file is verified against a pinned SHA-256 digest after download.  If
+    verification fails the corrupt/unexpected file is removed and font loading
+    is skipped, falling back to matplotlib's default sans-serif font.
+    """
+    if os.environ.get("ZOPEN_DOWNLOAD_FONTS") != "1":
+        return
+
+    # Pinned to IBM/plex tag v6.4.2 — update PLEX_TAG and PLEX_SHA256 together
+    # when upgrading.
+    PLEX_TAG = "v6.4.2"
+    _BASE = (
+        f"https://raw.githubusercontent.com/IBM/plex/{PLEX_TAG}"
+        "/IBM-Plex-Sans/fonts/complete/ttf"
+    )
+    PLEX_FONTS = {
+        "IBMPlexSans-Regular":  (
+            f"{_BASE}/IBMPlexSans-Regular.ttf",
+            "975dcda37d80f038dcd143c22e33ca2d97a0cc5a929aace1c749153b0fe1afa5",
+        ),
+        "IBMPlexSans-Bold": (
+            f"{_BASE}/IBMPlexSans-Bold.ttf",
+            "9e6c74a889a700d707613d24548fe4ffa6bc59559a0689d2cf9e133bdcdafb2f",
+        ),
+        "IBMPlexSans-SemiBold": (
+            f"{_BASE}/IBMPlexSans-SemiBold.ttf",
+            "a20caf8286023a6a7a85e40b1d2a4ae9fc3e3b1f9eda8f4c542dd4986af67bb1",
+        ),
     }
+
     font_dir = os.path.join(tempfile.gettempdir(), "ibm_plex_fonts")
     os.makedirs(font_dir, exist_ok=True)
     try:
-        for name, url in PLEX_URLS.items():
+        import hashlib
+        for name, (url, expected_sha256) in PLEX_FONTS.items():
             dest = os.path.join(font_dir, f"{name}.ttf")
             if not os.path.exists(dest):
                 urllib.request.urlretrieve(url, dest)
+            # Verify digest regardless of whether we just downloaded or cached.
+            digest = hashlib.sha256(open(dest, "rb").read()).hexdigest()
+            if digest != expected_sha256:
+                os.remove(dest)
+                raise ValueError(
+                    f"{name}.ttf digest mismatch: expected {expected_sha256}, got {digest}"
+                )
             fm.fontManager.addfont(dest)
         mpl.rcParams['font.family'] = 'IBM Plex Sans'
         print("IBM Plex Sans fonts loaded.", file=sys.stderr)
@@ -432,7 +469,7 @@ with open('docs/Progress.md', 'w') as f_progress:
         print("No quality chart generated.")
     else:
         for chart_file in chart_files:
-            print(f"![Project Test Quality](./images/quality.png)")
+            print(f"![Project Test Quality]({chart_file})")
 
     print("\n## Projects with skipped or no tests (or no releases resulting in skipped status)")
     count_skipped_no_tests = 0

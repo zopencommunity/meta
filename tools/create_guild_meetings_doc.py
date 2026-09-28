@@ -6,6 +6,8 @@ Reads from json data source and generates ToolsGuildMeetingLinks.md
 import json
 import os
 import argparse
+import sys
+import requests
 
 def format_links(items):
     if not items:
@@ -14,11 +16,7 @@ def format_links(items):
     for item in items:
         label = item.get("label", "")
         url = item.get("url", "")
-        password = item.get("pass", "")
-        s = f"[{label}]({url})"
-        if password:
-            s += f" pass: {password}"
-        formatted.append(s)
+        formatted.append(f"[{label}]({url})")
     return ", ".join(formatted)
 
 def generate_markdown(data, output_file):
@@ -46,18 +44,32 @@ def generate_markdown(data, output_file):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate Guild Meeting Links markdown page.')
-    parser.add_argument('--input', '-i', default='', help='Input json data file')
+    parser.add_argument('--input', '-i', default='', help='Input JSON file path or URL')
     parser.add_argument('--output', '-o', default='', help='Output markdown file path')
     args = parser.parse_args()
 
-    input_file = args.input
-    if not input_file:
-        if os.path.exists('meta/docs/api/guild_meetings.json'):
-            input_file = 'meta/docs/api/guild_meetings.json'
-        elif os.path.exists('docs/api/guild_meetings.json'):
-            input_file = 'docs/api/guild_meetings.json'
+    input_arg = args.input
+
+    if input_arg and input_arg.startswith(('http://', 'https://')):
+        response = requests.get(input_arg)
+        response.raise_for_status()
+        data = response.json()
+    else:
+        if input_arg:
+            if not os.path.exists(input_arg):
+                print(f"Error: input file not found: {input_arg}", file=sys.stderr)
+                sys.exit(1)
+            input_file = input_arg
         else:
-            input_file = 'meta/docs/api/guild_meetings.json'
+            if os.path.exists('meta/docs/api/guild_meetings.json'):
+                input_file = 'meta/docs/api/guild_meetings.json'
+            elif os.path.exists('docs/api/guild_meetings.json'):
+                input_file = 'docs/api/guild_meetings.json'
+            else:
+                input_file = 'meta/docs/api/guild_meetings.json'
+
+        with open(input_file, 'r') as f:
+            data = json.load(f)
 
     output_file = args.output
     if not output_file:
@@ -67,8 +79,5 @@ if __name__ == '__main__':
             output_file = 'docs/Guides/ToolsGuildMeetingLinks.md'
         else:
             output_file = 'meta/docs/Guides/ToolsGuildMeetingLinks.md'
-
-    with open(input_file, 'r') as f:
-        data = json.load(f)
 
     generate_markdown(data, output_file)
