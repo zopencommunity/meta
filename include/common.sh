@@ -31,7 +31,7 @@ zopenInitialize()
     processConfig
   fi
   ZOPEN_ANALYTICS_JSON="${ZOPEN_ROOTFS}/var/lib/zopen/analytics.json"
-  ZOPEN_JSON_CACHE_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases.json"
+  ZOPEN_JSON_CACHE_URL="https://github.com/zopencommunity/meta/releases/download/api-cache/zopen_releases.json"
   ZOPEN_JSON_CONFIG="${ZOPEN_ROOTFS}/etc/zopen/config.json"
   if [ -n "${INCDIR}" ]; then
     ZOPEN_SYSTEM_PREREQ_SCRIPT="${INCDIR}/prereq.sh"
@@ -1492,17 +1492,22 @@ downloadJSONCache()
       [ ! -w "${JSON_CACHE}" ] || [ ! -r "${JSON_CACHE}" ] && printError "Cannot access cache at '${JSON_CACHE}'. Check permissions and retry request."
     fi
 
-    if ! curlout=$(curlCmd -L --no-progress-meter -I "${ZOPEN_JSON_CACHE_URL}" -o "${JSON_TIMESTAMP_CURRENT}"); then
-      printError "Failed to obtain json cache timestamp from ${ZOPEN_JSON_CACHE_URL}; ${curlout}"
+    JSON_SHA256_URL="${ZOPEN_JSON_CACHE_URL}.sha256"
+    if curlCmd -s -L --no-progress-meter "${JSON_SHA256_URL}" -o "${JSON_TIMESTAMP_CURRENT}" 2>/dev/null && [ -s "${JSON_TIMESTAMP_CURRENT}" ]; then
+      chtag -tc 819 "${JSON_TIMESTAMP_CURRENT}"
+      if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && [ "$(cat "${JSON_TIMESTAMP_CURRENT}")" = "$(cat "${JSON_TIMESTAMP}")" ]; then
+        return
+      fi
+      printVerbose "Replacing old sha256 checksum with latest."
+      mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
+    elif curlout=$(curlCmd -L --no-progress-meter -I "${ZOPEN_JSON_CACHE_URL}" -o "${JSON_TIMESTAMP_CURRENT}") && grep -q 'ETag' "${JSON_TIMESTAMP_CURRENT}"; then
+      chtag -tc 819 "${JSON_TIMESTAMP_CURRENT}"
+      if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && [ "$(grep 'ETag' "${JSON_TIMESTAMP_CURRENT}")" = "$(grep 'ETag' "${JSON_TIMESTAMP}")" ]; then
+        return
+      fi
+      printVerbose "Replacing old timestamp with latest."
+      mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
     fi
-    chtag -tc 819 "${JSON_TIMESTAMP_CURRENT}"
-
-    if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && grep -q 'ETag' "${JSON_TIMESTAMP_CURRENT}" && [ "$(grep 'ETag' "${JSON_TIMESTAMP_CURRENT}")" = "$(grep 'ETag' "${JSON_TIMESTAMP}")" ]; then
-      return
-    fi
-
-    printVerbose "Replacing old timestamp with latest."
-    mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
 
     if ! curlout=$(curlCmd -L --no-progress-meter -o "${JSON_CACHE}" "${ZOPEN_JSON_CACHE_URL}"); then
       printError "Failed to obtain json cache from ${ZOPEN_JSON_CACHE_URL}; ${curlout}"

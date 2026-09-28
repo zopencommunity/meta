@@ -1,5 +1,5 @@
 {
-  "generation_timestamp_utc": "2026-08-24T23:05:20+00:00Z",
+  "generation_timestamp_utc": "2026-09-26T01:56:06+00:00Z",
   "source_organization": "zopencommunity",
   "descriptions": {
     "m4": "A macro processor",
@@ -374,6 +374,11 @@
     "snappy": "zopen port of snappy",
     "utf8proc": "zopen port of utf8proc",
     "arrow": "zopen port of Apache Arrow C++",
-    "pyarrow": "zopen port of pyarrow"
+    "pyarrow": "zopen port of pyarrow",
+    "rapidjson": "z/OS port of RapidJSON, a fast JSON parser/generator for C++",
+    "zdnn": "zopen port of the IBM zDNN library (NNPA / Telum Integrated Accelerator for AI) for z/OS",
+    "rpmconfig": "RPM configuration files needed by DNF5 and other RPM-based tools on z/OS",
+    "pkgconf": "package compiler and linker metadata toolkit",
+    "git-secrets": ""
   }
 }

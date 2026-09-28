@@ -8,6 +8,11 @@ import { defineConfig } from "vitepress";
 //   - For prod: npm run docs:build (defaults to "/")
 const base = (typeof process !== "undefined" && process.env.BASE_PATH) || "/";
 
+console.log(
+  "\x1b[36m%s\x1b[0m",
+  "💡 Tip: Dynamic pages (/Latest, /Vulnerabilities, /Progress, /reference) can be generated locally with: ./cicd/generate_docs.sh"
+);
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   base: base,
@@ -68,6 +73,7 @@ export default defineConfig({
       { text: "Getting Started", link: "/Guides/QuickStart" },
       { text: "Available Tools", link: "/Latest" },
       { text: "Python Packages", link: "/PythonPackages" },
+      { text: "RPM Packages", link: "/RpmPackages" },
       { text: "Request a Package", link: "/PackageRequests" },
       { text: "Governance", link: "/Governance" },
       { text: "Reference", link: "/reference/zopen-reference" },
@@ -126,6 +132,15 @@ export default defineConfig({
           { text: "Contributing Python Packages", link: "/Guides/PythonContributing" },
           { text: "Porting Python Packages", link: "/Guides/PythonPorting" },
           { text: "Candidate Status", link: "/Guides/PythonCandidates" },
+        ],
+      },
+      {
+        text: "RPM Packages on z/OS",
+        collapsed: false,
+        items: [
+          { text: "Available RPM Packages", link: "/RpmPackages" },
+          { text: "Overview", link: "/Guides/RpmPackages" },
+          { text: "Setup Guide", link: "/Guides/RpmSetup" },
         ],
       },
       {
@@ -271,6 +286,17 @@ export default defineConfig({
   sitemap: {
     hostname: "https://zopen.community",
   },
+
+  // Allow local preview and builds even if dynamic pages haven't been generated
+  ignoreDeadLinks: [
+    "/Latest",
+    "/Progress",
+    "/updatestatus",
+    "/upstreamstatus",
+    "/newly_released",
+    "/Vulnerabilities",
+    /\/reference\/.*/,
+  ],
 });
 
 // Made with Bob

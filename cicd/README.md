@@ -62,6 +62,7 @@ This directory contains the Jenkins Pipeline scripts (Groovy) used to orchestrat
   * `PROJECT_GITHUB_REPO`: Upstream GitHub repository URL of the project to build.
   * `PROJECT_BRANCH`: Git branch to checkout (default: `main`).
   * `SPEC_FILE`: Path to the RPM `.spec` file relative to the repository root.
+  * `SOURCE_DIR`: Optional directory containing source files (relative to project root). **Default**: if empty and a `SOURCES/` directory exists at the repository root, it will be used automatically. Set to a non-empty directory name to use a custom directory (e.g. `rpm-sources`). Leave empty for virtual/meta packages.
   * `NODE_LABEL`: Jenkins node executor label for the build (default: `zos`).
   * `NO_PROMOTE`: Boolean flag to skip the package publication step.
 

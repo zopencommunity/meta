@@ -135,6 +135,9 @@ Optional:
   ZOPEN_INSTALL               Installation program to run. If skip is specified,
                               no installation step is performed.
                               (defaults to '${ZOPEN_INSTALLD}')
+  ZOPEN_INSTALL_MINIMAL       Installation program will not be passed CFLAGS,
+                              LDFLAGS, CPPFLAGS options but will get them from
+                              env vars.
   ZOPEN_INSTALL_OPTS          Options to pass to installation program.
                               (defaults to '${ZOPEN_INSTALL_OPTSD}')
   ZOPEN_MAKE                  Build program to run. If skip is specified,
@@ -3470,6 +3473,9 @@ create_rpm()
     if [ "${signRPM}" = "true" ]; then
       cmd="${cmd} --sign"
     fi
+    if ${forceUpgradeDeps}; then
+      cmd="${cmd} -u"
+    fi
     if ! runAndLog "${cmd}"; then
       printError "Could not generate RPM from \"${paxFileName}\""
     fi
@@ -3690,7 +3696,13 @@ resolveCommands()
       export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS}"
       ;;
     *)
-      export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} ${verboseOpts} ${ZOPEN_EXTRA_INSTALL_CC_OPTS}"
+      if [ -z "${ZOPEN_INSTALL_MINIMAL}" ]; then
+        export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS} ${verboseOpts} ${ZOPEN_EXTRA_INSTALL_CC_OPTS}"
+        export ZOPEN_INSTALL_MINIMAL="no"
+      else
+        export ZOPEN_INSTALL_CMD="\"${ZOPEN_INSTALL}\" ${ZOPEN_INSTALL_OPTS}"
+        export ZOPEN_INSTALL_MINIMAL="yes"
+      fi
       ;;
     esac
     [[ -d ${ZOPEN_ROOT}/install ]] || mkdir -p ${ZOPEN_ROOT}/install
@@ -3865,19 +3877,25 @@ ${line}
 EOF
       IFS="$oldIFS"
 
+      rule=""
       if [ "${action}" = "unset" ]; then
-        echo "  unsetenv(\"${var}\");" >> "${rules_tmp}"
+        rule="unsetenv(\"${var}\");"
       elif [ "${action}" = "set" -o "${action}" = "overrideset" ]; then
         forceset="0"
         if [ "${action}" = "overrideset" ]; then
           forceset="1";
         fi
-        echo "  set_env_var(\"${var}\", \"${value}\", root_dir, ${forceset});" >> "${rules_tmp}"
+        rule="set_env_var(\"${var}\", \"${value}\", root_dir, ${forceset});"
       elif [ "${action}" = "prepend" ]; then
-        echo "  prepend_env_var(\"${var}\", \"${value}\", root_dir);" >> "${rules_tmp}"
+        rule="prepend_env_var(\"${var}\", \"${value}\", root_dir);"
       else
         printError "${action} is not valid, must be one of set, unset, or prepend"
       fi
+
+      case "${value}" in
+        *PROJECT_ROOT*) echo "  if (!skip_project_root_rules) ${rule}" >> "${rules_tmp}" ;;
+        *)             echo "  ${rule}" >> "${rules_tmp}" ;;
+      esac
     done
   fi
 

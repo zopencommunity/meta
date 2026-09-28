@@ -9,6 +9,7 @@
     "docs:build:dev": "BASE_PATH=/meta/ vitepress build",
     "docs:build:prod": "BASE_PATH=/ vitepress build",
     "docs:preview": "vitepress preview",
+    "docs:generate": "bash ../cicd/generate_docs.sh",
     "serve": "vitepress dev",
     "build": "vitepress build",
     "build:dev": "BASE_PATH=/meta/ vitepress build",

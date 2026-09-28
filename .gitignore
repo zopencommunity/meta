@@ -1,4 +1,7 @@
 .DS_Store
+__pycache__/
+*.py[cod]
+*$py.class
 
 # Prerequisites
 *.d
@@ -76,10 +79,18 @@ tools/src/hwthic.h
 meta.iml
 
 # Generated files from md2man tooling
-
 docs/zopen/man1/zopen*.gz
 docs/.vitepress/cache/
 
-# Python bytecode
-__pycache__/
-*.py[cod]
+# Dynamically generated documentation and API caches (built at deploy time)
+docs/updatestatus.md
+docs/upstreamstatus.md
+docs/images/upstream/
+docs/Latest.md
+docs/Progress.md
+docs/Vulnerabilities.md
+docs/vulnerabilities_rss.xml
+docs/newly_released.md
+docs/reference/*.md
+docs/api/zopen_files.json.sha256
+man/man1/

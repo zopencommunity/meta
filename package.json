@@ -1,0 +1,14 @@
+{
+  "name": "zopen-community-meta",
+  "version": "0.0.1",
+  "private": true,
+  "description": "zopen community meta repository",
+  "scripts": {
+    "docs:dev": "npm --prefix docs run docs:dev",
+    "docs:build": "npm --prefix docs run docs:build",
+    "docs:build:dev": "npm --prefix docs run docs:build:dev",
+    "docs:build:prod": "npm --prefix docs run docs:build:prod",
+    "docs:preview": "npm --prefix docs run docs:preview",
+    "docs:generate": "bash cicd/generate_docs.sh"
+  }
+}

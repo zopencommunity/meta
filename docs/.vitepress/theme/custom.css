@@ -464,14 +464,43 @@ body,
   background: var(--vp-c-bg-soft);
 }
 
+.man-page-content .header-with-back {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.man-page-content .back-link {
+  position: absolute;
+  top: 0;
+  right: 15px;
+}
+
+.man-page-content .back-link a {
+  color: var(--vp-c-brand-1);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9em;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.25s;
+}
+
+.man-page-content .back-link a:hover {
+  color: var(--vp-c-brand-2);
+  text-decoration: underline;
+}
+
 
 .man-page-content h1 {
   margin-top: 0;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0;
   text-align: left;
 }
 
 .man-page-content h2 {
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
 }
 
 .man-page-content table {
