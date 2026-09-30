@@ -1855,9 +1855,49 @@ PYENVEOF
 
 }
 
+# addDep
+# Locates, installs if needed, and activates the environment for a single dependency.
+# Inputs: $1 - dep name, $2 - binOnly, $3 - libOnly
+addDep()
+{
+  depName="$1"
+  binOnly="$2"
+  libOnly="$3"
+  depdir="${depsPath%%|*}/${depName}/${depName}"
+
+  if [ ! -d "${depdir}" ] || ${forceUpgradeDeps}; then
+    if ${forceUpgradeDeps}; then
+      printHeader "Upgrading dependency ${depName}. Installing via zopen install"
+    else
+      printWarning "Dependency ${depName} not found. Downloading via zopen install"
+    fi
+    if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${depName} -v -y"; then
+      printError "zopen install command failed"
+    fi
+    if [ ! -d "${depdir}" ]; then
+      printError "Dependency ${depName} not found after install"
+    fi
+  fi
+
+  printVerbose "Setting up ${depdir} dependency environment"
+  if [ "${libOnly}" != "true" ]; then
+    export PATH="${depdir}/bin:${PATH}"
+    export LIBPATH="${depdir}/lib:${LIBPATH}"
+  fi
+  if [ "${binOnly}" != "true" ]; then
+    if [ -d "${depdir}/lib/pkgconfig" ]; then
+      export PKG_CONFIG_PATH="${depdir}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+    fi
+    if [ -d "${depdir}/share/pkgconfig" ]; then
+      export PKG_CONFIG_PATH="${depdir}/share/pkgconfig:${PKG_CONFIG_PATH}"
+    fi
+    cd "${depdir}" && . ./.appenv || printError "Failed to source ${depdir} .appenv"
+  fi
+}
+
 # setDepsEnv
-# Sources the environment of the specified dependencies.
-# Inputs: $* - list of dependencies to source
+# Installs and activates the environment for all dependencies.
+# Inputs: $* - list of dependencies
 setDepsEnv()
 {
   if [ $# -eq 0 ]; then
@@ -1869,74 +1909,14 @@ setDepsEnv()
     return
   fi
 
-  deps="$*"
   orig="${PWD}"
-  deps=$(normalizeDeps "${deps}")
+  deps=$(normalizeDeps "$*")
   for dep in ${deps}; do
     parseline=$(parseDeps ${dep})
     depName=$(echo ${parseline} | awk -F'|' '{print $1}')
-    operator=$(echo ${parseline} | awk -F'|' '{print $2}')
-    requestedMajor=$(echo ${parseline} | awk -F'|' '{print $3}')
-    requestedMinor=$(echo ${parseline} | awk -F'|' '{print $4}')
-    requestedPatch=$(echo ${parseline} | awk -F'|' '{print $5}')
-    requestedSubrelease=$(echo ${parseline} | awk -F'|' '{print $6}')
-    requestedVersion="${requestedMajor}.${requestedMinor}.${requestedPatch}.${requestedSubrelease}"
     binOnly=$(echo ${parseline} | awk -F'|' '{print $7}')
-    
-    foundDep=false
-    if ! ${forceUpgradeDeps}; then
-      for path in $(echo ${depsPath} | tr '|' '\n'); do
-        depdir="${path}/${depName}/${depName}"
-        if [ -r "${depdir}/.env" ]; then
-          version=$(cat "${depdir}/.version" 2>/dev/null)
-          if validateVersion "${version}" "${operator}" "${requestedVersion}" "${depdir}"; then
-            foundDep=true
-            break
-          fi
-        fi
-      done
-    fi
-
-    if ! ${foundDep} || ${forceUpgradeDeps}; then
-      if ! ${forceUpgradeDeps}; then
-        if [ -z "${operator}" ]; then
-          printWarning "Dependency ${depName} not found. Downloading via zopen install"
-        else
-          printWarning "Dependency ${depName} ${operator} ${requestedVersion} not found. Downloading via zopen install"
-        fi
-      else
-        printHeader "Upgrading dependency ${depName}. Installing via zopen install"
-      fi
-      if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${depName} -v -y"; then
-        printError "zopen install command failed"
-      fi
-    fi
-
-    # Re-verify and source the environment
-    foundDep=false
-    for path in $(echo ${depsPath} | tr '|' '\n'); do
-      depdir="${path}/${depName}/${depName}"
-      if [ -r "${depdir}/.env" ]; then
-        version=$(cat "${depdir}/.version" 2>/dev/null)
-        if validateVersion "${version}" "${operator}" "${requestedVersion}" "${depdir}"; then
-          printVerbose "Setting up ${depdir} dependency environment"
-          _save_zos_build="${ZOPEN_IN_ZOPEN_BUILD}"
-          if [ "${binOnly}" = "true" ]; then
-            unset ZOPEN_IN_ZOPEN_BUILD
-          fi
-          cd "${depdir}" && . ./.env
-          if [ $? -gt 0 ]; then
-            printError "Failed to source ${depdir} .env"
-          fi
-          export ZOPEN_IN_ZOPEN_BUILD="${_save_zos_build}"
-          foundDep=true
-          break
-        fi
-      fi
-    done
-    if ! ${foundDep}; then
-       printError "Compatible version of dependency ${depName} not found for sourcing"
-    fi
+    libOnly=$(echo ${parseline} | awk -F'|' '{print $8}')
+    addDep "${depName}" "${binOnly}" "${libOnly}"
   done
   cd "${orig}" || exit 99
 }
@@ -2858,18 +2838,6 @@ zz
     echo "export LIBPATH=\"\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
 
-  cat << zz >> "${ZOPEN_INSTALL_DIR}/.env"
-if [ ! -z "\${ZOPEN_IN_ZOPEN_BUILD}" ]; then
-  if [ -d "\${${projectName}_HOME}/lib/pkgconfig" ]; then
-    PKG_CONFIG_PATH="\${${projectName}_HOME}/lib/pkgconfig:\$PKG_CONFIG_PATH"
-    export PKG_CONFIG_PATH="\$(deleteDuplicateEntries "\$PKG_CONFIG_PATH" ":")"
-  fi
-  if [ -d "\${${projectName}_HOME}/share/pkgconfig" ]; then
-    PKG_CONFIG_PATH="\${${projectName}_HOME}/share/pkgconfig:\$PKG_CONFIG_PATH"
-    export PKG_CONFIG_PATH="\$(deleteDuplicateEntries "\$PKG_CONFIG_PATH\" ":")"
-  fi
-fi
-zz
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ] || [ "${projectName}" = "GIT" ]; then
     echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export MANPATH=\"\$(deleteDuplicateEntries \"\$MANPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
