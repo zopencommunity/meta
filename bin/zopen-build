@@ -152,6 +152,10 @@ Optional:
 Optional settings for installation:
   ZOPEN_RUNTIME_DEPS          Runtime z/OS Open Tool dependencies to be installed
                               alongside the tool.
+  ZOPEN_BUILDTIME_DEPS        Transitive build-time lib dependencies. Each entry
+                              is appended as a :lib dep to ZOPEN_DEPS so that
+                              pkg-config and link flags are activated at build
+                              time. Written to .libdeps for downstream consumers.
   ZOPEN_SETUP_NO_REPLACE      If set, do not replace hardcoded paths with
                               placeholders.
   ZOPEN_SYSTEM_PREREQ         System prerequisites, supply the name of the prereq
@@ -1811,6 +1815,13 @@ PYENVEOF
     ZOPEN_DEPS="${implicitDeps}"
   else
     ZOPEN_DEPS="${langDeps} ${implicitDeps} ${ZOPEN_DEPS}"
+    # Append transitive lib deps as :lib qualifiers so pkg-config/appenv are
+    # activated during the build without polluting PATH.
+    if [ -n "${ZOPEN_BUILDTIME_DEPS}" ]; then
+      for _tdep in ${ZOPEN_BUILDTIME_DEPS}; do
+        ZOPEN_DEPS="${ZOPEN_DEPS} ${_tdep}:lib"
+      done
+    fi
   fi
 
   # Add meta as an implicit runtime dependency
@@ -1858,11 +1869,67 @@ PYENVEOF
 # addDep
 # Locates, installs if needed, and activates the environment for a single dependency.
 # Inputs: $1 - dep name, $2 - binOnly, $3 - libOnly
+# Tracks activation mode per dep in _addDep_visited to handle the case where the
+# same dep is reached via different paths with different qualifiers. Modes:
+#   :bin  - only PATH/LIBPATH activated
+#   :lib  - only PKG_CONFIG_PATH/.appenv activated
+#   :full - both sides activated (skips any further calls for this dep)
+# A :bin dep later requested as :lib (or vice-versa) gets the missing side applied
+# and is upgraded to :full. A :full dep is never re-processed (cycle/dup guard).
 addDep()
 {
   depName="$1"
   binOnly="$2"
   libOnly="$3"
+
+  # Determine requested mode
+  if [ "${binOnly}" = "true" ]; then
+    reqMode="bin"
+  elif [ "${libOnly}" = "true" ]; then
+    reqMode="lib"
+  else
+    reqMode="full"
+  fi
+
+  # Check what mode (if any) this dep was previously activated with
+  prevMode=""
+  case " ${_addDep_visited} " in
+    *" ${depName}:full "*) printVerbose "Skipping already-fully-activated dep ${depName}"; return ;;
+    *" ${depName}:bin "*)  prevMode="bin" ;;
+    *" ${depName}:lib "*)  prevMode="lib" ;;
+  esac
+
+  # Determine which sides still need activation
+  doBin="false"
+  doLib="false"
+  if [ "${reqMode}" = "full" ]; then
+    if [ "${prevMode}" != "bin" ] && [ "${prevMode}" != "full" ]; then
+      doBin="true"
+    fi
+    if [ "${prevMode}" != "lib" ] && [ "${prevMode}" != "full" ]; then
+      doLib="true"
+    fi
+  elif [ "${reqMode}" = "bin" ] && [ -z "${prevMode}" ]; then
+    doBin="true"
+  elif [ "${reqMode}" = "lib" ] && [ -z "${prevMode}" ]; then
+    doLib="true"
+  fi
+
+  # Nothing new to activate
+  if [ "${doBin}" = "false" ] && [ "${doLib}" = "false" ]; then
+    printVerbose "Skipping already-activated dep ${depName} (prev=${prevMode} req=${reqMode})"
+    return
+  fi
+
+  # Update visited record: remove old entry and record upgraded mode
+  if [ -n "${prevMode}" ]; then
+    _addDep_visited=$(echo "${_addDep_visited}" | sed "s/ ${depName}:${prevMode} / /")
+    newMode="full"
+  else
+    newMode="${reqMode}"
+  fi
+  _addDep_visited="${_addDep_visited} ${depName}:${newMode}"
+
   depdir="${depsPath%%|*}/${depName}/${depName}"
 
   if [ ! -d "${depdir}" ] || ${forceUpgradeDeps}; then
@@ -1879,12 +1946,18 @@ addDep()
     fi
   fi
 
-  printVerbose "Setting up ${depdir} dependency environment"
-  if [ "${libOnly}" != "true" ]; then
+  printVerbose "Setting up ${depdir} dependency environment (mode=${newMode})"
+  if [ "${doBin}" = "true" ]; then
     export PATH="${depdir}/bin:${PATH}"
     export LIBPATH="${depdir}/lib:${LIBPATH}"
+    # Recursively activate runtime deps with :bin semantics
+    if [ -f "${depdir}/.runtimedeps" ]; then
+      for _rdep in $(cat "${depdir}/.runtimedeps"); do
+        addDep "${_rdep}" "true" "false"
+      done
+    fi
   fi
-  if [ "${binOnly}" != "true" ]; then
+  if [ "${doLib}" = "true" ]; then
     if [ -d "${depdir}/lib/pkgconfig" ]; then
       export PKG_CONFIG_PATH="${depdir}/lib/pkgconfig:${PKG_CONFIG_PATH}"
     fi
@@ -1892,6 +1965,12 @@ addDep()
       export PKG_CONFIG_PATH="${depdir}/share/pkgconfig:${PKG_CONFIG_PATH}"
     fi
     cd "${depdir}" && . ./.appenv || printError "Failed to source ${depdir} .appenv"
+    # Recursively activate lib deps with :lib semantics
+    if [ -f "${depdir}/.libdeps" ]; then
+      for _ldep in $(cat "${depdir}/.libdeps"); do
+        addDep "${_ldep}" "false" "true"
+      done
+    fi
   fi
 }
 
@@ -1903,6 +1982,7 @@ setDepsEnv()
   if [ $# -eq 0 ]; then
     return
   fi
+  _addDep_visited=""
 
   if ${getSourceOnly} && [ "$(uname -s)" != "OS/390" ]; then
     printVerbose "Skipping dependency installation in --get-source mode and on non-z/OS system"
@@ -3375,6 +3455,8 @@ install()
 
     asciiecho "$(echo "${ZOPEN_RUNTIME_DEPS}" | xargs | tr ' ' '\n' | sort -u | xargs)" "${ZOPEN_INSTALL_DIR}/.runtimedeps"
     cp "${ZOPEN_INSTALL_DIR}/.runtimedeps" "${ZOPEN_ROOT}/install/"
+    asciiecho "$(echo "${ZOPEN_BUILDTIME_DEPS}" | xargs | tr ' ' '\n' | sort -u | xargs)" "${ZOPEN_INSTALL_DIR}/.libdeps"
+    cp "${ZOPEN_INSTALL_DIR}/.libdeps" "${ZOPEN_ROOT}/install/"
 
     buildDeps="${ZOPEN_DEPS}"
     asciiecho "$(echo "${buildDeps}" | xargs | tr ' ' '\n' | sort -u | xargs)" "${ZOPEN_INSTALL_DIR}/.builddeps"
