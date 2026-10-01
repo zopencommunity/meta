@@ -1871,100 +1871,153 @@ PYENVEOF
 # and is upgraded to :full. A :full dep is never re-processed (cycle/dup guard).
 addDep()
 {
-  depName="$1"
-  binOnly="$2"
-  libOnly="$3"
+  # Use a depth counter to give each recursion level its own save-slot,
+  # since shell functions share global scope and nested calls would otherwise
+  # clobber each other's saved state.
+  _ad_depth=$(( ${_ad_depth:-0} + 1 ))
+  eval "_ad_s${_ad_depth}_depName=\"\${_ad_depName}\""
+  eval "_ad_s${_ad_depth}_depdir=\"\${_ad_depdir}\""
+  eval "_ad_s${_ad_depth}_doBin=\"\${_ad_doBin}\""
+  eval "_ad_s${_ad_depth}_doLib=\"\${_ad_doLib}\""
+  eval "_ad_s${_ad_depth}_newMode=\"\${_ad_newMode}\""
+
+  _ad_depName="$1"
+  _ad_binOnly="$2"
+  _ad_libOnly="$3"
+
+  # meta is a zopen tooling package, not a build dep — skip it
+  case "${_ad_depName}" in
+    meta)
+      eval "_ad_depName=\"\${_ad_s${_ad_depth}_depName}\""
+      eval "_ad_depdir=\"\${_ad_s${_ad_depth}_depdir}\""
+      eval "_ad_doBin=\"\${_ad_s${_ad_depth}_doBin}\""
+      eval "_ad_doLib=\"\${_ad_s${_ad_depth}_doLib}\""
+      eval "_ad_newMode=\"\${_ad_s${_ad_depth}_newMode}\""
+      _ad_depth=$(( _ad_depth - 1 ))
+      return ;;
+  esac
 
   # Determine requested mode
-  if [ "${binOnly}" = "true" ]; then
-    reqMode="bin"
-  elif [ "${libOnly}" = "true" ]; then
-    reqMode="lib"
+  if [ "${_ad_binOnly}" = "true" ]; then
+    _ad_reqMode="bin"
+  elif [ "${_ad_libOnly}" = "true" ]; then
+    _ad_reqMode="lib"
   else
-    reqMode="full"
+    _ad_reqMode="full"
   fi
 
   # Check what mode (if any) this dep was previously activated with
-  prevMode=""
+  _ad_prevMode=""
   case " ${_addDep_visited} " in
-    *" ${depName}:full "*) printVerbose "Skipping already-fully-activated dep ${depName}"; return ;;
-    *" ${depName}:bin "*)  prevMode="bin" ;;
-    *" ${depName}:lib "*)  prevMode="lib" ;;
+    *" ${_ad_depName}:full "*)
+      printVerbose "Skipping already-fully-activated dep ${_ad_depName}"
+      eval "_ad_depName=\"\${_ad_s${_ad_depth}_depName}\""
+      eval "_ad_depdir=\"\${_ad_s${_ad_depth}_depdir}\""
+      eval "_ad_doBin=\"\${_ad_s${_ad_depth}_doBin}\""
+      eval "_ad_doLib=\"\${_ad_s${_ad_depth}_doLib}\""
+      eval "_ad_newMode=\"\${_ad_s${_ad_depth}_newMode}\""
+      _ad_depth=$(( _ad_depth - 1 ))
+      return ;;
+    *" ${_ad_depName}:bin "*)  _ad_prevMode="bin" ;;
+    *" ${_ad_depName}:lib "*)  _ad_prevMode="lib" ;;
   esac
 
   # Determine which sides still need activation
-  doBin="false"
-  doLib="false"
-  if [ "${reqMode}" = "full" ]; then
-    if [ "${prevMode}" != "bin" ] && [ "${prevMode}" != "full" ]; then
-      doBin="true"
+  _ad_doBin="false"
+  _ad_doLib="false"
+  if [ "${_ad_reqMode}" = "full" ]; then
+    if [ "${_ad_prevMode}" != "bin" ] && [ "${_ad_prevMode}" != "full" ]; then
+      _ad_doBin="true"
     fi
-    if [ "${prevMode}" != "lib" ] && [ "${prevMode}" != "full" ]; then
-      doLib="true"
+    if [ "${_ad_prevMode}" != "lib" ] && [ "${_ad_prevMode}" != "full" ]; then
+      _ad_doLib="true"
     fi
-  elif [ "${reqMode}" = "bin" ] && [ -z "${prevMode}" ]; then
-    doBin="true"
-  elif [ "${reqMode}" = "lib" ] && [ -z "${prevMode}" ]; then
-    doLib="true"
+  elif [ "${_ad_reqMode}" = "bin" ] && [ -z "${_ad_prevMode}" ]; then
+    _ad_doBin="true"
+  elif [ "${_ad_reqMode}" = "lib" ] && [ -z "${_ad_prevMode}" ]; then
+    _ad_doLib="true"
   fi
 
   # Nothing new to activate
-  if [ "${doBin}" = "false" ] && [ "${doLib}" = "false" ]; then
-    printVerbose "Skipping already-activated dep ${depName} (prev=${prevMode} req=${reqMode})"
+  if [ "${_ad_doBin}" = "false" ] && [ "${_ad_doLib}" = "false" ]; then
+    printVerbose "Skipping already-activated dep ${_ad_depName} (prev=${_ad_prevMode} req=${_ad_reqMode})"
+    eval "_ad_depName=\"\${_ad_s${_ad_depth}_depName}\""
+    eval "_ad_depdir=\"\${_ad_s${_ad_depth}_depdir}\""
+    eval "_ad_doBin=\"\${_ad_s${_ad_depth}_doBin}\""
+    eval "_ad_doLib=\"\${_ad_s${_ad_depth}_doLib}\""
+    eval "_ad_newMode=\"\${_ad_s${_ad_depth}_newMode}\""
+    _ad_depth=$(( _ad_depth - 1 ))
     return
   fi
 
   # Update visited record: remove old entry and record upgraded mode
-  if [ -n "${prevMode}" ]; then
-    _addDep_visited=$(echo "${_addDep_visited}" | sed "s/ ${depName}:${prevMode} / /")
-    newMode="full"
+  if [ -n "${_ad_prevMode}" ]; then
+    _addDep_visited=$(echo "${_addDep_visited}" | sed "s/ ${_ad_depName}:${_ad_prevMode} / /")
+    _ad_newMode="full"
   else
-    newMode="${reqMode}"
+    _ad_newMode="${_ad_reqMode}"
   fi
-  _addDep_visited="${_addDep_visited} ${depName}:${newMode}"
+  _addDep_visited="${_addDep_visited} ${_ad_depName}:${_ad_newMode}"
 
-  depdir="${depsPath%%|*}/${depName}/${depName}"
+  _ad_depdir="${depsPath%%|*}/${_ad_depName}/${_ad_depName}"
 
-  if [ ! -d "${depdir}" ] || ${forceUpgradeDeps}; then
+  if [ ! -d "${_ad_depdir}" ] || ${forceUpgradeDeps}; then
     if ${forceUpgradeDeps}; then
-      printHeader "Upgrading dependency ${depName}. Installing via zopen install"
+      printHeader "Upgrading dependency ${_ad_depName}. Installing via zopen install"
     else
-      printWarning "Dependency ${depName} not found. Downloading via zopen install"
+      printWarning "Dependency ${_ad_depName} not found. Downloading via zopen install"
     fi
-    if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${depName} -v -y"; then
+    if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${_ad_depName} -v -y"; then
       printError "zopen install command failed"
     fi
-    if [ ! -d "${depdir}" ]; then
-      printError "Dependency ${depName} not found after install"
+    if [ ! -d "${_ad_depdir}" ]; then
+      printError "Dependency ${_ad_depName} not found after install"
     fi
   fi
 
-  printVerbose "Setting up ${depdir} dependency environment (mode=${newMode})"
-  if [ "${doBin}" = "true" ]; then
-    export PATH="${depdir}/bin:${PATH}"
-    export LIBPATH="${depdir}/lib:${LIBPATH}"
+  printVerbose "Setting up ${_ad_depdir} dependency environment (mode=${_ad_newMode})"
+  # Export <PKGNAME>_HOME the same way .env does (uppercase, hyphens to underscores)
+  _ad_depHome=$(echo "${_ad_depName}" | sed 's/-/_/g' | tr '[:lower:]' '[:upper:]')
+  export "${_ad_depHome}_HOME=${_ad_depdir}"
+  if [ "${_ad_doBin}" = "true" ]; then
+    if [ -d "${_ad_depdir}/bin" ]; then
+      export PATH="${_ad_depdir}/bin:${PATH}"
+    fi
+    if [ -d "${_ad_depdir}/altbin" ]; then
+      export PATH="${_ad_depdir}/altbin:${PATH}"
+    fi
+    if ls "${_ad_depdir}/lib"/*.so > /dev/null 2>&1; then
+      export LIBPATH="${_ad_depdir}/lib:${LIBPATH}"
+    fi
     # Recursively activate runtime deps with :bin semantics
-    if [ -f "${depdir}/.runtimedeps" ]; then
-      for _rdep in $(cat "${depdir}/.runtimedeps"); do
+    if [ -f "${_ad_depdir}/.runtimedeps" ]; then
+      for _rdep in $(cat "${_ad_depdir}/.runtimedeps"); do
         addDep "${_rdep}" "true" "false"
       done
     fi
   fi
-  if [ "${doLib}" = "true" ]; then
-    if [ -d "${depdir}/lib/pkgconfig" ]; then
-      export PKG_CONFIG_PATH="${depdir}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+  if [ "${_ad_doLib}" = "true" ]; then
+    if [ -d "${_ad_depdir}/lib/pkgconfig" ]; then
+      export PKG_CONFIG_PATH="${_ad_depdir}/lib/pkgconfig:${PKG_CONFIG_PATH}"
     fi
-    if [ -d "${depdir}/share/pkgconfig" ]; then
-      export PKG_CONFIG_PATH="${depdir}/share/pkgconfig:${PKG_CONFIG_PATH}"
+    if [ -d "${_ad_depdir}/share/pkgconfig" ]; then
+      export PKG_CONFIG_PATH="${_ad_depdir}/share/pkgconfig:${PKG_CONFIG_PATH}"
     fi
-    cd "${depdir}" && . ./.appenv || printError "Failed to source ${depdir} .appenv"
+    cd "${_ad_depdir}" && . ./.appenv || printError "Failed to source ${_ad_depdir} .appenv"
     # Recursively activate lib deps with :lib semantics
-    if [ -f "${depdir}/.libdeps" ]; then
-      for _ldep in $(cat "${depdir}/.libdeps"); do
+    if [ -f "${_ad_depdir}/.libdeps" ]; then
+      for _ldep in $(cat "${_ad_depdir}/.libdeps"); do
         addDep "${_ldep}" "false" "true"
       done
     fi
   fi
+  # Restore caller's local state
+  eval "_ad_depName=\"\${_ad_s${_ad_depth}_depName}\""
+  eval "_ad_depdir=\"\${_ad_s${_ad_depth}_depdir}\""
+  eval "_ad_doBin=\"\${_ad_s${_ad_depth}_doBin}\""
+  eval "_ad_doLib=\"\${_ad_s${_ad_depth}_doLib}\""
+  eval "_ad_newMode=\"\${_ad_s${_ad_depth}_newMode}\""
+  _ad_depth=$(( _ad_depth - 1 ))
 }
 
 # setDepsEnv
@@ -1976,6 +2029,7 @@ setDepsEnv()
     return
   fi
   _addDep_visited=""
+  _ad_depth=0
 
   if ${getSourceOnly} && [ "$(uname -s)" != "OS/390" ]; then
     printVerbose "Skipping dependency installation in --get-source mode and on non-z/OS system"
@@ -3347,8 +3401,9 @@ handle_bin_conflicts()
   prefix="zot"
   any_conflict=0
 
-  mkdir -p "$install_dir/altbin"
-  mkdir -p "$install_dir/share/altman/man1"
+  if [ ! -d "$install_dir/bin" ]; then
+    return
+  fi
 
   if is_gnu_license_from_url; then
     printVerbose "Detected GNU license"
@@ -3360,6 +3415,8 @@ handle_bin_conflicts()
   dir=$(dirname "$file")
 
   if [ -f "/bin/$base" ] && [ ! -L "/bin/$base" ]; then
+    mkdir -p "$install_dir/altbin"
+    mkdir -p "$install_dir/share/altman/man1"
     mv "$file" "$dir/${prefix}$base"
     ln -sf "../bin/${prefix}$base" "$install_dir/altbin/$base"
     printVerbose "Renaming conflicting binary: $base → ${prefix}$base"
