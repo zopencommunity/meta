@@ -1815,13 +1815,6 @@ PYENVEOF
     ZOPEN_DEPS="${implicitDeps}"
   else
     ZOPEN_DEPS="${langDeps} ${implicitDeps} ${ZOPEN_DEPS}"
-    # Append transitive lib deps as :lib qualifiers so pkg-config/appenv are
-    # activated during the build without polluting PATH.
-    if [ -n "${ZOPEN_BUILDTIME_DEPS}" ]; then
-      for _tdep in ${ZOPEN_BUILDTIME_DEPS}; do
-        ZOPEN_DEPS="${ZOPEN_DEPS} ${_tdep}:lib"
-      done
-    fi
   fi
 
   # Add meta as an implicit runtime dependency
