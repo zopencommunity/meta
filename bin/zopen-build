@@ -1980,10 +1980,10 @@ addDep()
   _ad_depHome=$(echo "${_ad_depName}" | sed 's/-/_/g' | tr '[:lower:]' '[:upper:]')
   export "${_ad_depHome}_HOME=${_ad_depdir}"
   if [ "${_ad_doBin}" = "true" ]; then
-    if [ -d "${_ad_depdir}/bin" ]; then
+    if ls "${_ad_depdir}/bin"/* > /dev/null 2>&1; then
       export PATH="${_ad_depdir}/bin:${PATH}"
     fi
-    if [ -d "${_ad_depdir}/altbin" ]; then
+    if ls "${_ad_depdir}/altbin"/* > /dev/null 2>&1; then
       export PATH="${_ad_depdir}/altbin:${PATH}"
     fi
     if ls "${_ad_depdir}/lib"/*.so > /dev/null 2>&1; then
