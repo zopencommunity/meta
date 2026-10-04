@@ -1855,8 +1855,19 @@ PYENVEOF
         printError "ZOPEN_SYSTEM_PREREQ prereq \"${prereq}\" does not exist in \"$ZOPEN_SYSTEM_PREREQ_SCRIPT\""
       fi
     done
-  fi 
+  fi
 
+}
+
+# Stack pop helper: restores the caller's local variables saved by addDep's push.
+_ad_pop()
+{
+  eval "_ad_depName=\"\${_ad_s${_ad_depth}_depName}\""
+  eval "_ad_depdir=\"\${_ad_s${_ad_depth}_depdir}\""
+  eval "_ad_doBin=\"\${_ad_s${_ad_depth}_doBin}\""
+  eval "_ad_doLib=\"\${_ad_s${_ad_depth}_doLib}\""
+  eval "_ad_newMode=\"\${_ad_s${_ad_depth}_newMode}\""
+  _ad_depth=$(( _ad_depth - 1 ))
 }
 
 # addDep
@@ -1871,8 +1882,8 @@ PYENVEOF
 # and is upgraded to :full. A :full dep is never re-processed (cycle/dup guard).
 addDep()
 {
-  # Use a depth counter to give each recursion level its own save-slot,
-  # since shell functions share global scope and nested calls would otherwise
+  # Push caller's local variables onto the manual stack.
+  # Shell functions share global scope so nested calls would otherwise
   # clobber each other's saved state.
   _ad_depth=$(( ${_ad_depth:-0} + 1 ))
   eval "_ad_s${_ad_depth}_depName=\"\${_ad_depName}\""
@@ -1887,14 +1898,7 @@ addDep()
 
   # meta is a zopen tooling package, not a build dep — skip it
   case "${_ad_depName}" in
-    meta)
-      eval "_ad_depName=\"\${_ad_s${_ad_depth}_depName}\""
-      eval "_ad_depdir=\"\${_ad_s${_ad_depth}_depdir}\""
-      eval "_ad_doBin=\"\${_ad_s${_ad_depth}_doBin}\""
-      eval "_ad_doLib=\"\${_ad_s${_ad_depth}_doLib}\""
-      eval "_ad_newMode=\"\${_ad_s${_ad_depth}_newMode}\""
-      _ad_depth=$(( _ad_depth - 1 ))
-      return ;;
+    meta) _ad_pop; return 0 ;;
   esac
 
   # Determine requested mode
@@ -1911,13 +1915,7 @@ addDep()
   case " ${_addDep_visited} " in
     *" ${_ad_depName}:full "*)
       printVerbose "Skipping already-fully-activated dep ${_ad_depName}"
-      eval "_ad_depName=\"\${_ad_s${_ad_depth}_depName}\""
-      eval "_ad_depdir=\"\${_ad_s${_ad_depth}_depdir}\""
-      eval "_ad_doBin=\"\${_ad_s${_ad_depth}_doBin}\""
-      eval "_ad_doLib=\"\${_ad_s${_ad_depth}_doLib}\""
-      eval "_ad_newMode=\"\${_ad_s${_ad_depth}_newMode}\""
-      _ad_depth=$(( _ad_depth - 1 ))
-      return ;;
+      _ad_pop; return 0 ;;
     *" ${_ad_depName}:bin "*)  _ad_prevMode="bin" ;;
     *" ${_ad_depName}:lib "*)  _ad_prevMode="lib" ;;
   esac
@@ -1925,34 +1923,26 @@ addDep()
   # Determine which sides still need activation
   _ad_doBin="false"
   _ad_doLib="false"
-  if [ "${_ad_reqMode}" = "full" ]; then
+  if [ "${_ad_reqMode}" = "full" ] || [ "${_ad_reqMode}" = "bin" ]; then
     if [ "${_ad_prevMode}" != "bin" ] && [ "${_ad_prevMode}" != "full" ]; then
       _ad_doBin="true"
     fi
+  fi
+  if [ "${_ad_reqMode}" = "full" ] || [ "${_ad_reqMode}" = "lib" ]; then
     if [ "${_ad_prevMode}" != "lib" ] && [ "${_ad_prevMode}" != "full" ]; then
       _ad_doLib="true"
     fi
-  elif [ "${_ad_reqMode}" = "bin" ] && [ -z "${_ad_prevMode}" ]; then
-    _ad_doBin="true"
-  elif [ "${_ad_reqMode}" = "lib" ] && [ -z "${_ad_prevMode}" ]; then
-    _ad_doLib="true"
   fi
 
   # Nothing new to activate
   if [ "${_ad_doBin}" = "false" ] && [ "${_ad_doLib}" = "false" ]; then
     printVerbose "Skipping already-activated dep ${_ad_depName} (prev=${_ad_prevMode} req=${_ad_reqMode})"
-    eval "_ad_depName=\"\${_ad_s${_ad_depth}_depName}\""
-    eval "_ad_depdir=\"\${_ad_s${_ad_depth}_depdir}\""
-    eval "_ad_doBin=\"\${_ad_s${_ad_depth}_doBin}\""
-    eval "_ad_doLib=\"\${_ad_s${_ad_depth}_doLib}\""
-    eval "_ad_newMode=\"\${_ad_s${_ad_depth}_newMode}\""
-    _ad_depth=$(( _ad_depth - 1 ))
-    return
+    _ad_pop; return 0
   fi
 
   # Update visited record: remove old entry and record upgraded mode
   if [ -n "${_ad_prevMode}" ]; then
-    _addDep_visited=$(echo "${_addDep_visited}" | sed "s/ ${_ad_depName}:${_ad_prevMode} / /")
+    _addDep_visited=$(printf '%s\n' " ${_addDep_visited} " | sed "s/ ${_ad_depName}:${_ad_prevMode} / /")
     _ad_newMode="full"
   else
     _ad_newMode="${_ad_reqMode}"
@@ -1976,9 +1966,12 @@ addDep()
   fi
 
   printVerbose "Setting up ${_ad_depdir} dependency environment (mode=${_ad_newMode})"
-  # Export <PKGNAME>_HOME the same way .env does (uppercase, hyphens to underscores)
-  _ad_depHome=$(echo "${_ad_depName}" | sed 's/-/_/g' | tr '[:lower:]' '[:upper:]')
-  export "${_ad_depHome}_HOME=${_ad_depdir}"
+
+  # Export <PKGNAME>_HOME (uppercase, hyphens to underscores)
+  _ad_depHome=$(printf '%s\n' "${_ad_depName}" | sed 's/-/_/g' | tr '[:lower:]' '[:upper:]')
+  eval "${_ad_depHome}_HOME=\"\${_ad_depdir}\""
+  eval "export ${_ad_depHome}_HOME"
+
   if [ "${_ad_doBin}" = "true" ]; then
     if ls "${_ad_depdir}/bin"/* > /dev/null 2>&1; then
       export PATH="${_ad_depdir}/bin:${PATH}"
@@ -1996,6 +1989,7 @@ addDep()
       done
     fi
   fi
+
   if [ "${_ad_doLib}" = "true" ]; then
     if [ -d "${_ad_depdir}/lib/pkgconfig" ]; then
       export PKG_CONFIG_PATH="${_ad_depdir}/lib/pkgconfig:${PKG_CONFIG_PATH}"
@@ -2003,7 +1997,9 @@ addDep()
     if [ -d "${_ad_depdir}/share/pkgconfig" ]; then
       export PKG_CONFIG_PATH="${_ad_depdir}/share/pkgconfig:${PKG_CONFIG_PATH}"
     fi
+    _ad_origPwd=$(pwd)
     cd "${_ad_depdir}" && . ./.appenv || printError "Failed to source ${_ad_depdir} .appenv"
+    cd "${_ad_origPwd}" || printError "Failed to restore directory to ${_ad_origPwd}"
     # Recursively activate lib deps with :lib semantics
     if [ -f "${_ad_depdir}/.libdeps" ]; then
       for _ldep in $(cat "${_ad_depdir}/.libdeps"); do
@@ -2011,13 +2007,9 @@ addDep()
       done
     fi
   fi
-  # Restore caller's local state
-  eval "_ad_depName=\"\${_ad_s${_ad_depth}_depName}\""
-  eval "_ad_depdir=\"\${_ad_s${_ad_depth}_depdir}\""
-  eval "_ad_doBin=\"\${_ad_s${_ad_depth}_doBin}\""
-  eval "_ad_doLib=\"\${_ad_s${_ad_depth}_doLib}\""
-  eval "_ad_newMode=\"\${_ad_s${_ad_depth}_newMode}\""
-  _ad_depth=$(( _ad_depth - 1 ))
+
+  _ad_pop
+  return 0
 }
 
 # setDepsEnv
