@@ -1175,10 +1175,15 @@ parseDeps()
 {
   dep="$1"
   binOnly="false"
+  libOnly="false"
   case "${dep}" in
     *:bin*)
       dep=$(echo "${dep}" | sed 's/:bin//')
       binOnly="true"
+      ;;
+    *:lib*)
+      dep=$(echo "${dep}" | sed 's/:lib//')
+      libOnly="true"
       ;;
   esac
   version=$(echo ${dep} | awk -F '[>=<]+' '{print $2}')
@@ -1208,34 +1213,36 @@ parseDeps()
     fi
   fi
 
-  echo "${dep}|${operator}|${major}|${minor}|${patch}|${prerelease}|${binOnly}"
+  echo "${dep}|${operator}|${major}|${minor}|${patch}|${prerelease}|${binOnly}|${libOnly}"
 }
 
 normalizeDeps()
 {
-  # Given a list of deps, if both pkg and pkg:bin are present, prefer pkg
-  # and "upgrade" pkg:bin to pkg to ensure the full environment is available.
+  # Given a list of deps, if both pkg and pkg:bin (or pkg:lib) are present,
+  # prefer pkg and "upgrade" to pkg to ensure the full environment is available.
   printf "%s\n" $1 | awk '
     {
       deps[NR] = $0
       dep = $0
-      is_bin = 0
-      if (match(dep, /:bin/)) {
-        is_bin = 1
+      is_qualified = 0
+      if (match(dep, /:bin/) || match(dep, /:lib/)) {
+        is_qualified = 1
         sub(/:bin/, "", dep)
+        sub(/:lib/, "", dep)
       }
       split(dep, parts, /[>=<]/)
       pkg = parts[1]
-      if (!is_bin) {
+      if (!is_qualified) {
         full_pkgs[pkg] = 1
       }
     }
     END {
       for (i=1; i<=NR; i++) {
         dep = deps[i]
-        if (match(dep, /:bin/)) {
+        if (match(dep, /:bin/) || match(dep, /:lib/)) {
           temp_dep = dep
           sub(/:bin/, "", temp_dep)
+          sub(/:lib/, "", temp_dep)
           split(temp_dep, parts, /[>=<]/)
           pkg = parts[1]
           if (pkg in full_pkgs) {

@@ -152,6 +152,10 @@ Optional:
 Optional settings for installation:
   ZOPEN_RUNTIME_DEPS          Runtime z/OS Open Tool dependencies to be installed
                               alongside the tool.
+  ZOPEN_BUILDTIME_DEPS        Transitive build-time lib dependencies. Each entry
+                              is appended as a :lib dep to ZOPEN_DEPS so that
+                              pkg-config and link flags are activated at build
+                              time. Written to .libdeps for downstream consumers.
   ZOPEN_SETUP_NO_REPLACE      If set, do not replace hardcoded paths with
                               placeholders.
   ZOPEN_SYSTEM_PREREQ         System prerequisites, supply the name of the prereq
@@ -1851,92 +1855,187 @@ PYENVEOF
         printError "ZOPEN_SYSTEM_PREREQ prereq \"${prereq}\" does not exist in \"$ZOPEN_SYSTEM_PREREQ_SCRIPT\""
       fi
     done
-  fi 
+  fi
 
 }
 
+# Stack pop helper: restores the caller's local variables saved by addDep's push.
+_ad_pop()
+{
+  eval "_ad_depName=\"\${_ad_s${_ad_depth}_depName}\""
+  eval "_ad_depdir=\"\${_ad_s${_ad_depth}_depdir}\""
+  eval "_ad_doBin=\"\${_ad_s${_ad_depth}_doBin}\""
+  eval "_ad_doLib=\"\${_ad_s${_ad_depth}_doLib}\""
+  eval "_ad_newMode=\"\${_ad_s${_ad_depth}_newMode}\""
+  _ad_depth=$(( _ad_depth - 1 ))
+}
+
+# addDep
+# Locates, installs if needed, and activates the environment for a single dependency.
+# Inputs: $1 - dep name, $2 - binOnly, $3 - libOnly
+# Tracks activation mode per dep in _addDep_visited to handle the case where the
+# same dep is reached via different paths with different qualifiers. Modes:
+#   :bin  - only PATH/LIBPATH activated
+#   :lib  - only PKG_CONFIG_PATH/.appenv activated
+#   :full - both sides activated (skips any further calls for this dep)
+# A :bin dep later requested as :lib (or vice-versa) gets the missing side applied
+# and is upgraded to :full. A :full dep is never re-processed (cycle/dup guard).
+addDep()
+{
+  # Push caller's local variables onto the manual stack.
+  # Shell functions share global scope so nested calls would otherwise
+  # clobber each other's saved state.
+  _ad_depth=$(( ${_ad_depth:-0} + 1 ))
+  eval "_ad_s${_ad_depth}_depName=\"\${_ad_depName}\""
+  eval "_ad_s${_ad_depth}_depdir=\"\${_ad_depdir}\""
+  eval "_ad_s${_ad_depth}_doBin=\"\${_ad_doBin}\""
+  eval "_ad_s${_ad_depth}_doLib=\"\${_ad_doLib}\""
+  eval "_ad_s${_ad_depth}_newMode=\"\${_ad_newMode}\""
+
+  _ad_depName="$1"
+  _ad_binOnly="$2"
+  _ad_libOnly="$3"
+
+  # meta is a zopen tooling package, not a build dep — skip it
+  case "${_ad_depName}" in
+    meta) _ad_pop; return 0 ;;
+  esac
+
+  # Determine requested mode
+  if [ "${_ad_binOnly}" = "true" ]; then
+    _ad_reqMode="bin"
+  elif [ "${_ad_libOnly}" = "true" ]; then
+    _ad_reqMode="lib"
+  else
+    _ad_reqMode="full"
+  fi
+
+  # Check what mode (if any) this dep was previously activated with
+  _ad_prevMode=""
+  case " ${_addDep_visited} " in
+    *" ${_ad_depName}:full "*)
+      printVerbose "Skipping already-fully-activated dep ${_ad_depName}"
+      _ad_pop; return 0 ;;
+    *" ${_ad_depName}:bin "*)  _ad_prevMode="bin" ;;
+    *" ${_ad_depName}:lib "*)  _ad_prevMode="lib" ;;
+  esac
+
+  # Determine which sides still need activation
+  _ad_doBin="false"
+  _ad_doLib="false"
+  if [ "${_ad_reqMode}" = "full" ] || [ "${_ad_reqMode}" = "bin" ]; then
+    if [ "${_ad_prevMode}" != "bin" ] && [ "${_ad_prevMode}" != "full" ]; then
+      _ad_doBin="true"
+    fi
+  fi
+  if [ "${_ad_reqMode}" = "full" ] || [ "${_ad_reqMode}" = "lib" ]; then
+    if [ "${_ad_prevMode}" != "lib" ] && [ "${_ad_prevMode}" != "full" ]; then
+      _ad_doLib="true"
+    fi
+  fi
+
+  # Nothing new to activate
+  if [ "${_ad_doBin}" = "false" ] && [ "${_ad_doLib}" = "false" ]; then
+    printVerbose "Skipping already-activated dep ${_ad_depName} (prev=${_ad_prevMode} req=${_ad_reqMode})"
+    _ad_pop; return 0
+  fi
+
+  # Update visited record: remove old entry and record upgraded mode
+  if [ -n "${_ad_prevMode}" ]; then
+    _addDep_visited=$(printf '%s\n' " ${_addDep_visited} " | sed "s/ ${_ad_depName}:${_ad_prevMode} / /")
+    _ad_newMode="full"
+  else
+    _ad_newMode="${_ad_reqMode}"
+  fi
+  _addDep_visited="${_addDep_visited} ${_ad_depName}:${_ad_newMode}"
+
+  _ad_depdir="${depsPath%%|*}/${_ad_depName}/${_ad_depName}"
+
+  if [ ! -d "${_ad_depdir}" ] || ${forceUpgradeDeps}; then
+    if ${forceUpgradeDeps}; then
+      printHeader "Upgrading dependency ${_ad_depName}. Installing via zopen install"
+    else
+      printWarning "Dependency ${_ad_depName} not found. Downloading via zopen install"
+    fi
+    if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${_ad_depName} -v -y"; then
+      printError "zopen install command failed"
+    fi
+    if [ ! -d "${_ad_depdir}" ]; then
+      printError "Dependency ${_ad_depName} not found after install"
+    fi
+  fi
+
+  printVerbose "Setting up ${_ad_depdir} dependency environment (mode=${_ad_newMode})"
+
+  # Export <PKGNAME>_HOME (uppercase, hyphens to underscores)
+  _ad_depHome=$(printf '%s\n' "${_ad_depName}" | sed 's/-/_/g' | tr '[:lower:]' '[:upper:]')
+  eval "${_ad_depHome}_HOME=\"\${_ad_depdir}\""
+  eval "export ${_ad_depHome}_HOME"
+
+  if [ "${_ad_doBin}" = "true" ]; then
+    if ls "${_ad_depdir}/bin"/* > /dev/null 2>&1; then
+      export PATH="${_ad_depdir}/bin:${PATH}"
+    fi
+    if ls "${_ad_depdir}/altbin"/* > /dev/null 2>&1; then
+      export PATH="${_ad_depdir}/altbin:${PATH}"
+    fi
+    if ls "${_ad_depdir}/lib"/*.so > /dev/null 2>&1; then
+      export LIBPATH="${_ad_depdir}/lib:${LIBPATH}"
+    fi
+    # Recursively activate runtime deps with :bin semantics
+    if [ -f "${_ad_depdir}/.runtimedeps" ]; then
+      for _rdep in $(cat "${_ad_depdir}/.runtimedeps"); do
+        addDep "${_rdep}" "true" "false"
+      done
+    fi
+  fi
+
+  if [ "${_ad_doLib}" = "true" ]; then
+    if [ -d "${_ad_depdir}/lib/pkgconfig" ]; then
+      export PKG_CONFIG_PATH="${_ad_depdir}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+    fi
+    if [ -d "${_ad_depdir}/share/pkgconfig" ]; then
+      export PKG_CONFIG_PATH="${_ad_depdir}/share/pkgconfig:${PKG_CONFIG_PATH}"
+    fi
+    _ad_origPwd=$(pwd)
+    cd "${_ad_depdir}" && . ./.appenv || printError "Failed to source ${_ad_depdir} .appenv"
+    cd "${_ad_origPwd}" || printError "Failed to restore directory to ${_ad_origPwd}"
+    # Recursively activate lib deps with :lib semantics
+    if [ -f "${_ad_depdir}/.libdeps" ]; then
+      for _ldep in $(cat "${_ad_depdir}/.libdeps"); do
+        addDep "${_ldep}" "false" "true"
+      done
+    fi
+  fi
+
+  _ad_pop
+  return 0
+}
+
 # setDepsEnv
-# Sources the environment of the specified dependencies.
-# Inputs: $* - list of dependencies to source
+# Installs and activates the environment for all dependencies.
+# Inputs: $* - list of dependencies
 setDepsEnv()
 {
   if [ $# -eq 0 ]; then
     return
   fi
+  _addDep_visited=""
+  _ad_depth=0
 
   if ${getSourceOnly} && [ "$(uname -s)" != "OS/390" ]; then
     printVerbose "Skipping dependency installation in --get-source mode and on non-z/OS system"
     return
   fi
 
-  deps="$*"
   orig="${PWD}"
-  deps=$(normalizeDeps "${deps}")
+  deps=$(normalizeDeps "$*")
   for dep in ${deps}; do
     parseline=$(parseDeps ${dep})
     depName=$(echo ${parseline} | awk -F'|' '{print $1}')
-    operator=$(echo ${parseline} | awk -F'|' '{print $2}')
-    requestedMajor=$(echo ${parseline} | awk -F'|' '{print $3}')
-    requestedMinor=$(echo ${parseline} | awk -F'|' '{print $4}')
-    requestedPatch=$(echo ${parseline} | awk -F'|' '{print $5}')
-    requestedSubrelease=$(echo ${parseline} | awk -F'|' '{print $6}')
-    requestedVersion="${requestedMajor}.${requestedMinor}.${requestedPatch}.${requestedSubrelease}"
     binOnly=$(echo ${parseline} | awk -F'|' '{print $7}')
-    
-    foundDep=false
-    if ! ${forceUpgradeDeps}; then
-      for path in $(echo ${depsPath} | tr '|' '\n'); do
-        depdir="${path}/${depName}/${depName}"
-        if [ -r "${depdir}/.env" ]; then
-          version=$(cat "${depdir}/.version" 2>/dev/null)
-          if validateVersion "${version}" "${operator}" "${requestedVersion}" "${depdir}"; then
-            foundDep=true
-            break
-          fi
-        fi
-      done
-    fi
-
-    if ! ${foundDep} || ${forceUpgradeDeps}; then
-      if ! ${forceUpgradeDeps}; then
-        if [ -z "${operator}" ]; then
-          printWarning "Dependency ${depName} not found. Downloading via zopen install"
-        else
-          printWarning "Dependency ${depName} ${operator} ${requestedVersion} not found. Downloading via zopen install"
-        fi
-      else
-        printHeader "Upgrading dependency ${depName}. Installing via zopen install"
-      fi
-      if ! runAndLog "PATH=\"${ZOPEN_OLD_PATH}\" ${MYDIR}/zopen-install --install-or-upgrade ${depName} -v -y"; then
-        printError "zopen install command failed"
-      fi
-    fi
-
-    # Re-verify and source the environment
-    foundDep=false
-    for path in $(echo ${depsPath} | tr '|' '\n'); do
-      depdir="${path}/${depName}/${depName}"
-      if [ -r "${depdir}/.env" ]; then
-        version=$(cat "${depdir}/.version" 2>/dev/null)
-        if validateVersion "${version}" "${operator}" "${requestedVersion}" "${depdir}"; then
-          printVerbose "Setting up ${depdir} dependency environment"
-          _save_zos_build="${ZOPEN_IN_ZOPEN_BUILD}"
-          if [ "${binOnly}" = "true" ]; then
-            unset ZOPEN_IN_ZOPEN_BUILD
-          fi
-          cd "${depdir}" && . ./.env
-          if [ $? -gt 0 ]; then
-            printError "Failed to source ${depdir} .env"
-          fi
-          export ZOPEN_IN_ZOPEN_BUILD="${_save_zos_build}"
-          foundDep=true
-          break
-        fi
-      fi
-    done
-    if ! ${foundDep}; then
-       printError "Compatible version of dependency ${depName} not found for sourcing"
-    fi
+    libOnly=$(echo ${parseline} | awk -F'|' '{print $8}')
+    addDep "${depName}" "${binOnly}" "${libOnly}"
   done
   cd "${orig}" || exit 99
 }
@@ -2858,18 +2957,6 @@ zz
     echo "export LIBPATH=\"\$(deleteDuplicateEntries \"\$LIBPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
   fi
 
-  cat << zz >> "${ZOPEN_INSTALL_DIR}/.env"
-if [ ! -z "\${ZOPEN_IN_ZOPEN_BUILD}" ]; then
-  if [ -d "\${${projectName}_HOME}/lib/pkgconfig" ]; then
-    PKG_CONFIG_PATH="\${${projectName}_HOME}/lib/pkgconfig:\$PKG_CONFIG_PATH"
-    export PKG_CONFIG_PATH="\$(deleteDuplicateEntries "\$PKG_CONFIG_PATH" ":")"
-  fi
-  if [ -d "\${${projectName}_HOME}/share/pkgconfig" ]; then
-    PKG_CONFIG_PATH="\${${projectName}_HOME}/share/pkgconfig:\$PKG_CONFIG_PATH"
-    export PKG_CONFIG_PATH="\$(deleteDuplicateEntries "\$PKG_CONFIG_PATH\" ":")"
-  fi
-fi
-zz
   if [ -d "${ZOPEN_INSTALL_DIR}/share/man" ] || [ "${projectName}" = "GIT" ]; then
     echo "MANPATH=\"\${${projectName}_HOME}/share/man:\$MANPATH\"" >> "${ZOPEN_INSTALL_DIR}/.env"
     echo "export MANPATH=\"\$(deleteDuplicateEntries \"\$MANPATH\" \":\")\"" >> "${ZOPEN_INSTALL_DIR}/.env"
@@ -3306,8 +3393,9 @@ handle_bin_conflicts()
   prefix="zot"
   any_conflict=0
 
-  mkdir -p "$install_dir/altbin"
-  mkdir -p "$install_dir/share/altman/man1"
+  if [ ! -d "$install_dir/bin" ]; then
+    return
+  fi
 
   if is_gnu_license_from_url; then
     printVerbose "Detected GNU license"
@@ -3319,6 +3407,8 @@ handle_bin_conflicts()
   dir=$(dirname "$file")
 
   if [ -f "/bin/$base" ] && [ ! -L "/bin/$base" ]; then
+    mkdir -p "$install_dir/altbin"
+    mkdir -p "$install_dir/share/altman/man1"
     mv "$file" "$dir/${prefix}$base"
     ln -sf "../bin/${prefix}$base" "$install_dir/altbin/$base"
     printVerbose "Renaming conflicting binary: $base → ${prefix}$base"
@@ -3407,6 +3497,8 @@ install()
 
     asciiecho "$(echo "${ZOPEN_RUNTIME_DEPS}" | xargs | tr ' ' '\n' | sort -u | xargs)" "${ZOPEN_INSTALL_DIR}/.runtimedeps"
     cp "${ZOPEN_INSTALL_DIR}/.runtimedeps" "${ZOPEN_ROOT}/install/"
+    asciiecho "$(echo "${ZOPEN_BUILDTIME_DEPS}" | xargs | tr ' ' '\n' | sort -u | xargs)" "${ZOPEN_INSTALL_DIR}/.libdeps"
+    cp "${ZOPEN_INSTALL_DIR}/.libdeps" "${ZOPEN_ROOT}/install/"
 
     buildDeps="${ZOPEN_DEPS}"
     asciiecho "$(echo "${buildDeps}" | xargs | tr ' ' '\n' | sort -u | xargs)" "${ZOPEN_INSTALL_DIR}/.builddeps"
