@@ -390,7 +390,7 @@ _CFGFILES=$(mktemp)
 _DOCFILES=$(mktemp)
 _EMPTYDIRS=$(mktemp)
 
-find "${_BR}" \( -type f -o -type l \) -print | sed "s|^${_BR}||" | sort > "$_ALLFILES"
+find "${_BR}" \( -type f -o -type l \) -not -name '*.la' -print | sed "s|^${_BR}||" | sort > "$_ALLFILES"
 
 # Collect empty directories — these must be listed explicitly with %dir
 # otherwise RPM won't create them and packages relying on them will break.
@@ -490,14 +490,6 @@ BuildArch:      ${BUILD_ARCH}
 ${REQUIRES:+Requires:       $REQUIRES}
 
 EOF
-
-    if [ "$(uname -s)" = "OS/390" ]; then
-        cat >> "$output_file" << EOF
-# On z/OS, disable broken post-install processing (stripping, etc.)
-%define __os_install_post %{nil}
-
-EOF
-    fi
 
     cat >> "$output_file" << EOF
 %description

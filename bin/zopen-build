@@ -3084,7 +3084,7 @@ ZZ
         fi
       fi
 
-      printVerbose "Generating .depsenv"
+      printVerbose "Generating .depsenv for ${dep}"
       parent=""
       depth=$depsDepth
       while [ $depth -gt 0 ]; do
