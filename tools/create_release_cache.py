@@ -36,6 +36,7 @@ MAX_RETRIES = 20             # Max attempts for secondary limit errors
 INITIAL_BACKOFF_SECONDS = 180 # Initial wait time for secondary limit retry
 MAX_BACKOFF_SECONDS = 300    # Maximum wait time between retries
 MIN_RELEASE_YEAR = 2024     # Ignore releases published before this year (can be overridden by arg)
+DEFAULT_RELEASE_CACHE_URL = "https://github.com/zopencommunity/meta/releases/download/api-cache/zopen_releases.json"
 
 # --- GitHub Connection & Rate Limiting Logic ---
 try:
@@ -252,7 +253,13 @@ parser.add_argument(
 parser.add_argument(
     '--no-cache',
     action='store_true',
-    help='Force a fresh rebuild of the cache, ignoring the existing output file.'
+    help='Force a fresh rebuild of the cache, ignoring remote or local cache sources.'
+)
+parser.add_argument(
+    '--cache-input',
+    dest='cache_input',
+    default=DEFAULT_RELEASE_CACHE_URL,
+    help=f'URL or local file path to load baseline release cache from (default: {DEFAULT_RELEASE_CACHE_URL}).'
 )
 args = parser.parse_args()
 
@@ -276,13 +283,33 @@ def parse_date(date_str):
     except Exception:
         return None
 
+def load_json_source(source):
+    """Loads JSON data from either a URL or a local file path."""
+    if not source:
+        return None
+    if source.startswith(('http://', 'https://')):
+        logger.info(f"Fetching cache from URL: {source}...")
+        headers = {}
+        token = os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') or os.getenv('GITHUB_TOKEN')
+        if token:
+            headers['Authorization'] = f"token {token}"
+        resp = requests.get(source, headers=headers, timeout=60)
+        resp.raise_for_status()
+        return resp.json()
+    elif os.path.exists(source):
+        logger.info(f"Loading cache from local file: {source}...")
+        with open(source, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    else:
+        logger.debug(f"Cache source does not exist: {source}")
+        return None
+
 # --- Load Existing Cache ---
 existing_cache = {}
-if not args.no_cache and os.path.exists(args.output_file):
+if not args.no_cache and args.cache_input:
     try:
-        logger.info(f"Loading existing cache from {args.output_file}...")
-        with open(args.output_file, 'r', encoding='utf-8') as f:
-            old_data = json.load(f)
+        old_data = load_json_source(args.cache_input)
+        if old_data:
             for repo, releases in old_data.get("release_data", {}).items():
                 for release in releases:
                     tag = release.get("tag_name")
@@ -291,9 +318,28 @@ if not args.no_cache and os.path.exists(args.output_file):
                         if isinstance(date_val, str):
                             release["date"] = parse_date(date_val)
                         existing_cache[(repo, tag)] = release
-        logger.info(f"Loaded {len(existing_cache)} cached releases.")
+            logger.info(f"Loaded {len(existing_cache)} cached releases from {args.cache_input}.")
     except Exception as e:
-        logger.warning(f"Could not load existing cache: {e}. Starting fresh.")
+        logger.warning(f"Could not load cache from {args.cache_input}: {e}.")
+        # Fallback to local output file if it exists and differs from cache_input
+        if os.path.exists(args.output_file) and args.output_file != args.cache_input:
+            try:
+                logger.info(f"Falling back to local file: {args.output_file}...")
+                with open(args.output_file, 'r', encoding='utf-8') as f:
+                    old_data = json.load(f)
+                    for repo, releases in old_data.get("release_data", {}).items():
+                        for release in releases:
+                            tag = release.get("tag_name")
+                            if tag:
+                                date_val = release.get("date")
+                                if isinstance(date_val, str):
+                                    release["date"] = parse_date(date_val)
+                                existing_cache[(repo, tag)] = release
+                logger.info(f"Loaded {len(existing_cache)} cached releases from local fallback.")
+            except Exception as e_local:
+                logger.warning(f"Could not load local fallback cache: {e_local}. Starting fresh.")
+        else:
+            logger.info("Starting fresh without cache.")
 
 
 # --- Environment Check & GitHub Instance Setup ---
@@ -571,22 +617,31 @@ if args.single_repo:
                 release_data[repo] = []
             release_data[repo].append(release)
             
-    # Pre-populate repo_descriptions from descriptions file
-    desc_output_file = args.output_file
-    if desc_output_file.lower().endswith('.json'):
-        desc_output_file = desc_output_file[:-5] + '_descriptions.json'
+    # Pre-populate repo_descriptions from descriptions file or URL
+    desc_source = None
+    if args.cache_input and args.cache_input.startswith(('http://', 'https://')):
+        desc_source = re.sub(r'(\.json)$', r'_descriptions\1', args.cache_input)
     else:
-        desc_output_file += "_descriptions.json"
-        
-    if os.path.exists(desc_output_file):
-        try:
-            with open(desc_output_file, 'r', encoding='utf-8') as f:
-                old_desc_data = json.load(f)
-                for repo, desc in old_desc_data.get("descriptions", {}).items():
-                    if repo != target_project_name:
-                        repo_descriptions[repo] = desc
-        except Exception as e:
-            logger.warning(f"Could not load existing descriptions: {e}")
+        desc_output_file = args.output_file
+        if desc_output_file.lower().endswith('.json'):
+            desc_output_file = desc_output_file[:-5] + '_descriptions.json'
+        else:
+            desc_output_file += "_descriptions.json"
+        desc_source = desc_output_file
+
+    try:
+        old_desc_data = load_json_source(desc_source)
+        if not old_desc_data and desc_source != args.output_file:
+            # Fallback to local descriptions file if available
+            local_desc = args.output_file[:-5] + '_descriptions.json' if args.output_file.lower().endswith('.json') else args.output_file + '_descriptions.json'
+            if os.path.exists(local_desc):
+                old_desc_data = load_json_source(local_desc)
+        if old_desc_data:
+            for repo, desc in old_desc_data.get("descriptions", {}).items():
+                if repo != target_project_name:
+                    repo_descriptions[repo] = desc
+    except Exception as e:
+        logger.warning(f"Could not load existing descriptions from {desc_source}: {e}")
 
 # Counters for tracking progress and results
 total_repos_processed = 0
