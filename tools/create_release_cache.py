@@ -607,6 +607,15 @@ repo_descriptions = {}
 # If doing a single repo update, pre-populate with existing cache and descriptions
 target_project_name = None
 if args.single_repo:
+    clean_repo = args.single_repo.strip().rstrip('/')
+    if clean_repo.endswith('.git'):
+        clean_repo = clean_repo[:-4]
+    if '/' in clean_repo:
+        clean_repo = clean_repo.split('/')[-1]
+    if not clean_repo.endswith(REPO_SUFFIX_FILTER):
+        clean_repo = f"{clean_repo}{REPO_SUFFIX_FILTER}"
+    args.single_repo = clean_repo
+
     target_project_name = re.sub(rf"{REPO_SUFFIX_FILTER}$", "", args.single_repo)
     logger.info(f"Single repository update mode. Target repository: {args.single_repo} (project: {target_project_name})")
     

@@ -28,6 +28,12 @@ mkdir -p docs/api
 TARGET_REPO="${1:-${PORT_GITHUB_REPO:-}}"
 EXTRA_CACHE_ARGS=()
 if [ -n "${TARGET_REPO}" ]; then
+  # Normalize repo name if a full Git URL or path is passed
+  TARGET_REPO="${TARGET_REPO##*/}"
+  TARGET_REPO="${TARGET_REPO%.git}"
+  if [[ "${TARGET_REPO}" != *port ]]; then
+    TARGET_REPO="${TARGET_REPO}port"
+  fi
   EXTRA_CACHE_ARGS+=(--repo "${TARGET_REPO}")
 fi
 
