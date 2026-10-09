@@ -25,8 +25,34 @@ echo "=== Updating Release Metadata and Package Catalogs ==="
 
 mkdir -p docs/api
 
+GITHUB_REPO="${GITHUB_REPO:-}"
+if [ -z "${GITHUB_REPO}" ]; then
+  if command -v gh >/dev/null 2>&1; then
+    GITHUB_REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null || true)"
+  fi
+  GITHUB_REPO="${GITHUB_REPO:-zopencommunity/meta}"
+fi
+RELEASE_TAG="${RELEASE_TAG:-api-cache}"
+
+# Pre-fetch live cache assets so targeted runs on clean runners merge against
+# the authoritative release cache rather than a stale checkout
+if command -v gh >/dev/null 2>&1; then
+  echo "Fetching existing cache assets from release '${RELEASE_TAG}' in ${GITHUB_REPO}..."
+  gh release download "${RELEASE_TAG}" \
+    --repo "${GITHUB_REPO}" \
+    --pattern "zopen_releases*.json" \
+    --dir docs/api \
+    --clobber 2>/dev/null || echo "Notice: Could not download api-cache release assets; will use remote cache URL."
+fi
+
+TARGET_REPO="${1:-${PORT_GITHUB_REPO:-}}"
+EXTRA_CACHE_ARGS=()
+if [ -n "${TARGET_REPO}" ]; then
+  EXTRA_CACHE_ARGS+=(--repo "${TARGET_REPO}")
+fi
+
 # 1. Generate release cache (zopen_releases.json, _latest.json, _descriptions.json)
-python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json
+python3 tools/create_release_cache.py --verbose --output-file docs/api/zopen_releases.json "${EXTRA_CACHE_ARGS[@]}"
 
 # Generate sha256 checksum for lightweight cache invalidation
 if command -v sha256sum >/dev/null 2>&1; then
@@ -42,15 +68,6 @@ python3 tools/create_python_package_catalog.py
 if [ -f "tools/create_rpm_package_catalog.py" ]; then
   python3 tools/create_rpm_package_catalog.py || echo "Warning: RPM package catalog generation failed; skipping."
 fi
-
-GITHUB_REPO="${GITHUB_REPO:-}"
-if [ -z "${GITHUB_REPO}" ]; then
-  if command -v gh >/dev/null 2>&1; then
-    GITHUB_REPO="$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null || true)"
-  fi
-  GITHUB_REPO="${GITHUB_REPO:-zopencommunity/meta}"
-fi
-RELEASE_TAG="${RELEASE_TAG:-api-cache}"
 
 API_FILES=(
   "docs/api/zopen_releases.json"
