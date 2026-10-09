@@ -17,6 +17,8 @@ import argparse
 import datetime
 import requests
 import urllib
+import urllib.parse
+import hashlib
 import time
 import logging
 from functools import wraps
@@ -263,6 +265,10 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
+# Targeted mode requires an existing cache baseline to preserve other repositories
+if args.single_repo and args.no_cache:
+    parser.error("--repo (targeted mode) cannot be combined with --no-cache because a baseline cache is required to preserve non-target repositories.")
+
 # Set logging level based on verbosity argument
 if args.verbose:
     logger.setLevel(logging.DEBUG)
@@ -283,6 +289,32 @@ def parse_date(date_str):
     except Exception:
         return None
 
+def compute_release_fingerprint(release_obj):
+    """
+    Computes a deterministic hash fingerprint of a release and its assets
+    to detect if assets or release metadata were modified under the same tag.
+    """
+    try:
+        title = release_obj.title or ""
+        pub_date = str(release_obj.published_at or release_obj.created_at or "")
+        
+        # PyGithub release objects store the raw GitHub JSON in raw_data, which embeds assets
+        raw_assets = getattr(release_obj, "raw_data", {}).get("assets", [])
+        asset_signatures = []
+        for a in raw_assets:
+            asset_signatures.append((
+                a.get("name", ""),
+                a.get("size", 0),
+                a.get("updated_at", "")
+            ))
+        asset_signatures.sort()
+        
+        fp_data = f"{title}|{pub_date}|{repr(asset_signatures)}"
+        return hashlib.sha256(fp_data.encode("utf-8")).hexdigest()
+    except Exception as e:
+        logger.debug(f"Could not compute release fingerprint: {e}")
+        return None
+
 def load_json_source(source):
     """Loads JSON data from either a URL or a local file path."""
     if not source:
@@ -290,9 +322,12 @@ def load_json_source(source):
     if source.startswith(('http://', 'https://')):
         logger.info(f"Fetching cache from URL: {source}...")
         headers = {}
-        token = os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') or os.getenv('GITHUB_TOKEN')
-        if token:
-            headers['Authorization'] = f"token {token}"
+        # Security: Only attach Authorization credentials to trusted HTTPS GitHub hosts
+        parsed = urllib.parse.urlparse(source)
+        if parsed.scheme == 'https' and parsed.hostname in ('api.github.com', 'raw.githubusercontent.com'):
+            token = os.getenv('ZOPEN_GITHUB_OAUTH_TOKEN') or os.getenv('GITHUB_TOKEN')
+            if token:
+                headers['Authorization'] = f"token {token}"
         resp = requests.get(source, headers=headers, timeout=60)
         resp.raise_for_status()
         return resp.json()
@@ -340,6 +375,10 @@ if not args.no_cache and args.cache_input:
                 logger.warning(f"Could not load local fallback cache: {e_local}. Starting fresh.")
         else:
             logger.info("Starting fresh without cache.")
+
+if args.single_repo and not existing_cache:
+    logger.error("Fatal Error: Targeted mode (--repo) requires a valid existing cache baseline to preserve non-target repositories, but no cache was successfully loaded. Please perform a full rebuild without --repo first.")
+    sys.exit(1)
 
 
 # --- Environment Check & GitHub Instance Setup ---
@@ -524,9 +563,13 @@ def process_release(repo_name, release_obj):
     The filtered_release_dict contains release metadata and a list of processed assets.
     """
     release_tag = release_obj.tag_name
-    if (repo_name, release_tag) in existing_cache:
-        logger.debug(f"Cache hit for release '{release_obj.title}' (tag: {release_tag}) in repo: {repo_name}")
-        return existing_cache[(repo_name, release_tag)], repo_name, False
+    cached_release = existing_cache.get((repo_name, release_tag))
+    if cached_release:
+        cached_fp = cached_release.get("fingerprint")
+        current_fp = compute_release_fingerprint(release_obj)
+        if cached_fp and current_fp and cached_fp == current_fp:
+            logger.debug(f"Cache hit for release '{release_obj.title}' (tag: {release_tag}) in repo: {repo_name}")
+            return cached_release, repo_name, False
 
     release_title = release_obj.title
     logger.debug(f"Processing release '{release_title}' (tag: {release_tag}) for repo: {repo_name}")
@@ -589,6 +632,7 @@ def process_release(repo_name, release_obj):
             "name": release_title,
             "date": published_at_dt, # Keep as datetime object for accurate sorting
             "tag_name": release_tag,
+            "fingerprint": compute_release_fingerprint(release_obj),
             "assets": filtered_assets  # List of processed asset data dictionaries
         }
         return filtered_release_dict, repo_name, False # Success
@@ -651,6 +695,10 @@ if args.single_repo:
                     repo_descriptions[repo] = desc
     except Exception as e:
         logger.warning(f"Could not load existing descriptions from {desc_source}: {e}")
+
+    if not repo_descriptions:
+        logger.error("Fatal Error: Targeted mode (--repo) requires an existing repository descriptions baseline, but none could be loaded. Please perform a full rebuild without --repo first.")
+        sys.exit(1)
 
 # Counters for tracking progress and results
 total_repos_processed = 0
@@ -738,6 +786,19 @@ try:
                 else:
                     logger.error(f"Unexpected error processing repository {repo_obj.name}: {err}", exc_info=should_log_tracebacks())
                     repo_release_fetch_failures += 1
+
+                # If targeted mode failed to fetch its target, abort immediately to prevent cache truncation
+                if args.single_repo and project_name == target_project_name:
+                    logger.error(f"Fatal Error: Failed to list releases for target repository {repo_obj.name}. Aborting targeted cache update to prevent data loss.")
+                    sys.exit(1)
+
+                # In full mode, preserve existing cached releases for this repo if available
+                cached_for_repo = [rel for (r, _), rel in existing_cache.items() if r == project_name]
+                if cached_for_repo:
+                    logger.warning(f"Preserving {len(cached_for_repo)} existing cached releases for {project_name} due to fetch error.")
+                    if project_name not in release_data:
+                        release_data[project_name] = []
+                    release_data[project_name].extend(cached_for_repo)
                 continue
             
             uncached_submitted = 0
@@ -746,10 +807,33 @@ try:
             for release in releases:
                 release_tag = release.tag_name
                 
-                # Check cache check before submitting to the thread pool
-                if (project_name, release_tag) in existing_cache:
+                # Check cache before submitting to the thread pool
+                cached_release = existing_cache.get((project_name, release_tag))
+                is_cache_hit = False
+
+                if cached_release:
+                    cached_fp = cached_release.get("fingerprint")
+                    current_fp = compute_release_fingerprint(release)
+
+                    if cached_fp and current_fp:
+                        if cached_fp == current_fp:
+                            is_cache_hit = True
+                        else:
+                            logger.info(f"Release '{release.title}' (tag: {release_tag}) was modified on GitHub (fingerprint mismatch). Refreshing metadata.")
+                    elif current_fp:
+                        # Legacy cache entry without fingerprint: verify asset names and sizes match
+                        cached_asset_sigs = sorted((a.get("name"), int(a.get("size", 0))) for a in cached_release.get("assets", []))
+                        raw_assets = getattr(release, "raw_data", {}).get("assets", [])
+                        matching_assets = [a for a in raw_assets if a.get("name") in [ca.get("name") for ca in cached_release.get("assets", [])]]
+                        current_asset_sigs = sorted((a.get("name"), int(a.get("size", 0))) for a in matching_assets)
+                        if cached_asset_sigs and cached_asset_sigs == current_asset_sigs and cached_release.get("name") == (release.title or release_tag):
+                            cached_release["fingerprint"] = current_fp
+                            is_cache_hit = True
+                        else:
+                            logger.info(f"Release '{release.title}' (tag: {release_tag}) metadata or assets modified. Refreshing metadata.")
+
+                if is_cache_hit:
                     logger.debug(f"Cache hit for release '{release.title}' (tag: {release_tag}) in repo: {project_name}")
-                    cached_release = existing_cache[(project_name, release_tag)]
                     release_date = cached_release.get('date')
                     if release_date and isinstance(release_date, datetime.datetime):
                         if release_date.year >= args.min_year:
@@ -857,6 +941,10 @@ for repo_name, releases_list in release_data.items():
         except Exception as e:
              # Log errors during sorting for a specific repo
              logger.error(f"Error sorting releases for repo {repo_name}: {e}")
+
+# Canonical alphabetical sorting of repositories for deterministic output order
+release_data = dict(sorted(release_data.items()))
+repo_descriptions = dict(sorted(repo_descriptions.items()))
 
 # Helper function for JSON serialization (handles datetime)
 def json_default_serializer(obj):
