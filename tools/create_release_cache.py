@@ -666,24 +666,32 @@ if args.single_repo:
     target_project_name = re.sub(rf"{REPO_SUFFIX_FILTER}$", "", args.single_repo)
     logger.info(f"Single repository update mode. Target repository: {args.single_repo} (project: {target_project_name})")
     
-    # Pre-populate release_data from existing_cache for all other repos
+    # Pre-populate release_data from existing_cache for all other repos, applying minimum release year filter
     for (repo, tag), release in existing_cache.items():
         if repo != target_project_name:
+            rel_date = release.get('date')
+            if isinstance(rel_date, str):
+                rel_date = parse_date(rel_date)
+                release['date'] = rel_date
+            if rel_date and isinstance(rel_date, datetime.datetime):
+                if rel_date.year < args.min_year:
+                    continue
             if repo not in release_data:
                 release_data[repo] = []
             release_data[repo].append(release)
             
-    # Pre-populate repo_descriptions from descriptions file or URL
+    # Pre-populate repo_descriptions from descriptions file or URL alongside cache_input
     desc_source = None
-    if args.cache_input and args.cache_input.startswith(('http://', 'https://')):
-        desc_source = re.sub(r'(\.json)$', r'_descriptions\1', args.cache_input)
-    else:
-        desc_output_file = args.output_file
-        if desc_output_file.lower().endswith('.json'):
-            desc_output_file = desc_output_file[:-5] + '_descriptions.json'
+    if args.cache_input:
+        if args.cache_input.lower().endswith('.json'):
+            desc_source = args.cache_input[:-5] + '_descriptions.json'
         else:
-            desc_output_file += "_descriptions.json"
-        desc_source = desc_output_file
+            desc_source = args.cache_input + '_descriptions.json'
+    else:
+        if args.output_file.lower().endswith('.json'):
+            desc_source = args.output_file[:-5] + '_descriptions.json'
+        else:
+            desc_source = args.output_file + '_descriptions.json'
 
     old_desc_data = None
     try:
@@ -691,14 +699,14 @@ if args.single_repo:
     except Exception as e:
         logger.warning(f"Could not load descriptions from primary source {desc_source}: {e}")
 
-    # Fallback to local descriptions file if primary source produced no data and differs
-    local_desc = args.output_file[:-5] + '_descriptions.json' if args.output_file.lower().endswith('.json') else args.output_file + '_descriptions.json'
-    if not old_desc_data and os.path.exists(local_desc) and desc_source != local_desc:
+    # Fallback to local descriptions file alongside output_file if primary source produced no data and differs
+    local_output_desc = args.output_file[:-5] + '_descriptions.json' if args.output_file.lower().endswith('.json') else args.output_file + '_descriptions.json'
+    if not old_desc_data and os.path.exists(local_output_desc) and desc_source != local_output_desc:
         try:
-            logger.info(f"Falling back to local descriptions file: {local_desc}")
-            old_desc_data = load_json_source(local_desc)
+            logger.info(f"Falling back to local descriptions file: {local_output_desc}")
+            old_desc_data = load_json_source(local_output_desc)
         except Exception as e_local:
-            logger.warning(f"Could not load local descriptions from {local_desc}: {e_local}")
+            logger.warning(f"Could not load fallback descriptions from {local_output_desc}: {e_local}")
 
     if old_desc_data:
         for repo, desc in old_desc_data.get("descriptions", {}).items():
@@ -893,12 +901,16 @@ try:
                 # Get the result tuple from the completed future: (dict, str, bool) or (None, str, bool)
                 filtered_release_dict, repo_name_result, release_failed = future.result()
 
-                if release_failed or not filtered_release_dict:
+                if release_failed:
                     skipped_failed_futures += 1
                     prior_cached = existing_cache.get((repo_name_fut, tag_name_fut))
                     if prior_cached and repo_name_fut:
-                        logger.warning(f"Preserving prior valid cached release for {repo_name_fut} tag {tag_name_fut} after task failure or empty result.")
+                        logger.warning(f"Preserving prior valid cached release for {repo_name_fut} tag {tag_name_fut} after task failure.")
                         add_release_to_data(prior_cached, repo_name_fut)
+                    continue
+
+                if not filtered_release_dict:
+                    # Empty successful result: release has no metadata asset. Skip without counting failure.
                     continue
 
                 # Add the successfully processed release
