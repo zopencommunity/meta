@@ -57,6 +57,7 @@ node(node_label) {
 
     def testOption = skip_test ? "-sc" : ""
 
+    sh 'chmod -R u+rwx . 2>/dev/null || true'
     deleteDir()
 
     def gpgBindings = [
@@ -160,6 +161,7 @@ BASH'''
                          allowEmptyArchive: true,
                          fingerprint: true
       } finally {
+        sh 'chmod -R u+rwx . 2>/dev/null || true'
         deleteDir()
       }
     }
