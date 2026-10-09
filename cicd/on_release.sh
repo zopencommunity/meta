@@ -48,7 +48,10 @@ fi
 TARGET_REPO="${1:-${PORT_GITHUB_REPO:-}}"
 EXTRA_CACHE_ARGS=()
 if [ -n "${TARGET_REPO}" ]; then
+  echo "Target repository specified: '${TARGET_REPO}' (running in fast incremental mode)"
   EXTRA_CACHE_ARGS+=(--repo "${TARGET_REPO}")
+else
+  echo "No target repository specified; running in full rebuild mode across all repositories."
 fi
 
 # 1. Generate release cache (zopen_releases.json, _latest.json, _descriptions.json)
