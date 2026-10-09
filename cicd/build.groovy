@@ -27,7 +27,14 @@ def skip_test        = params.SKIP_TEST != null ? params.SKIP_TEST : false
 def node_label       = params.node ?: (params.NODE_LABEL ?: "zos")
 
 node(node_label) {
-  def ws = env.WORKSPACE
+  def cleanWorkspace = {
+    sh '''bash -s << \'BASH\'
+      set +e
+      chmod -Rfh u+rwx . 2>/dev/null || true
+      rm -rf * .[!.]* 2>/dev/null || true
+BASH'''
+    deleteDir()
+  }
 
   stage('Build Project') {
     if (!port_github_repo) {
@@ -57,8 +64,7 @@ node(node_label) {
 
     def testOption = skip_test ? "-sc" : ""
 
-    sh 'chmod -R u+rwx . 2>/dev/null || true'
-    deleteDir()
+    cleanWorkspace()
 
     def gpgBindings = [
       file(credentialsId: 'ZOPEN_GPG_PUBLIC_KEY_FILE', variable: 'ZOPEN_GPG_PUBLIC_KEY_FILE'),
@@ -147,6 +153,10 @@ node(node_label) {
             # Clean using the workspace version of zopen-clean
             zopen-clean -c -v
 
+            # Clean TMPDIR and restore permissions on test directories
+            chmod -Rfh u+rwx "${TMPDIR}" 2>/dev/null || true
+            rm -rf "${TMPDIR}" 2>/dev/null || true
+
             # Copy built RPMs to workspace for archiving
             if [ -d "rpmbuild/RPMS" ] && [ "$(ls -A "rpmbuild/RPMS" 2>/dev/null)" ]; then
               mkdir -p "${WORKSPACE}/rpms"
@@ -161,8 +171,7 @@ BASH'''
                          allowEmptyArchive: true,
                          fingerprint: true
       } finally {
-        sh 'chmod -R u+rwx . 2>/dev/null || true'
-        deleteDir()
+        cleanWorkspace()
       }
     }
   }
