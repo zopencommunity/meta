@@ -1087,12 +1087,35 @@ except TypeError as e:
      output_write_failures += 1
 
 
-# --- Final Summary Output ---
-total_failures = skipped_failed_futures + repo_release_fetch_failures + output_write_failures
-if total_failures == 0:
+# --- Final Summary Output & Exit Condition ---
+is_fatal_failure = False
+if output_write_failures > 0:
+    logger.error(f"Fatal: {output_write_failures} output file write failures occurred.")
+    is_fatal_failure = True
+if repo_release_fetch_failures > 0:
+    logger.error(f"Fatal: {repo_release_fetch_failures} repository release listing failures occurred.")
+    is_fatal_failure = True
+
+if skipped_failed_futures > 0:
+    if args.single_repo:
+        logger.error(f"Fatal: Targeted mode encountered {skipped_failed_futures} failed release processing tasks for {args.single_repo}.")
+        is_fatal_failure = True
+    else:
+        # In full rebuild mode, tolerate minor release task failures if error rate is low (< 5%)
+        # and valid releases were successfully included.
+        total_tasks = len(release_futures)
+        failure_rate = (skipped_failed_futures / total_tasks * 100) if total_tasks > 0 else 0
+        if failure_rate > 5.0 or total_releases_included == 0:
+            logger.error(f"Fatal: Release failure rate {failure_rate:.1f}% ({skipped_failed_futures}/{total_tasks}) exceeded 5% threshold.")
+            is_fatal_failure = True
+        else:
+            logger.warning(f"Tolerating {skipped_failed_futures} failed release tasks ({failure_rate:.2f}% of {total_tasks}) in full rebuild mode.")
+
+if not is_fatal_failure:
     logger.info("Script finished successfully.")
 else:
     logger.error("Script completed with failures.")
+
 # Always print basic summary stats to INFO level
 logger.info(f"--- Summary ---")
 logger.info(f"Processed {total_repos_processed} '{REPO_SUFFIX_FILTER}' repositories from '{ORGANIZATION}'.")
@@ -1123,4 +1146,4 @@ try:
 except Exception as e:
     logger.warning(f"Could not retrieve final rate limit status: {e}")
 
-sys.exit(1 if total_failures > 0 else 0) # Fail the job rather than publishing partial data.
+sys.exit(1 if is_fatal_failure else 0)
