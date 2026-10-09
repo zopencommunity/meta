@@ -784,6 +784,31 @@ try:
         release_futures = []
         future_to_release = {}
         
+        def add_release_to_data(rel_dict, repo_name):
+            global skipped_old_releases
+            if not rel_dict or not repo_name:
+                return False
+            rel_date = rel_dict.get('date')
+            if isinstance(rel_date, str):
+                rel_date = parse_date(rel_date)
+                rel_dict['date'] = rel_date
+            if rel_date and isinstance(rel_date, datetime.datetime):
+                if rel_date.tzinfo is None:
+                    rel_date = rel_date.replace(tzinfo=datetime.timezone.utc)
+                    rel_dict['date'] = rel_date
+                if rel_date.year >= args.min_year:
+                    if repo_name not in release_data:
+                        release_data[repo_name] = []
+                    release_data[repo_name].append(rel_dict)
+                    return True
+                else:
+                    logger.debug(f"Skipping release '{rel_dict.get('name', 'N/A')}' (tag: {rel_dict.get('tag_name', 'N/A')}) from {repo_name} - Published in {rel_date.year} (before {args.min_year})")
+                    skipped_old_releases += 1
+                    return False
+            else:
+                logger.warning(f"Skipping release in {repo_name} due to missing or invalid date field: {rel_dict.get('tag_name', 'N/A')}")
+                return False
+
         # Process results of repository release fetches
         for future in concurrent.futures.as_completed(repo_tasks):
             project_name, repo_obj, releases, err = future.result()
@@ -806,9 +831,8 @@ try:
                 cached_for_repo = [rel for (r, _), rel in existing_cache.items() if r == project_name]
                 if cached_for_repo:
                     logger.warning(f"Preserving {len(cached_for_repo)} existing cached releases for {project_name} due to fetch error.")
-                    if project_name not in release_data:
-                        release_data[project_name] = []
-                    release_data[project_name].extend(cached_for_repo)
+                    for rel in cached_for_repo:
+                        add_release_to_data(rel, project_name)
                 continue
             
             uncached_submitted = 0
@@ -835,14 +859,7 @@ try:
 
                 if is_cache_hit:
                     logger.debug(f"Cache hit for release '{release.title}' (tag: {release_tag}) in repo: {project_name}")
-                    release_date = cached_release.get('date')
-                    if release_date and isinstance(release_date, datetime.datetime):
-                        if release_date.year >= args.min_year:
-                            if project_name not in release_data:
-                                release_data[project_name] = []
-                            release_data[project_name].append(cached_release)
-                        else:
-                            skipped_old_releases += 1
+                    add_release_to_data(cached_release, project_name)
                     continue
 
                 # If not cached, submit to the executor for processing
@@ -876,39 +893,16 @@ try:
                 # Get the result tuple from the completed future: (dict, str, bool) or (None, str, bool)
                 filtered_release_dict, repo_name_result, release_failed = future.result()
 
-                if release_failed:
+                if release_failed or not filtered_release_dict:
                     skipped_failed_futures += 1
                     prior_cached = existing_cache.get((repo_name_fut, tag_name_fut))
                     if prior_cached and repo_name_fut:
-                        logger.warning(f"Preserving prior valid cached release for {repo_name_fut} tag {tag_name_fut} after task failure.")
-                        release_date = prior_cached.get('date')
-                        if release_date and isinstance(release_date, datetime.datetime):
-                            if release_date.tzinfo is None:
-                                release_date = release_date.replace(tzinfo=datetime.timezone.utc)
-                            if release_date.year >= args.min_year:
-                                if repo_name_fut not in release_data:
-                                    release_data[repo_name_fut] = []
-                                release_data[repo_name_fut].append(prior_cached)
-                            else:
-                                skipped_old_releases += 1
+                        logger.warning(f"Preserving prior valid cached release for {repo_name_fut} tag {tag_name_fut} after task failure or empty result.")
+                        add_release_to_data(prior_cached, repo_name_fut)
                     continue
 
-                # --- Filter the result based on Date ---
-                if filtered_release_dict and repo_name_result:
-                    release_date = filtered_release_dict.get('date')
-                    if release_date and isinstance(release_date, datetime.datetime):
-                        if release_date.tzinfo is None:
-                             release_date = release_date.replace(tzinfo=datetime.timezone.utc)
-
-                        if release_date.year >= args.min_year:
-                            if repo_name_result not in release_data:
-                                release_data[repo_name_result] = []
-                            release_data[repo_name_result].append(filtered_release_dict)
-                        else:
-                            logger.debug(f"Skipping release '{filtered_release_dict.get('name', 'N/A')}' (tag: {filtered_release_dict.get('tag_name', 'N/A')}) from {repo_name_result} - Published in {release_date.year} (before {args.min_year})")
-                            skipped_old_releases += 1
-                    else:
-                        logger.warning(f"Skipping release in {repo_name_result} due to missing or invalid date field: {filtered_release_dict.get('tag_name', 'N/A')}")
+                # Add the successfully processed release
+                add_release_to_data(filtered_release_dict, repo_name_result)
 
             # --- Handle errors that occurred during future execution ---
             except concurrent.futures.CancelledError:
@@ -917,32 +911,14 @@ try:
                  prior_cached = existing_cache.get((repo_name_fut, tag_name_fut))
                  if prior_cached and repo_name_fut:
                      logger.warning(f"Preserving prior valid cached release for {repo_name_fut} tag {tag_name_fut} after task cancellation.")
-                     release_date = prior_cached.get('date')
-                     if release_date and isinstance(release_date, datetime.datetime):
-                         if release_date.tzinfo is None:
-                             release_date = release_date.replace(tzinfo=datetime.timezone.utc)
-                         if release_date.year >= args.min_year:
-                             if repo_name_fut not in release_data:
-                                 release_data[repo_name_fut] = []
-                             release_data[repo_name_fut].append(prior_cached)
-                         else:
-                             skipped_old_releases += 1
+                     add_release_to_data(prior_cached, repo_name_fut)
             except Exception as e:
                 logger.error(f"Error retrieving result from a release processing future for {repo_name_fut} tag {tag_name_fut}: {e}", exc_info=should_log_tracebacks())
                 skipped_failed_futures += 1
                 prior_cached = existing_cache.get((repo_name_fut, tag_name_fut))
                 if prior_cached and repo_name_fut:
                     logger.warning(f"Preserving prior valid cached release for {repo_name_fut} tag {tag_name_fut} after task error.")
-                    release_date = prior_cached.get('date')
-                    if release_date and isinstance(release_date, datetime.datetime):
-                        if release_date.tzinfo is None:
-                            release_date = release_date.replace(tzinfo=datetime.timezone.utc)
-                        if release_date.year >= args.min_year:
-                            if repo_name_fut not in release_data:
-                                release_data[repo_name_fut] = []
-                            release_data[repo_name_fut].append(prior_cached)
-                        else:
-                            skipped_old_releases += 1
+                    add_release_to_data(prior_cached, repo_name_fut)
 
         logger.info(f"Finished processing futures. Skipped {skipped_old_releases} releases published before {args.min_year}. Encountered {skipped_failed_futures} failed release tasks.")
 
