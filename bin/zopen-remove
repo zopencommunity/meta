@@ -43,7 +43,7 @@ Examples:
                     remove the foo and bar packages if installed, without
                     asking for confirmation
 
-Report bugs at https://github.com/zopencommunity/meta/issues .
+Report bugs at https://github.com/zopencommunity/meta/issues
 
 HELPDOC
 }

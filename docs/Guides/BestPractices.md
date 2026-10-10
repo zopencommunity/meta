@@ -1,1 +1,3 @@
-## Best Practices (coming soon)
+# Best Practices
+
+> This page is coming soon.
