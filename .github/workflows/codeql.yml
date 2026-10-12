@@ -266,15 +266,15 @@ jobs:
             echo "No SARIF file found, skipping PR comment."
             exit 0
           fi
+          export SARIF_FILE
+          echo "Using SARIF file: $SARIF_FILE"
 
           python3 << 'PYEOF'
-          import json, os, sys, urllib.request, urllib.error
+          import json, os, sys, glob, urllib.request, urllib.error
 
           sarif_path = os.environ.get("SARIF_FILE", "")
           if not sarif_path or not os.path.exists(sarif_path):
-              # find sarif file from current directory
-              import glob
-              files = glob.glob("sarif-results/**/*.sarif", recursive=True)
+              files = glob.glob("sarif-results/*.sarif") + glob.glob("sarif-results/**/*.sarif", recursive=True)
               if files:
                   sarif_path = files[0]
               else:
@@ -326,8 +326,9 @@ jobs:
                       loc = alert.get("most_recent_instance", {}).get("location", {})
                       path = loc.get("path", "")
                       start_line = loc.get("start_line", 0)
-                      baseline_signatures.add(f"{rule_id}:{path}:{start_line}")
-                      baseline_signatures.add(f"{rule_id}:{path}")
+                      if rule_id and path:
+                          baseline_signatures.add(f"{rule_id}:{path}:{start_line}")
+                          baseline_signatures.add(f"{rule_id}:{path}")
               print(f"Retrieved {len(baseline_signatures)} baseline signatures from main.")
           except Exception as e:
               print(f"Note: Could not query baseline alerts from main ({e}). Treating current findings as fresh.")
@@ -338,18 +339,29 @@ jobs:
 
           delta_counts = {"critical": 0, "high": 0, "medium": 0}
           delta_findings = []
+          total_results_seen = 0
 
           for run in sarif.get("runs", []):
-              rules = {}
+              rules_by_id = {}
+              rules_by_idx = {}
               driver = run.get("tool", {}).get("driver", {})
-              for rule in driver.get("rules", []):
-                  rules[rule.get("id")] = rule
+              for idx, rule in enumerate(driver.get("rules", [])):
+                  if "id" in rule:
+                      rules_by_id[rule["id"]] = rule
+                  rules_by_idx[idx] = rule
 
               for result in run.get("results", []):
-                  rule_id = result.get("ruleId", "unknown")
-                  rule_meta = rules.get(rule_id, {})
+                  total_results_seen += 1
+                  rule_id = result.get("ruleId") or ""
+                  rule_idx = result.get("ruleIndex")
+                  rule_meta = rules_by_id.get(rule_id) or (rules_by_idx.get(rule_idx) if rule_idx is not None else {})
+                  if not rule_id and rule_meta:
+                      rule_id = rule_meta.get("id", "unknown")
+
                   msg = result.get("message", {}).get("text", "No description")
-                  raw_level = result.get("level", "warning")
+                  default_level = rule_meta.get("defaultConfiguration", {}).get("level")
+                  prob_severity = rule_meta.get("properties", {}).get("problem.severity")
+                  raw_level = result.get("level") or default_level or prob_severity or "warning"
 
                   sec_score = rule_meta.get("properties", {}).get("security-severity")
                   severity = None
@@ -362,23 +374,20 @@ jobs:
                               severity = "High"
                           elif score >= 4.0:
                               severity = "Medium"
-                          # Low / note ignored
-                      except ValueError:
+                      except (ValueError, TypeError):
                           pass
 
                   if severity is None:
-                      if raw_level == "error":
+                      if raw_level in ("error", "critical"):
                           severity = "High"
-                      elif raw_level == "warning":
+                      elif raw_level in ("warning", "medium"):
                           severity = "Medium"
-                      # Ignore notes/recommendations
 
                   # Filter out anything not Critical, High, or Medium
                   if severity not in ("Critical", "High", "Medium"):
                       continue
 
                   # Extract location
-                  loc_str = "unknown location"
                   uri = ""
                   start_line = 1
                   locs = result.get("locations", [])
@@ -386,14 +395,19 @@ jobs:
                       phys = locs[0].get("physicalLocation", {})
                       uri = phys.get("artifactLocation", {}).get("uri", "")
                       start_line = phys.get("region", {}).get("startLine", 1)
-                      if uri:
-                          loc_str = f"`{uri}:{start_line}`"
+
+                  if uri.startswith("/"):
+                      uri = uri.lstrip("/")
+
+                  loc_str = f"`{uri}:{start_line}`" if uri else "unknown location"
 
                   # Check if this finding was already present in main (baseline debt)
-                  sig_exact = f"{rule_id}:{uri}:{start_line}"
-                  sig_file = f"{rule_id}:{uri}"
-                  if sig_exact in baseline_signatures or sig_file in baseline_signatures:
-                      # Pre-existing on main -> skip from PR delta
+                  is_in_baseline = False
+                  if uri and (f"{rule_id}:{uri}:{start_line}" in baseline_signatures or f"{rule_id}:{uri}" in baseline_signatures):
+                      is_in_baseline = True
+
+                  if is_in_baseline:
+                      print(f"Excluding baseline finding on main: {rule_id} at {uri}:{start_line}")
                       continue
 
                   delta_counts[severity.lower()] += 1
@@ -404,6 +418,8 @@ jobs:
                       "location": loc_str
                   })
 
+          print(f"Total SARIF results examined: {total_results_seen}")
+          print(f"Total net-new delta findings: {len(delta_findings)}")
           total_delta = sum(delta_counts.values())
 
           # 3. Build Markdown comment
