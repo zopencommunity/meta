@@ -308,8 +308,8 @@ jobs:
           with open(sarif_path) as f:
               sarif = json.load(f)
 
-          counts = {"critical": 0, "high": 0, "medium": 0, "low": 0, "note": 0}
-          findings = []
+          counts = {"critical": 0, "high": 0, "medium": 0}
+          filtered_findings = []
 
           for run in sarif.get("runs", []):
               rules = {}
@@ -324,7 +324,7 @@ jobs:
                   raw_level = result.get("level", "warning")
 
                   sec_score = rule_meta.get("properties", {}).get("security-severity")
-                  severity = "Medium"
+                  severity = None
                   if sec_score is not None:
                       try:
                           score = float(sec_score)
@@ -334,23 +334,22 @@ jobs:
                               severity = "High"
                           elif score >= 4.0:
                               severity = "Medium"
-                          else:
-                              severity = "Low"
+                          # Low / note ignored
                       except ValueError:
                           pass
-                  else:
+
+                  if severity is None:
                       if raw_level == "error":
                           severity = "High"
                       elif raw_level == "warning":
                           severity = "Medium"
-                      else:
-                          severity = "Low"
+                      # Ignore notes/recommendations
 
-                  sev_key = severity.lower()
-                  if sev_key in counts:
-                      counts[sev_key] += 1
-                  else:
-                      counts["low"] += 1
+                  # Filter out anything not Critical, High, or Medium
+                  if severity not in ("Critical", "High", "Medium"):
+                      continue
+
+                  counts[severity.lower()] += 1
 
                   # Extract location
                   loc_str = "unknown location"
@@ -362,14 +361,14 @@ jobs:
                       if uri:
                           loc_str = f"`{uri}:{start_line}`"
 
-                  findings.append({
+                  filtered_findings.append({
                       "severity": severity,
                       "rule_id": rule_id,
                       "message": msg.strip().split("\n")[0],
                       "location": loc_str
                   })
 
-          total_count = sum(counts.values())
+          total_actionable = sum(counts.values())
 
           # Build Markdown comment
           comment_tag = "<!-- codeql-pr-comment -->"
@@ -379,8 +378,8 @@ jobs:
               ""
           ]
 
-          if total_count == 0:
-              lines.append("✅ **No security vulnerabilities or quality issues detected.**")
+          if total_actionable == 0:
+              lines.append("✅ **No Critical, High, or Medium security findings detected in this PR.**")
           else:
               lines.append("| Severity | Count |")
               lines.append("| :--- | :---: |")
@@ -390,19 +389,17 @@ jobs:
                   lines.append(f"| 🟠 **High** | {counts['high']} |")
               if counts["medium"] > 0:
                   lines.append(f"| 🟡 **Medium** | {counts['medium']} |")
-              if counts["low"] > 0 or counts["note"] > 0:
-                  lines.append(f"| 🔵 **Low / Note** | {counts['low'] + counts['note']} |")
-              lines.append(f"| **Total Findings** | **{total_count}** |")
+              lines.append(f"| **Total (Critical / High / Medium)** | **{total_actionable}** |")
               lines.append("")
 
-              # Top findings list
-              display_findings = findings[:10]
-              lines.append("<details>")
-              lines.append(f"<summary><strong>📋 Findings Breakdown (showing {len(display_findings)} of {total_count})</strong></summary>")
+              # Findings breakdown list
+              display_findings = filtered_findings[:10]
+              lines.append("<details open>")
+              lines.append(f"<summary><strong>📋 Findings Breakdown ({len(display_findings)} of {total_actionable} shown)</strong></summary>")
               lines.append("")
-              sev_icons = {"Critical": "🔴", "High": "🟠", "Medium": "🟡", "Low": "🔵"}
+              sev_icons = {"Critical": "🔴", "High": "🟠", "Medium": "🟡"}
               for f_item in display_findings:
-                  icon = sev_icons.get(f_item["severity"], "ℹ️")
+                  icon = sev_icons.get(f_item["severity"], "⚠️")
                   lines.append(f"- {icon} **{f_item['severity']}** — `{f_item['rule_id']}` in {f_item['location']}")
                   lines.append(f"  > {f_item['message']}")
               lines.append("")
@@ -410,7 +407,7 @@ jobs:
 
           lines.append("")
           lines.append("---")
-          lines.append("*Full SARIF report is downloadable from the workflow artifacts.*")
+          lines.append("🔒 *Note: Security alerts are officially closed and resolved in GitHub Security only once the fixing commit is merged into `main`.*")
           comment_body = "\n".join(lines)
 
           # API Calls using urllib
