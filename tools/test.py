@@ -1,11 +1,23 @@
+import sys
 import subprocess
 import pickle
+import base64
 
-def process_untrusted_data(user_input: bytes, cmd_arg: str):
-    # 1. Insecure Deserialization (CWE-502 - High Severity)
-    data = pickle.loads(user_input)
+# CodeQL flags source-to-sink dataflow (sys.argv / input -> sink)
 
-    # 2. Command Injection via shell=True (CWE-78 - High Severity)
-    subprocess.call(f"echo Processing: {cmd_arg}", shell=True)
-    
-    return data
+def run():
+    # Source of untrusted input
+    user_input = sys.argv[1]
+
+    # 1. Code Injection (CWE-95 - High / Critical)
+    eval(user_input)
+
+    # 2. Command Injection (CWE-78 - High)
+    subprocess.call(f"echo {user_input}", shell=True)
+
+    # 3. Unsafe Deserialization (CWE-502 - High)
+    raw_bytes = base64.b64decode(user_input)
+    pickle.loads(raw_bytes)
+
+if __name__ == "__main__":
+    run()
