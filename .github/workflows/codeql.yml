@@ -65,7 +65,11 @@ jobs:
         run: |
           repo="${{ inputs.repo }}"
           if [ -z "${repo}" ]; then
-            repo="${{ github.repository }}"
+            if [ "${{ github.event_name }}" == "pull_request" ] && [ -n "${{ github.event.pull_request.head.repo.full_name }}" ]; then
+              repo="${{ github.event.pull_request.head.repo.full_name }}"
+            else
+              repo="${{ github.repository }}"
+            fi
           fi
           branch="${{ inputs.branch }}"
           if [ -z "${branch}" ]; then
