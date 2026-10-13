@@ -39,6 +39,7 @@ jobs:
           python3 tools/generate_monthly_status.py \
             --org zopencommunity \
             --days "$STATUS_DAYS" \
+            --period Monthly \
             --output "$GITHUB_WORKSPACE/monthly_status.md" \
             --print
 
