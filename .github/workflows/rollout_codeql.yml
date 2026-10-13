@@ -41,7 +41,7 @@ jobs:
             --repo=zopencommunity/dnf5port \
             --repo=zopencommunity/vimport \
             --repo=zopencommunity/autoconfport \
-            --pr-title "Add CodeQL security scanning workflow"
+            --branch "from-multi-gitter"
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
 

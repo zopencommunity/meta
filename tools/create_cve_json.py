@@ -86,7 +86,7 @@ async def main():
     conn = aiohttp.TCPConnector(ssl_context=ssl_context)
     async with aiohttp.ClientSession(connector=conn) as session:
         # Fetch releases json and CVE include/exclude list jsons
-        releases_url = f"{BASE_URL}/docs/api/zopen_releases.json"
+        releases_url = "https://github.com/zopencommunity/meta/releases/download/api-cache/zopen_releases.json"
         include_url = f"{BASE_URL}/data/cve_include.json"
         exclude_url = f"{BASE_URL}/data/cve_exclude.json"
         if args.verbose:

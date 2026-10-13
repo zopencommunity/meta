@@ -179,6 +179,11 @@ def clone_org_repos(clone_dir, org=DEFAULT_GITHUB_ORG, repos_list_str=None):
                 cloned_count += 1
             else:
                 print(f"  Updating {repo_name}...")
+                # Reset and clean to avoid conflicts from leftover dirty files
+                subprocess.run(["git", "-C", target_dir, "reset", "--hard", "HEAD"],
+                               check=False, capture_output=True, timeout=30)
+                subprocess.run(["git", "-C", target_dir, "clean", "-fd"],
+                               check=False, capture_output=True, timeout=30)
                 # Use --ff-only to avoid accidental merges if local history diverged
                 # Use --prune to remove stale remote-tracking refs
                 subprocess.run(["git", "-C", target_dir, "pull", "--quiet", "--ff-only", "--prune"],
@@ -381,7 +386,7 @@ def get_patch_data_for_commit(repo_path, commit_hash, default_branch_to_restore)
          return -1, -1
 
     try:
-        checkout_cmd = ['git', 'checkout', '--quiet', commit_hash]
+        checkout_cmd = ['git', 'checkout', '--force', '--quiet', commit_hash]
         subprocess.run(checkout_cmd, cwd=repo_path, check=True, timeout=60,
                        stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
@@ -392,20 +397,36 @@ def get_patch_data_for_commit(repo_path, commit_hash, default_branch_to_restore)
     except subprocess.TimeoutExpired as e:
         print(f"ERROR [{repo_basename}]: Timeout checking out commit {commit_hash[:7]}. Err: {e}")
     except subprocess.CalledProcessError as e:
-        print(f"ERROR [{repo_basename}]: Failed checking out commit {commit_hash[:7]}. Err: {e.stderr.decode(errors='ignore').strip()}")
+        # Fallback: reset working tree and clean untracked files, then retry checkout
+        try:
+            subprocess.run(['git', 'reset', '--hard', 'HEAD'], cwd=repo_path, check=False, timeout=30, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+            subprocess.run(['git', 'clean', '-fd'], cwd=repo_path, check=False, timeout=30, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+            subprocess.run(checkout_cmd, cwd=repo_path, check=True, timeout=60,
+                           stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+            patches_list, total_loc_at_commit = analyze_current_patches(repo_path)
+            patch_count = len(patches_list)
+            total_loc = total_loc_at_commit
+        except Exception:
+            print(f"ERROR [{repo_basename}]: Failed checking out commit {commit_hash[:7]}. Err: {e.stderr.decode(errors='ignore').strip()}")
     except Exception as e:
         print(f"ERROR [{repo_basename}]: Exception during patch analysis at commit {commit_hash[:7]}: {e}")
     finally:
         try:
-            restore_cmd = ['git', 'checkout', '--quiet', default_branch_to_restore]
+            restore_cmd = ['git', 'checkout', '--force', '--quiet', default_branch_to_restore]
             subprocess.run(restore_cmd, cwd=repo_path, check=True, timeout=60,
                            stderr=subprocess.PIPE, stdout=subprocess.PIPE)
             original_state_restored = True
         except Exception as e:
-            print(f"FATAL ERROR [{repo_basename}]: Failed to restore branch {default_branch_to_restore} after checking out {commit_hash[:7]}. Err: {e}")
-            print("  Further analysis for this repository might be compromised.")
-            patch_count = -1
-            total_loc = -1
+            try:
+                subprocess.run(['git', 'reset', '--hard', 'HEAD'], cwd=repo_path, check=False, timeout=30, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+                subprocess.run(['git', 'clean', '-fd'], cwd=repo_path, check=False, timeout=30, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+                subprocess.run(['git', 'checkout', '--force', '--quiet', default_branch_to_restore], cwd=repo_path, check=True, timeout=60, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+                original_state_restored = True
+            except Exception:
+                print(f"FATAL ERROR [{repo_basename}]: Failed to restore branch {default_branch_to_restore} after checking out {commit_hash[:7]}. Err: {e}")
+                print("  Further analysis for this repository might be compromised.")
+                patch_count = -1
+                total_loc = -1
 
     return patch_count, total_loc
 
@@ -430,7 +451,9 @@ def process_repo_history(repo_name, repo_path, default_branch, origin_datetime, 
     origin_date_only = origin_datetime.date() if origin_datetime else None
 
     try:
-        subprocess.run(['git', 'checkout', '--quiet', default_branch], cwd=repo_path, check=True, timeout=30, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        subprocess.run(['git', 'reset', '--hard', 'HEAD'], cwd=repo_path, check=False, timeout=30, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        subprocess.run(['git', 'clean', '-fd'], cwd=repo_path, check=False, timeout=30, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
+        subprocess.run(['git', 'checkout', '--force', '--quiet', default_branch], cwd=repo_path, check=True, timeout=30, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     except Exception as e:
         print(f"[PID {pid}] ERROR: Could not checkout default branch {default_branch} for {repo_name} before history loop. Skipping. Error: {e}")
         return repo_name, {}
@@ -473,7 +496,7 @@ def process_repo_history(repo_name, repo_path, default_branch, origin_datetime, 
         repo_monthly_data[month_key] = {'count': current_count, 'loc': current_loc}
 
     try:
-        subprocess.run(['git', 'checkout', '--quiet', default_branch], cwd=repo_path, check=True, timeout=30, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        subprocess.run(['git', 'checkout', '--force', '--quiet', default_branch], cwd=repo_path, check=True, timeout=30, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     except Exception:
         pass
 

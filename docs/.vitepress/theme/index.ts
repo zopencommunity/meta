@@ -1,3 +1,4 @@
+import { h } from 'vue'
 import DefaultTheme from 'vitepress/theme'
 import './custom.css'
 import type { Theme } from 'vitepress'
@@ -6,9 +7,15 @@ import PackageRequests from './components/PackageRequests.vue'
 import PackageRequestsAdmin from './components/PackageRequestsAdmin.vue'
 import PackageRequestDetail from './components/PackageRequestDetail.vue'
 import PythonPackages from './components/PythonPackages.vue'
+import CustomNotFound from './components/CustomNotFound.vue'
 
 export default {
   extends: DefaultTheme,
+  Layout: () => {
+    return h(DefaultTheme.Layout, null, {
+      'not-found': () => h(CustomNotFound)
+    })
+  },
   enhanceApp({ app, router, siteData }) {
     // Register global components
     app.component('ToolFilters', ToolFilters)

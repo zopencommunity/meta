@@ -370,7 +370,7 @@ setDepsEnv()
 setup_rpm_env()
 {
   printInfo "Ensuring required zopen packages are installed and sourced..."
-  _sre_deps="rpm"
+  _sre_deps="rpm coreutils findutils"
   if [ "$SIGN_RPM" = true ]; then
     _sre_deps="${_sre_deps} gpg"
   fi

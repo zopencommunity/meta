@@ -67,8 +67,7 @@ if ! command -v jq > /dev/null 2>&1; then
   exit 1
 fi
 
-JSON_FILES_URL="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_files.json"
-JSON_FILES_URL="https://raw.githubusercontent.com/zopencommunity/meta/e859e89e75fab31c1d5b4764b9ee9f511c52b682/docs/api/zopen_files.json"
+JSON_FILES_URL="https://github.com/zopencommunity/meta/releases/download/api-cache/zopen_files.json"
 
 downloadJsonCaches()
 {

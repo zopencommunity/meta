@@ -28,7 +28,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - [%
 logger = logging.getLogger(__name__)
 
 # --- Constants ---
-INPUT_JSON_URL = "https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases_latest.json"
+INPUT_JSON_URL = "https://github.com/zopencommunity/meta/releases/download/api-cache/zopen_releases_latest.json"
 DEFAULT_OUTPUT_FILE = "zopen__files.json"
 DEFAULT_MAX_WORKERS = 4
 BINARY_DIRS = ["bin", "sbin", "altbin"]

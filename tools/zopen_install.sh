@@ -19,7 +19,7 @@ if ! command -v jq > /dev/null 2>&1; then
   exit 1
 fi
 
-ZOPEN_RELEASE_JSON="https://raw.githubusercontent.com/zopencommunity/meta/main/docs/api/zopen_releases.json"
+ZOPEN_RELEASE_JSON="https://github.com/zopencommunity/meta/releases/download/api-cache/zopen_releases.json"
 
 # ----------------------------
 # DOWNLOAD RELEASE JSON
