@@ -88,7 +88,7 @@ DESCRIPTIONS_LOCAL = Path(__file__).resolve().parent.parent / "docs" / "api" / "
 
 BOT_AUTHORS = {"zosopentoolsmain", "github-actions[bot]", "github-actions", "actions@github.com", "bot"}
 BUMP_RE = re.compile(r"Update (.+?)-version to ([^ ]+) from ([^ ]+)", re.IGNORECASE)
-MAX_MISC_ITEMS = 20
+MAX_META_ITEMS = 20     # cap on meta (infrastructure) PRs shown individually
 MAX_IN_PROGRESS = 10
 VAGUE_TITLE_WORDS = 4  # titles shorter than this (with no PR body) are considered not meaningful
 
@@ -434,21 +434,26 @@ def render_digest(
             blocks.append(plain(desc))
         blocks.append("To install: `zopen install <tool_name>`")
 
-    # Miscellaneous Updates: meta PRs grouped by theme, then port PRs, then version bumps
+    # Miscellaneous Updates: meta PRs grouped by theme, then port PRs consolidated per repo, then version bumps
     misc = [p for p in changes if p["repo"] not in new_repos]
     misc.sort(key=lambda p: (p["repo"] != "meta", p["repo"], -p["number"]))
-    shown, hidden = misc[:MAX_MISC_ITEMS], max(0, len(misc) - MAX_MISC_ITEMS)
+    meta_prs  = [p for p in misc if p["repo"] == "meta"]
+    port_prs  = [p for p in misc if p["repo"] != "meta"]
+
     version_updates: Dict[str, str] = {}
     for p in bumps:
         m = BUMP_RE.search(p["title"])
         if m:
             version_updates.setdefault(m.group(1), m.group(2))
 
-    if shown or version_updates:
+    if misc or version_updates:
         blocks.append("## Miscellaneous Updates")
 
+        # meta PRs: group by theme, cap at MAX_META_ITEMS total
+        shown_meta = meta_prs[:MAX_META_ITEMS]
+        hidden_meta = max(0, len(meta_prs) - MAX_META_ITEMS)
         groups: Dict[str, List[str]] = {}
-        for p in (p for p in shown if p["repo"] == "meta"):
+        for p in shown_meta:
             title = clean_title(p["title"])
             group = categorize(title, fetch_pr_context(org, "meta", p["number"], token)["files"])
             groups.setdefault(group, []).append(bullet(title, describe_pr(org, p, token, llm_token)))
@@ -456,15 +461,34 @@ def render_digest(
             if name in groups:
                 blocks.append(f"### {name}")
                 blocks += groups[name]
+        if hidden_meta:
+            blocks.append(f"*...and {hidden_meta} more infrastructure updates.*")
 
-        port_prs = [p for p in shown if p["repo"] != "meta"]
+        # port PRs: one bullet per repo, titles consolidated
         if port_prs:
             blocks.append("### Port Updates")
+            by_repo: Dict[str, List[Dict[str, Any]]] = {}
             for p in port_prs:
-                blocks.append(bullet(clean_title(p["title"]), describe_pr(org, p, token, llm_token), prefix=tool_name(p["repo"])))
+                by_repo.setdefault(p["repo"], []).append(p)
+            for repo, prs in sorted(by_repo.items()):
+                tname = tool_name(repo)
+                if len(prs) == 1:
+                    desc = describe_pr(org, prs[0], token, llm_token)
+                    blocks.append(bullet(clean_title(prs[0]["title"]), desc, prefix=tname))
+                else:
+                    # Multiple PRs for same repo: pick the best description, list titles as sub-bullets
+                    titles = [clean_title(p["title"]) for p in prs]
+                    best_desc = next(
+                        (describe_pr(org, p, token, llm_token) for p in prs
+                         if describe_pr(org, p, token, llm_token)),
+                        ""
+                    )
+                    sub = "\n".join(f"  - {plain(t)}" for t in titles)
+                    combined = f"• **{tname}**: {len(prs)} updates\n{sub}"
+                    if best_desc:
+                        combined += f"  \n{plain(best_desc)}"
+                    blocks.append(combined)
 
-        if hidden:
-            blocks.append(f"*...and {hidden} more updates across the community repositories.*")
         if version_updates:
             blocks.append("### Version Updates")
             blocks.append(", ".join(f"{t} {v}" for t, v in sorted(version_updates.items())))
