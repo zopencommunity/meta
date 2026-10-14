@@ -11,11 +11,11 @@ on:
         required: false
         default: "90"
       category:
-        description: "GitHub Discussion Category"
+        description: "GitHub Discussion category to post in"
         required: false
-        default: "Announcements"
+        default: "Digest"
       publish:
-        description: "Publish directly to GitHub Discussions"
+        description: "Publish to GitHub Discussions (scheduled runs always publish)"
         type: boolean
         required: false
         default: false
@@ -44,9 +44,10 @@ jobs:
         env:
           COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DIGEST_PUBLISH: ${{ github.event.inputs.publish || 'false' }}
+          # Scheduled runs have no inputs and always publish; manual runs publish only if "publish" is ticked
+          DIGEST_PUBLISH: ${{ github.event_name == 'schedule' && 'true' || github.event.inputs.publish || 'false' }}
           DIGEST_DAYS: ${{ github.event.inputs.days || '90' }}
-          DIGEST_CATEGORY: ${{ github.event.inputs.category || 'Announcements' }}
+          DIGEST_CATEGORY: ${{ github.event.inputs.category || 'Digest' }}
         run: |
           PUBLISH_FLAG=""
           if [ "$DIGEST_PUBLISH" == "true" ]; then

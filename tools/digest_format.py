@@ -40,7 +40,7 @@ AUTOMATION (GitHub Actions, runs in zopencommunity/meta)
     GitHub UI : Actions tab -> pick the workflow -> "Run workflow" (optionally change "days").
     gh CLI    : gh workflow run weekly_status.yml    [-f days=14]
                 gh workflow run monthly_status.yml   [-f days=30]
-                gh workflow run quarterly_digest.yml [-f days=90] [-f publish=true] [-f category=Announcements]
+                gh workflow run quarterly_digest.yml [-f days=90] [-f publish=true] [-f category=Digest]
     Then      : gh run list --workflow weekly_status.yml   /   gh run download <run-id>
   Note: scheduled workflows only run from the repository's DEFAULT branch - merge to main first.
 
@@ -54,7 +54,7 @@ MANUAL RUN (from the root of the meta repo)
   Weekly     python3 tools/generate_monthly_status.py --days 7  --period Weekly  -o weekly_status.md  --print
   Monthly    python3 tools/generate_monthly_status.py --days 30 --period Monthly -o monthly_status.md --print
   Quarterly  python3 tools/generate_quarterly_digest.py --days 90 -o quarterly_digest.md --print
-  Publish    python3 tools/generate_quarterly_digest.py --days 90 --publish --category Announcements
+  Publish    python3 tools/generate_quarterly_digest.py --days 90 --publish --category Digest
              (needs a token with discussions:write)
 
   Audit which tools were detected as new:

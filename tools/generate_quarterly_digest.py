@@ -1,28 +1,29 @@
 #!/usr/bin/env python3
 """
 Generate the quarterly z/OS Open Tools Digest for zopencommunity and optionally publish it
-as a GitHub Discussion (Announcements / Digests category).
+as a GitHub Discussion (default category: Digest).
 
 Uses the same format as the weekly/monthly digest (tools/digest_format.py), looking back 90 days.
 
 Usage:
-  python3 tools/generate_quarterly_digest.py [--days 90] [--publish] [--category "Digests"]
+  python3 tools/generate_quarterly_digest.py [--days 90] [--publish] [--category "Digest"]
 
 HOW TO RUN
   Manual (from the root of the meta repo):
     read -rs GH_TOKEN && export GH_TOKEN          # avoids the API rate limit
     read -rs COPILOT_TOKEN && export COPILOT_TOKEN   # optional: LLM-written PR descriptions
     File only : python3 tools/generate_quarterly_digest.py --days 90 -o quarterly_digest.md --print
-    Publish   : python3 tools/generate_quarterly_digest.py --days 90 --publish --category Announcements
-                (GH_TOKEN needs discussions:write; if the category is not found, the first one is used)
+    Publish   : python3 tools/generate_quarterly_digest.py --days 90 --publish --category Digest
+                (GH_TOKEN needs discussions:write; the run fails if the category does not exist)
 
   Automated (GitHub Actions):
     .github/workflows/quarterly_digest.yml - 1 Jan/Apr/Jul/Oct 12:00 UTC, 90 days
     Run on demand: Actions tab -> "Quarterly Community Digest" -> "Run workflow"
       (inputs: days, category, publish), or
-      gh workflow run quarterly_digest.yml -f days=90 -f publish=true -f category=Announcements
-    Publishing is OFF by default; scheduled runs only generate the artifact. Tick "publish" (or pass
-    -f publish=true) to post the digest as a GitHub Discussion in zopencommunity/meta.
+      gh workflow run quarterly_digest.yml -f days=90 -f publish=true -f category=Digest
+    Scheduled runs PUBLISH to the "Digest" category of zopencommunity/meta Discussions automatically.
+    Manual runs only generate the artifact unless "publish" is ticked (or -f publish=true is passed).
+    Requires Discussions enabled on the repo with a category named "Digest" (Settings -> Features -> Discussions).
     Scheduled runs only fire from the default branch (merge to main first).
 
   Full reference (sections, secrets, troubleshooting): see the header of tools/digest_format.py
@@ -69,9 +70,8 @@ def get_discussion_category_id(org: str, repo: str, category_name: str, token: s
             for cat in categories:
                 if cat["name"].lower() == category_name.lower():
                     return repo_id, cat["id"]
-            if categories:
-                # Default to first category if requested one is not found
-                return repo_id, categories[0]["id"]
+            print(f"Error: Discussion category '{category_name}' not found. Available: "
+                  f"{', '.join(c['name'] for c in categories) or '(none - are Discussions enabled?)'}", file=sys.stderr)
     except Exception as e:
         print(f"Error querying discussion categories: {e}", file=sys.stderr)
     return None, None
@@ -120,7 +120,7 @@ def main():
     parser.add_argument("--days", type=int, default=90, help="Days to look back (default: 90 for quarterly)")
     parser.add_argument("--org", default="zopencommunity", help="GitHub Organization (default: zopencommunity)")
     parser.add_argument("--repo", default="meta", help="Target repo for discussions (default: meta)")
-    parser.add_argument("--category", default="Announcements", help="Discussion Category (e.g., 'Announcements' or 'Digests')")
+    parser.add_argument("--category", default="Digest", help="Discussion category name, matched case-insensitively (default: Digest)")
     parser.add_argument("--token", default=None, help="GitHub API token (defaults to GH_TOKEN or GITHUB_TOKEN)")
     parser.add_argument("--copilot-token", default=None, help="Copilot LLM token for PR descriptions (defaults to COPILOT_TOKEN)")
     parser.add_argument("--output", "-o", default="quarterly_digest.md", help="Output file path")
@@ -149,8 +149,9 @@ def main():
         if not gh_token:
             print("Error: --publish requires a valid GITHUB_TOKEN / GH_TOKEN with discussions:write permissions.", file=sys.stderr)
             sys.exit(1)
-        title = digest_md.splitlines()[0]
-        publish_github_discussion(args.org, args.repo, title, digest_md, args.category, gh_token)
+        title = digest_md.splitlines()[0].lstrip("# ").strip()
+        if not publish_github_discussion(args.org, args.repo, title, digest_md, args.category, gh_token):
+            sys.exit(1)   # fail the workflow run so a broken scheduled publish is noticed
 
 
 if __name__ == "__main__":
