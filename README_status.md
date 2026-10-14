@@ -32,6 +32,7 @@ All three share `tools/digest_format.py`, so formatting and detection rules are 
 | `GH_TOKEN` (GitHub reads) | Manual runs on your machine | Export it in your shell (below). Not stored anywhere. |
 | `GITHUB_TOKEN` | Automated runs in GitHub Actions | **Nothing.** GitHub creates it for every run, and the workflows already pass it to the scripts as `GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}`. |
 | `COPILOT_TOKEN` (optional) | Both | Manual: export it. Actions: add it as a repository secret (below). |
+| `DISCUSSIONS_TOKEN` (required for publish) | Automated publish to org Discussions | PAT with `write:discussion` scope stored as a repo secret (below). `GITHUB_TOKEN` cannot write org-level Discussions. |
 
 Notes:
 
@@ -41,6 +42,16 @@ Notes:
 - The quarterly `--publish` option needs `discussions: write`. The workflow already declares it.
 - Personal access tokens (`github_pat_...`) are usually rejected by the Copilot endpoint. Failures are silent and the script falls back to PR-body/file descriptions.
 - Never paste tokens into chats, commits or scripts. Revoke any token that has been exposed.
+
+### Add `DISCUSSIONS_TOKEN` as a repo secret (required for publish)
+
+`GITHUB_TOKEN` cannot create org-level Discussions. You need a PAT:
+
+1. Go to https://github.com/settings/tokens → **Generate new token (classic)** → tick **`write:discussion`** → copy it.
+   *(Fine-grained tokens: organization permissions → Discussions → Read and write.)*
+2. Repo **Settings → Secrets and variables → Actions → New repository secret** → Name `DISCUSSIONS_TOKEN` → paste → **Add secret**.
+
+The workflow uses `DISCUSSIONS_TOKEN` when publishing and falls back to `GITHUB_TOKEN` for all other API reads.
 
 ### Add `COPILOT_TOKEN` as a repo secret
 

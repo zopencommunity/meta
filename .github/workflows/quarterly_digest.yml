@@ -24,7 +24,8 @@ permissions:
   contents: read
   issues: read
   pull-requests: read
-  discussions: write
+  # discussions:write is for repo-level; org-level Discussions require a PAT stored in secrets.DISCUSSIONS_TOKEN
+  # GITHUB_TOKEN cannot write org-level Discussions - see README_status.md for setup instructions
 
 jobs:
   quarterly-digest:
@@ -43,7 +44,7 @@ jobs:
       - name: Generate Quarterly Digest Markdown
         env:
           COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.DISCUSSIONS_TOKEN || secrets.GITHUB_TOKEN }}
           # Scheduled runs have no inputs and always publish; manual runs publish only if "publish" is ticked
           DIGEST_PUBLISH: ${{ github.event_name == 'schedule' && 'true' || github.event.inputs.publish || 'false' }}
           DIGEST_DAYS: ${{ github.event.inputs.days || '90' }}

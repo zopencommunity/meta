@@ -21,9 +21,11 @@ HOW TO RUN
     Run on demand: Actions tab -> "Quarterly Community Digest" -> "Run workflow"
       (inputs: days, category, publish), or
       gh workflow run quarterly_digest.yml -f days=90 -f publish=true -f category=Digest
-    Scheduled runs PUBLISH to the "Digest" category of zopencommunity/meta Discussions automatically.
+    Scheduled runs PUBLISH to the "Digest" category of https://github.com/orgs/zopencommunity/discussions automatically.
     Manual runs only generate the artifact unless "publish" is ticked (or -f publish=true is passed).
-    Requires Discussions enabled on the repo with a category named "Digest" (Settings -> Features -> Discussions).
+    Token: GITHUB_TOKEN cannot write org-level Discussions. Create a PAT (classic or fine-grained) with the
+      'write:discussion' scope and store it as the repo secret DISCUSSIONS_TOKEN. The workflow prefers
+      DISCUSSIONS_TOKEN and falls back to GITHUB_TOKEN (which will fail at publish time without the scope).
     Scheduled runs only fire from the default branch (merge to main first).
 
   Full reference (sections, secrets, troubleshooting): see the header of tools/digest_format.py
@@ -40,13 +42,28 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import digest_format as df  # noqa: E402
 
 
-def get_discussion_category_id(org: str, repo: str, category_name: str, token: str) -> Tuple[Optional[str], Optional[str]]:
-    """Fetch GraphQL repository and category ID for GitHub Discussions."""
+def _graphql(query: str, variables: dict, token: str) -> dict:
+    """Execute a GraphQL query/mutation against the GitHub API."""
+    payload = {"query": query, "variables": variables}
+    req = urllib.request.Request(
+        "https://api.github.com/graphql",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+    )
+    with urllib.request.urlopen(req, timeout=20) as resp:
+        return json.loads(resp.read().decode())
+
+
+def get_org_discussion_category_id(org: str, category_name: str, token: str) -> Tuple[Optional[str], Optional[str]]:
+    """
+    Return (org_node_id, category_id) for an org-level Discussion category.
+    Posts go to https://github.com/orgs/<org>/discussions.
+    """
     query = """
-    query($owner: String!, $name: String!) {
-      repository(owner: $owner, name: $name) {
+    query($login: String!) {
+      organization(login: $login) {
         id
-        discussionCategories(first: 20) {
+        discussionCategories(first: 25) {
           nodes {
             id
             name
@@ -55,63 +72,62 @@ def get_discussion_category_id(org: str, repo: str, category_name: str, token: s
       }
     }
     """
-    payload = {"query": query, "variables": {"owner": org, "name": repo}}
-    req = urllib.request.Request(
-        "https://api.github.com/graphql",
-        data=json.dumps(payload).encode("utf-8"),
-        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
-    )
     try:
-        with urllib.request.urlopen(req) as resp:
-            data = json.loads(resp.read().decode())
-            repo_node = data.get("data", {}).get("repository", {})
-            repo_id = repo_node.get("id")
-            categories = repo_node.get("discussionCategories", {}).get("nodes", [])
-            for cat in categories:
-                if cat["name"].lower() == category_name.lower():
-                    return repo_id, cat["id"]
-            print(f"Error: Discussion category '{category_name}' not found. Available: "
-                  f"{', '.join(c['name'] for c in categories) or '(none - are Discussions enabled?)'}", file=sys.stderr)
+        data = _graphql(query, {"login": org}, token)
+        errors = data.get("errors")
+        if errors:
+            print(f"GraphQL errors querying org categories: {errors}", file=sys.stderr)
+            return None, None
+        org_node = data.get("data", {}).get("organization", {})
+        org_id = org_node.get("id")
+        categories = org_node.get("discussionCategories", {}).get("nodes", [])
+        for cat in categories:
+            if cat["name"].lower() == category_name.lower():
+                return org_id, cat["id"]
+        print(f"Error: Org Discussion category '{category_name}' not found in {org}. "
+              f"Available: {', '.join(c['name'] for c in categories) or '(none)'}", file=sys.stderr)
     except Exception as e:
-        print(f"Error querying discussion categories: {e}", file=sys.stderr)
+        print(f"Error querying org discussion categories: {e}", file=sys.stderr)
     return None, None
 
 
 def publish_github_discussion(org: str, repo: str, title: str, body: str, category_name: str, token: str) -> bool:
-    """Create a new GitHub Discussion under the specified category."""
-    repo_id, category_id = get_discussion_category_id(org, repo, category_name, token)
-    if not repo_id or not category_id:
-        print(f"Error: Could not resolve GitHub Discussion category '{category_name}'.", file=sys.stderr)
+    """
+    Create a new org-level Discussion at https://github.com/orgs/<org>/discussions.
+    `repo` is unused but kept for API compatibility.
+    """
+    org_id, category_id = get_org_discussion_category_id(org, category_name, token)
+    if not org_id or not category_id:
+        print(f"Error: Could not resolve org Discussion category '{category_name}' for {org}.", file=sys.stderr)
         return False
 
     mutation = """
-    mutation($repositoryId: ID!, $categoryId: ID!, $title: String!, $body: String!) {
-      createDiscussion(input: {repositoryId: $repositoryId, categoryId: $categoryId, title: $title, body: $body}) {
+    mutation($organizationId: ID!, $categoryId: ID!, $title: String!, $body: String!) {
+      createDiscussion(input: {repositoryId: $organizationId, categoryId: $categoryId, title: $title, body: $body}) {
         discussion {
           url
         }
       }
     }
     """
-    payload = {
-        "query": mutation,
-        "variables": {"repositoryId": repo_id, "categoryId": category_id, "title": title, "body": body}
-    }
-    req = urllib.request.Request(
-        "https://api.github.com/graphql",
-        data=json.dumps(payload).encode("utf-8"),
-        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
-    )
     try:
-        with urllib.request.urlopen(req) as resp:
-            data = json.loads(resp.read().decode())
-            url = data.get("data", {}).get("createDiscussion", {}).get("discussion", {}).get("url")
-            if url:
-                print(f"Successfully published digest to GitHub Discussions: {url}")
-                return True
-            print(f"Discussion creation response: {data}", file=sys.stderr)
+        data = _graphql(mutation, {
+            "organizationId": org_id,
+            "categoryId": category_id,
+            "title": title,
+            "body": body
+        }, token)
+        errors = data.get("errors")
+        if errors:
+            print(f"GraphQL errors creating discussion: {errors}", file=sys.stderr)
+            return False
+        url = data.get("data", {}).get("createDiscussion", {}).get("discussion", {}).get("url")
+        if url:
+            print(f"Successfully published digest to org Discussions: {url}")
+            return True
+        print(f"Unexpected response creating discussion: {data}", file=sys.stderr)
     except Exception as e:
-        print(f"Error creating discussion: {e}", file=sys.stderr)
+        print(f"Error creating org discussion: {e}", file=sys.stderr)
     return False
 
 
