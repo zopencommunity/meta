@@ -31,10 +31,30 @@ jobs:
         ISSUE_NUMBER: ${{ github.event.issue.number }}
       run: |
         REPO_NAME="${PORT_NAME}port"
-        
-        if gh repo view "$ORGANIZATION/$REPO_NAME" &> /dev/null; then
+
+        if [ -z "${GH_TOKEN:-}" ]; then
+          echo "::error::REPO_GITHUB_TOKEN secret is missing or unavailable to this workflow."
+          exit 1
+        fi
+
+        # Validate the token before doing any repository operations
+        if ! AUTH_OUTPUT=$(gh api user --jq .login 2>&1); then
+          echo "::error::REPO_GITHUB_TOKEN is invalid or expired (authentication failed): $AUTH_OUTPUT"
+          exit 1
+        fi
+        echo "Authenticated to GitHub as '$AUTH_OUTPUT'."
+
+        # Check repository existence; only a 404 means the repository does not exist
+        REPO_CHECK_OUTPUT=$(gh api --include "repos/$ORGANIZATION/$REPO_NAME" 2>&1) || true
+        HTTP_STATUS=$(printf '%s\n' "$REPO_CHECK_OUTPUT" | awk 'NR==1 && $1 ~ /^HTTP\// {print $2}')
+
+        if [ "$HTTP_STATUS" = "200" ]; then
           echo "Repository '$ORGANIZATION/$REPO_NAME' already exists."
           gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository already exists: https://github.com/$ORGANIZATION/$REPO_NAME"
+          exit 1
+        elif [ "$HTTP_STATUS" != "404" ]; then
+          echo "::error::Unable to determine whether '$ORGANIZATION/$REPO_NAME' exists (HTTP status: ${HTTP_STATUS:-unknown})."
+          printf '%s\n' "$REPO_CHECK_OUTPUT"
           exit 1
         else
           echo "Repository '$ORGANIZATION/$REPO_NAME' does not exist. Proceeding to create it."
