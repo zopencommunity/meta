@@ -421,17 +421,18 @@ def render_digest(
         "Here’s a summary of newly added tools, ongoing work, and recent updates.",
     ]
 
-    # New Tools
+    # New Tools — one bullet per tool: • **name** – description
     if new_repos:
         blocks.append("## New Tools")
+        tool_bullets: List[str] = []
         for repo in sorted(new_repos):
             desc = known_tool_description(org, repo, descriptions, token)
             if not desc:
                 repo_prs = [p for p in changes if p["repo"] == repo]
                 first = min(repo_prs, key=lambda p: p["number"]) if repo_prs else None
                 desc = (describe_pr(org, first, token, llm_token) if first else "") or f"New z/OS port of {tool_name(repo)}."
-            blocks.append(f"### **{tool_name(repo)}**")
-            blocks.append(plain(desc))
+            tool_bullets.append(f"• **{tool_name(repo)}** – {plain(desc)}")
+        blocks.append("\n".join(tool_bullets))
         blocks.append("To install: `zopen install <tool_name>`")
 
     # Miscellaneous Updates: meta PRs grouped by theme, then port PRs consolidated per repo, then version bumps
