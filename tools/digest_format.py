@@ -417,8 +417,9 @@ def render_digest(
     # The digest is a list of Markdown blocks joined by blank lines; "  \n" inside a block is a hard line break.
     blocks: List[str] = [
         f"# z/OS Open Tools {title_prefix}Digest – {now:%B} {now.day}, {now.year}",
-        "Hello everyone!  \nWelcome to another edition of the z/OS Open Tools Digest. "
-        "Here’s a summary of newly added tools, ongoing work, and recent updates.",
+        "Hello everyone!\n\n"
+        "Welcome to another edition of the z/OS Open Tools Digest. "
+        "Here's a summary of newly added tools, ongoing work, and recent updates.",
     ]
 
     # New Tools — one bullet per tool: • **name** – description
@@ -510,7 +511,7 @@ def render_digest(
             blocks.append(f"• **{tool_name(repo)}** – {plain(desc or clean_title(p['title']))}")
 
     blocks.append("## Thanks for reading!")
-    blocks.append("Stay tuned for more updates in the next digest.  \n"
+    blocks.append("Stay tuned for more updates in the next digest.\n\n"
                   "Feel free to reach out if you have any questions, suggestions, or contributions.")
     return "\n\n".join(blocks) + "\n"
 
