@@ -88,7 +88,7 @@ DESCRIPTIONS_LOCAL = Path(__file__).resolve().parent.parent / "docs" / "api" / "
 
 BOT_AUTHORS = {"zosopentoolsmain", "github-actions[bot]", "github-actions", "actions@github.com", "bot"}
 BUMP_RE = re.compile(r"Update (.+?)-version to ([^ ]+) from ([^ ]+)", re.IGNORECASE)
-MAX_META_ITEMS = 20     # cap on meta (infrastructure) PRs shown individually
+GROUP_COLLAPSE_THRESHOLD = 4   # within one theme group, collapse to sub-list above this count
 MAX_IN_PROGRESS = 10
 VAGUE_TITLE_WORDS = 4  # titles shorter than this (with no PR body) are considered not meaningful
 
@@ -451,20 +451,33 @@ def render_digest(
     if misc or version_updates:
         blocks.append("## Miscellaneous Updates")
 
-        # meta PRs: group by theme, cap at MAX_META_ITEMS total
-        shown_meta = meta_prs[:MAX_META_ITEMS]
-        hidden_meta = max(0, len(meta_prs) - MAX_META_ITEMS)
-        groups: Dict[str, List[str]] = {}
-        for p in shown_meta:
+        # meta PRs: group by theme, all PRs included; large groups collapsed to a summary sub-list
+        groups: Dict[str, List[Dict[str, Any]]] = {}
+        for p in meta_prs:
             title = clean_title(p["title"])
             group = categorize(title, fetch_pr_context(org, "meta", p["number"], token)["files"])
-            groups.setdefault(group, []).append(bullet(title, describe_pr(org, p, token, llm_token)))
+            groups.setdefault(group, []).append(p)
         for name in [g for g, _ in META_GROUPS] + [OTHER_GROUP]:
-            if name in groups:
-                blocks.append(f"### {name}")
-                blocks += groups[name]
-        if hidden_meta:
-            blocks.append(f"*...and {hidden_meta} more infrastructure updates.*")
+            if name not in groups:
+                continue
+            prs_in_group = groups[name]
+            blocks.append(f"### {name}")
+            if len(prs_in_group) <= GROUP_COLLAPSE_THRESHOLD:
+                # Show each PR as its own bullet
+                for p in prs_in_group:
+                    blocks.append(bullet(clean_title(p["title"]), describe_pr(org, p, token, llm_token)))
+            else:
+                # Summarise: one intro bullet + sub-list of all titles
+                best_desc = next(
+                    (describe_pr(org, p, token, llm_token) for p in prs_in_group
+                     if describe_pr(org, p, token, llm_token)),
+                    ""
+                )
+                intro = f"• {len(prs_in_group)} updates"
+                if best_desc:
+                    intro += f" – {plain(best_desc)}"
+                sub = "\n".join(f"  - {plain(clean_title(p['title']))}" for p in prs_in_group)
+                blocks.append(f"{intro}\n{sub}")
 
         # port PRs: one bullet per repo, titles consolidated
         if port_prs:
