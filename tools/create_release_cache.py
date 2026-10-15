@@ -455,6 +455,56 @@ except Exception as e:
 
 # --- Core Processing Functions ---
 
+# IBM-1047 (EBCDIC) character mapping to Latin-1/Unicode for releases packaged on z/OS
+IBM1047_MAP = (
+    "\x00\x01\x02\x03\x9c\t\x86\x7f\x97\x8d\x8e\x0b\x0c\r\x0e\x0f"
+    "\x10\x11\x12\x13\x9d\x85\x08\x87\x18\x19\x92\x8f\x1c\x1d\x1e\x1f"
+    "\x80\x81\x82\x83\x84\n\x17\x1b\x88\x89\x8a\x8b\x8c\x05\x06\x07"
+    "\x90\x91\x16\x93\x94\x95\x96\x04\x98\x99\x9a\x9b\x14\x15\x9e\x1a"
+    " \xa0\xe2\xe4\xe0\xe1\xe3\xe5\xe7\xf1\xa2.<(+|&"
+    "\xe9\xea\xeb\xe8\xed\xee\xef\xec\xdf!$*);^-/"
+    "\xc2\xc4\xc0\xc1\xc3\xc5\xc7\xd1\xa6,%_>?"
+    "\xf8\xc9\xca\xcb\xc8\xcd\xce\xcf\xcc`:#@'=\""
+    "\xd8abcdefghi\xab\xbb\xf0\xfd\xfe\xb1\xb0"
+    "jklmnopqr\xaa\xba\xe6\xb8\xc6\xa4\xb5~"
+    "stuvwxyz\xa1\xbf\xd0[\xde\xae\xac\xa3\xa5\xb7\xa9\xa7\xb6\xbc\xbd\xbe"
+    "\xdd\xa8\xaf]\xb4\xd7{ABCDEFGHI\xad\xf4\xf6\xf2\xf3\xf5"
+    "}JKLMNOPQR\xb9\xfb\xfc\xf9\xfa\xff\\\xf7"
+    "STUVWXYZ\xb2\xd4\xd6\xd2\xd3\xd50123456789\xb3\xdb\xdc\xd9\xda\x9f"
+)
+IBM1047_TRANS_TABLE = str.maketrans({chr(i): IBM1047_MAP[i] for i in range(256)})
+
+def decode_metadata_content(raw_bytes):
+    """
+    Decodes metadata bytes to string, trying UTF-8 first, then IBM-1047 (EBCDIC)
+    and other standard fallbacks. Normalizes EBCDIC newlines (NEL \\x85 -> \\n).
+    """
+    # 1. Standard UTF-8 (with or without BOM)
+    try:
+        return raw_bytes.decode('utf-8-sig')
+    except UnicodeDecodeError:
+        pass
+
+    # 2. IBM-1047 (Standard z/OS EBCDIC code page)
+    try:
+        decoded_ebcdic = raw_bytes.decode('latin-1').translate(IBM1047_TRANS_TABLE).replace('\x85', '\n')
+        if decoded_ebcdic.strip().startswith('{'):
+            return decoded_ebcdic
+    except Exception:
+        pass
+
+    # 3. Standard Python EBCDIC codecs (CP500, CP037, CP1140)
+    for cp in ('cp500', 'cp037', 'cp1140'):
+        try:
+            decoded_cp = raw_bytes.decode(cp).replace('\x85', '\n')
+            if decoded_cp.strip().startswith('{'):
+                return decoded_cp
+        except Exception:
+            pass
+
+    # 4. Latin-1 fallback (never raises UnicodeDecodeError)
+    return raw_bytes.decode('latin-1')
+
 def process_asset(asset):
     """
     Downloads and parses a metadata.json asset to extract release details.
@@ -473,22 +523,28 @@ def process_asset(asset):
         response = requests.get(download_url, timeout=90) # Generous timeout for download
         response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
         logger.debug(f"Successfully downloaded {asset.name} from {download_url}")
-        # Decode content, assuming UTF-8 which is standard for JSON
-        metadata_content = response.content.decode('utf-8')
+        
+        # Decode content, supporting UTF-8 as well as z/OS EBCDIC (IBM-1047)
+        metadata_content = decode_metadata_content(response.content)
 
         # Parse metadata information from JSON content
-        metadata_full = json.loads(metadata_content)
+        try:
+            metadata_full = json.loads(metadata_content)
+        except json.JSONDecodeError as e:
+            logger.warning(f"Failed to parse JSON from {asset.name} (URL: {download_url}): {e}")
+            return None
+
         # Expecting structure like {"product": {...}} containing the details
         metadata = metadata_full.get("product", {})
         if not isinstance(metadata, dict) or not metadata:
             logger.warning(f"Metadata file {asset.name} (URL: {download_url}) lacks 'product' key or it's not a dictionary.")
-            raise ValueError(f"Metadata file {asset.name} lacks 'product' key or it's not a dictionary.")
+            return None
 
         # Check for mandatory 'pax' key within 'product' which names the actual artifact
         pax_file_name = metadata.get("pax")
         if not pax_file_name:
              logger.warning(f"Skipping asset {asset.name} (URL: {download_url}): Required 'pax' key missing in metadata['product']")
-             raise ValueError(f"Required 'pax' key missing in metadata['product']")
+             return None
 
         # Construct URL for the actual pax file (assumed relative to the release download URL)
         base_url = download_url.rsplit('/', 1)[0] + '/' # Get base URL of the release assets
@@ -541,11 +597,11 @@ def process_asset(asset):
     except json.JSONDecodeError as e:
         # Handle cases where the downloaded file is not valid JSON
         logger.warning(f"Failed to parse JSON from {asset.name} (URL: {download_url}): {e}")
-        raise
+        return None
     except Exception as e:
         # Catch-all for any other unexpected errors during asset processing
         logger.error(f"Unexpected error processing asset {asset.name} (URL: {download_url}): {e}", exc_info=should_log_tracebacks())
-        raise
+        return None
 
 # Process a single GitHub release object
 def process_release(repo_name, release_obj):
@@ -1098,8 +1154,12 @@ if repo_release_fetch_failures > 0:
 
 if skipped_failed_futures > 0:
     if args.single_repo:
-        logger.error(f"Fatal: Targeted mode encountered {skipped_failed_futures} failed release processing tasks for {args.single_repo}.")
-        is_fatal_failure = True
+        target_releases = release_data.get(target_project_name, [])
+        if not target_releases:
+            logger.error(f"Fatal: Targeted mode encountered {skipped_failed_futures} failed release processing tasks and 0 valid releases were produced for {args.single_repo}.")
+            is_fatal_failure = True
+        else:
+            logger.warning(f"Targeted mode encountered {skipped_failed_futures} failed release processing tasks for {args.single_repo}, but {len(target_releases)} valid releases were successfully included for {target_project_name}.")
     else:
         # In full rebuild mode, tolerate minor release task failures if error rate is low (< 5%)
         # and valid releases were successfully included.
