@@ -17,3 +17,7 @@
 * [Modernizing z/OS Open Source Distribution with RPM and Pulp](https://community.ibm.com/community/user/blogs/tejaswini-r/2026/07/24/modernizing-zos-rpm-plup)
 * [Generating Software Bills of Materials on z/OS with Syft](https://community.ibm.com/community/user/blogs/p-sabitha/2026/08/11/generating-sbom-on-zos-with-syft)
 * [Porting Csmith to z/OS with zopen - July 30, 2026](https://community.ibm.com/community/user/blogs/atul-rustagi/2026/07/30/porting-csmith-to-zos-with-zopen)
+* [RocksDB on z/OS USS - September 23, 2026](https://community.ibm.com/community/user/blogs/dhulipudi-geetha-sushma/2026/09/23/rocksdb-on-zos-uss)
+* [Git-secrets on z/OS: Preventing Credential and Secret Leaks in Mainframe Git Workflows October 15, 2026](https://community.ibm.com/community/user/blogs/manish-shaw/2026/10/11/porting-git-secrets-to-z-os)
+* [Porting nlohmann/json to z/OS: Modern, Intuitive JSON for C++ on Mainframes October 15, 2026](https://community.ibm.com/community/user/blogs/manish-shaw/2026/10/11/porting-nlohmann-json-to-z-os)
+* [MessagePack on z/OS with zopen: Fast, Compact Binary Serialisation for Mainframes October 15, 2026](https://community.ibm.com/community/user/blogs/manish-shaw/2026/10/11/messagepack-on-z-os-with-zopen)
