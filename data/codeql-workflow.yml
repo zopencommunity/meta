@@ -4,6 +4,7 @@ permissions:
   actions: read
   contents: read
   security-events: write
+  pull-requests: write
 
 on:
   push:
@@ -22,6 +23,7 @@ jobs:
       actions: read
       contents: read
       security-events: write
+      pull-requests: write
     with:
       languages: "c-cpp"
       build-mode: "none"
