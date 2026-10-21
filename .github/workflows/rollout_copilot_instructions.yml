@@ -1,0 +1,66 @@
+name: "Rollout Copilot Instructions"
+
+# Opens a PR in each port repo adding .github/copilot-instructions.md from
+# data/copilot-instructions.md, so Copilot code review and the coding agent
+# know zopen's porting conventions. Re-run after editing the template: repos
+# that are already up to date are skipped.
+
+on:
+  workflow_dispatch:
+    inputs:
+      repos:
+        description: 'Space-separated repos to roll out to, or "all" for every *port repo'
+        required: true
+        type: string
+        default: 'gitport makeport curlport gpgport pinentryport perlport lessport ncursesport rpmport dnf5port vimport autoconfport'
+      dry_run:
+        description: 'Show what would change without opening PRs'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  multi-gitter:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.CODEQL_APP_ID }}
+          private-key: ${{ secrets.CODEQL_APP_PRIVATE_KEY }}
+          owner: zopencommunity
+
+      - uses: ./actions/multi-gitter-action
+
+      - name: Rollout Copilot instructions to port repos
+        env:
+          # Uses GitHub App token to push to and open PRs on other repos
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          # Absolute path so the script doesn't resolve it relative to BASH_SOURCE[0]
+          COPILOT_INSTRUCTIONS_TEMPLATE: ${{ github.workspace }}/data/copilot-instructions.md
+          REPOS: ${{ inputs.repos }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          targets=""
+          if [ "$REPOS" != "all" ]; then
+            targets='--org='
+            for repo in $REPOS; do
+              targets="$targets --repo=zopencommunity/$repo"
+            done
+          fi
+          # shellcheck disable=SC2086 # targets is a list of flags
+          multi-gitter --config ./cicd/multi-gitter-config \
+            --fork=false \
+            $targets \
+            --dry-run="$DRY_RUN" \
+            --branch "copilot-instructions" \
+            --author-name "zopen-bot" \
+            --author-email "zosopentools@ibm.com" \
+            --pr-title "Add Copilot review instructions" \
+            --pr-body "Adds .github/copilot-instructions.md from meta/data/copilot-instructions.md so Copilot code review and the Copilot coding agent follow zopen porting conventions (patches, /bin/sh buildenv, encoding, version bumps, honest test results). Rolled out with meta/.github/workflows/rollout_copilot_instructions.yml." \
+            run ./bulk-utils/rollout_copilot_instructions.sh
