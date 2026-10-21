@@ -1,0 +1,100 @@
+# Drafts the monthly zopen Community Digest and, once a maintainer approves,
+# posts it to the Digest discussion category.
+#
+# The draft job only reads public data and writes the digest to the job summary.
+# GitHub Copilot groups the merged PRs using the COPILOT_TOKEN secret: a token
+# from a user with a Copilot seat that can make Copilot requests (the
+# workflow's GITHUB_TOKEN cannot use Copilot). Without it, or if Copilot fails,
+# the digest lists the merged PRs per repository instead.
+# The post job runs in the `community-digest` environment: configure that
+# environment with required reviewers so nothing is posted without approval.
+name: Community Digest
+
+on:
+  schedule:
+    - cron: '0 14 2 * *' # 2nd of each month, covering the previous month
+  workflow_dispatch:
+    inputs:
+      month:
+        description: 'Month to cover (YYYY-MM, default: last month)'
+        required: false
+        type: string
+      through:
+        description: 'Optional last month for a catch-up digest (YYYY-MM)'
+        required: false
+        type: string
+      post:
+        description: 'Post to Discussions after approval'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    outputs:
+      title: ${{ steps.draft.outputs.title }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install Copilot CLI
+        run: npm install -g @github/copilot@1.0.102
+
+      - name: Draft digest
+        id: draft
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_TOKEN }}
+          DIGEST_AI: ${{ secrets.COPILOT_TOKEN != '' && 'copilot' || 'none' }}
+          DIGEST_MODEL: ${{ vars.DIGEST_MODEL }}
+          MONTH: ${{ inputs.month }}
+          THROUGH: ${{ inputs.through }}
+        run: |
+          python3 tools/create_community_digest.py draft ${MONTH:+--month "$MONTH"} ${THROUGH:+--through "$THROUGH"} --output digest.md --facts digest_facts.json
+          echo "title=$(jq -r .title digest_facts.json)" >> "$GITHUB_OUTPUT"
+          {
+            echo "# $(jq -r .title digest_facts.json)"
+            echo
+            cat digest.md
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: community-digest
+          path: |
+            digest.md
+            digest_facts.json
+
+  post:
+    needs: draft
+    if: (github.event_name == 'workflow_dispatch' && inputs.post) || (github.event_name == 'schedule' && vars.DIGEST_POST_ON_SCHEDULE == 'true')
+    runs-on: ubuntu-latest
+    environment: community-digest
+    permissions:
+      contents: read
+      discussions: write
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: community-digest
+
+      - name: Post to Discussions
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TITLE: ${{ needs.draft.outputs.title }}
+        run: |
+          url=$(python3 tools/create_community_digest.py post --body-file digest.md --title "$TITLE" --repo "$GITHUB_REPOSITORY")
+          echo "Posted: $url" >> "$GITHUB_STEP_SUMMARY"
