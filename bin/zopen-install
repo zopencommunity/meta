@@ -662,13 +662,6 @@ EOF
       if [ -e "${baseinstalldir}/${name}/${name}/.runtimedeps" ]; then
         dependencies=$(cat "${baseinstalldir}/${name}/${name}/.runtimedeps")
       fi
-      printVerbose "Checking for runtime dependencies from the git metadata."
-      if echo "${statusline}" | grep "Runtime Dependencies:" > /dev/null; then
-        gitmetadependencies="$(echo "${statusline}" | sed -e "s#.*Runtime Dependencies:<\/b> ##" -e "s#<br />.*##")"
-        if [ ! "${gitmetadependencies}" = "No dependencies" ]; then
-          dependencies="${dependencies} ${gitmetadependencies}"
-        fi
-      fi
       dependencies=$(deleteDuplicateEntries "${dependencies}" " ")
       if [ -n "${dependencies}" ]; then
         printInfo "- ${name} depends on: ${dependencies}"
