@@ -2,10 +2,10 @@
 # posts it to the Digest discussion category.
 #
 # The draft job only reads public data and writes the digest to the job summary.
-# GitHub Copilot groups the merged PRs when the COPILOT_GITHUB_TOKEN secret is set:
-# a fine-grained PAT, from a user with a Copilot seat, with the "Copilot Requests"
-# permission (the workflow's GITHUB_TOKEN cannot use Copilot). Without it the
-# digest lists the merged PRs per repository instead.
+# GitHub Copilot groups the merged PRs using the COPILOT_TOKEN secret: a token
+# from a user with a Copilot seat that can make Copilot requests (the
+# workflow's GITHUB_TOKEN cannot use Copilot). Without it, or if Copilot fails,
+# the digest lists the merged PRs per repository instead.
 # The post job runs in the `community-digest` environment: configure that
 # environment with required reviewers so nothing is posted without approval.
 name: Community Digest
@@ -55,8 +55,8 @@ jobs:
         id: draft
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
-          DIGEST_AI: ${{ secrets.COPILOT_GITHUB_TOKEN != '' && 'copilot' || 'none' }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_TOKEN }}
+          DIGEST_AI: ${{ secrets.COPILOT_TOKEN != '' && 'copilot' || 'none' }}
           DIGEST_MODEL: ${{ vars.DIGEST_MODEL }}
           MONTH: ${{ inputs.month }}
           THROUGH: ${{ inputs.through }}
