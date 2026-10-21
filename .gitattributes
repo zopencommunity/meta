@@ -4,3 +4,5 @@ utilities/*   binary
 *.png   binary
 *.gif   binary
 *.pax.Z binary
+
+.github/workflows/*.lock.yml linguist-generated=true
