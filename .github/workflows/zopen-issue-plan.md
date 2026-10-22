@@ -1,10 +1,10 @@
 ---
 description: |
-  Posts one grounded plan on each new meta issue: a porting plan for
-  "[New Port]" requests (build system, dependencies mapped to exact zopen
-  packages, a port to copy from, known z/OS traps) or a triage note for bugs
-  (likely files and cause). Anyone can re-run it with a /plan comment.
-  It only comments: it never labels, approves, assigns or edits.
+  Posts one grounded plan on each new "[New Port]" or "[New Python Port]"
+  issue (build system, dependencies mapped to exact zopen packages, a port to
+  copy from, known z/OS traps). On any other issue, a /plan comment asks for a
+  triage note (likely files and cause). It only comments: it never labels,
+  approves, assigns or edits.
 
 on:
   issues:
@@ -17,6 +17,10 @@ on:
   # and its only output is one comment, so any author may trigger it.
   roles: all
   reaction: eyes
+
+# Each run uses Copilot requests from the COPILOT_GITHUB_TOKEN owner's seat, so
+# only port requests are planned automatically; other issues need a /plan comment.
+if: github.event_name != 'issues' || startsWith(github.event.issue.title, '[New Port]') || startsWith(github.event.issue.title, '[New Python Port]')
 
 # Each issue gets its own slot, so two /plan requests don't queue behind each other.
 concurrency:

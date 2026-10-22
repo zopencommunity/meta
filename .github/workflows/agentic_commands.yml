@@ -64,7 +64,7 @@ jobs:
         env:
           GH_AW_SLASH_ROUTING: '{"plan":[{"workflow":"zopen-issue-plan","events":["issue_comment","issues"],"ai_reaction":"eyes","status_comment":true}]}'
           GH_AW_LABEL_ROUTING: '{}'
-          GH_AW_HELP_COMMANDS: '[{"command":"plan","description":"Posts one grounded plan on each new meta issue: a porting plan for\n\"[New Port]\" requests (build system, dependencies mapped to exact zopen\npackages, a port to copy from, known z/OS traps) or a triage note for bugs\n(likely files and cause). Anyone can re-run it with a /plan comment.\nIt only comments: it never labels, approves, assigns or edits.","centralized":true,"decentralized":false,"source_file":"zopen-issue-plan"}]'
+          GH_AW_HELP_COMMANDS: '[{"command":"plan","description":"Posts one grounded plan on each new \"[New Port]\" or \"[New Python Port]\"\nissue (build system, dependencies mapped to exact zopen packages, a port to\ncopy from, known z/OS traps). On any other issue, a /plan comment asks for a\ntriage note (likely files and cause). It only comments: it never labels,\napproves, assigns or edits.","centralized":true,"decentralized":false,"source_file":"zopen-issue-plan"}]'
           GH_AW_HELP_COMMAND_ENABLED: 'true'
           GH_AW_SLASH_COMMAND_DOCS_URL: 'https://github.github.com/gh-aw/reference/command-triggers/'
         with:
