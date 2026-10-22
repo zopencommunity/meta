@@ -92,6 +92,26 @@ EOF
     exit "$exit_code"
 }
 
+# Check normalization status separately from its output; never invent a version.
+normalize_pkg_version() {
+    _p2r_input_version="$PKG_VERSION"
+    if _p2r_normalized_version=$(normalizeRpmVersion "$_p2r_input_version"); then
+        :
+    else
+        _p2r_normalize_status=$?
+        echo "Error: normalizeRpmVersion failed (status $_p2r_normalize_status) for '$_p2r_input_version'. Check the metadata and normalizer environment." >&2
+        return 1
+    fi
+    case "$_p2r_normalized_version" in
+        *[![:space:]]*) ;;
+        *)
+            echo "Error: normalizeRpmVersion returned an empty/whitespace version for '$_p2r_input_version'. Check the metadata and normalizer environment." >&2
+            return 1
+            ;;
+    esac
+    PKG_VERSION="$_p2r_normalized_version"
+}
+
 # Function to extract package name and version from filename
 parse_filename() {
     filename="$1"
@@ -109,7 +129,7 @@ parse_filename() {
     if echo "$basename" | grep -qE '^(.+)-([vV]?[0-9].*)$'; then
         PKG_NAME=$(echo "$basename" | sed -E 's/^(.+)-([vV]?[0-9].*)$/\1/')
         PKG_VERSION=$(echo "$basename" | sed -E 's/^(.+)-([vV]?[0-9].*)$/\2/')
-        PKG_VERSION=$(normalizeRpmVersion "$PKG_VERSION")
+        normalize_pkg_version || return 1
     # Pattern 2: NAMEVERSION.suffix (e.g., HAMN110.runnable)
     elif echo "$basename" | grep -qE '^([A-Za-z]+)([0-9]+)\.(.+)$'; then
         PKG_NAME=$(echo "$basename" | sed -E 's/^([A-Za-z]+)([0-9]+)\.(.+)$/\1/')
@@ -455,6 +475,7 @@ generate_spec() {
 output_file="$1"
 source_file="$2"
 date=$(date "+%a %b %d %Y")
+    _p2r_expected_version="$PKG_VERSION"
 
     # Analyze the pax contents first (populate global DIR_STRUCTURE)
     analyze_pax_contents "$source_file"
@@ -536,6 +557,27 @@ $(generate_install_commands "$source_file")
 - Initial RPM package created from pax archive
 - Source: $(basename "$source_file")
 EOF
+
+    if [ "$PKG_VERSION" != "$_p2r_expected_version" ]; then
+        echo "Error: PKG_VERSION changed during spec generation (including archive analysis): expected '$_p2r_expected_version', got '$PKG_VERSION'. Spec retained at '$output_file'; inspect it and the archive-analysis environment before retrying." >&2
+        return 1
+    fi
+
+    # Always check the emitted tag before validation or build delegation.
+    if ! awk -v expected="$_p2r_expected_version" '
+        /^[[:space:]]*%description([[:space:]]|$)/ { exit }
+        tolower($0) ~ /^[[:space:]]*version[[:space:]]*:/ {
+            count++
+            value = $0
+            sub(/^[^:]*:[[:space:]]*/, "", value)
+            sub(/[[:space:]]*$/, "", value)
+            if ("x" value == "x" expected) matched++
+        }
+        END { exit !(count == 1 && matched == 1) }
+    ' "$output_file"; then
+        echo "Error: Spec '$output_file' must contain exactly one Version tag with value '$_p2r_expected_version'. Spec retained for inspection; check its Version tags and metadata before retrying. RPM build not delegated." >&2
+        return 1
+    fi
 
     echo "RPM spec file generated: $output_file"
     echo ""
@@ -733,7 +775,7 @@ main() {
     fi
     
     # Parse filename to get default name and version
-    parse_filename "$PAX_FILE"
+    parse_filename "$PAX_FILE" || exit 1
     
     # Parse command line options
     while [ $# -gt 0 ]; do
@@ -859,7 +901,7 @@ main() {
     fi
     
     # Normalize version for RPM compatibility: strip optional v/V prefix and convert pre-release suffixes
-    PKG_VERSION=$(normalizeRpmVersion "$PKG_VERSION")
+    normalize_pkg_version || exit 1
     
 
     # Display extracted information
@@ -885,7 +927,7 @@ main() {
     echo ""
     
     # Generate spec file
-    generate_spec "$OUTPUT_FILE" "$PAX_FILE"
+    generate_spec "$OUTPUT_FILE" "$PAX_FILE" || exit 1
     
     # Validate spec file if requested
     if [ "$VALIDATE_SPEC" = true ]; then

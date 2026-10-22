@@ -167,7 +167,7 @@ BASH'''
       }
     } finally {
       try {
-        archiveArtifacts artifacts: '**/install/*.pax.Z,**/install/*.pax.Z.asc,rpms/**/*.rpm,wheels/**/*.whl,**/install/metadata.json,**/*_config.log,**/*_build.log,**/*_check.log,**/*_install.log, **/test.status, **/install/.builddeps, **/install/.version, **/install/.runtimedeps',
+        archiveArtifacts artifacts: '**/install/*.pax.Z,**/install/*.pax.Z.asc,rpms/**/*.rpm,**/*.spec,wheels/**/*.whl,**/install/metadata.json,**/*_config.log,**/*_build.log,**/*_check.log,**/*_install.log, **/test.status, **/install/.builddeps, **/install/.version, **/install/.runtimedeps',
                          allowEmptyArchive: true,
                          fingerprint: true
       } finally {

@@ -1,0 +1,30 @@
+name: RPM version guards
+
+on:
+  pull_request:
+    paths:
+      - bin/zopen-build
+      - bin/zopen-pax2rpm
+      - include/common.sh
+      - tests/rpm-version-guards.sh
+      - .github/workflows/rpm-version-guards.yml
+  push:
+    branches: [main]
+    paths:
+      - bin/zopen-build
+      - bin/zopen-pax2rpm
+      - include/common.sh
+      - tests/rpm-version-guards.sh
+      - .github/workflows/rpm-version-guards.yml
+
+permissions:
+  contents: read
+
+jobs:
+  version-guards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check RPM version propagation and rejection paths
+        run: sh tests/rpm-version-guards.sh
