@@ -19,7 +19,7 @@ REPOS=$(gh repo list $ORG --limit 1000 --json name -q '.[].name' | sort)
 # Pending PRs Section
 echo -e "\n---\n" >> $OUTPUT_FILE
 echo -e "<details open>" >> $OUTPUT_FILE
-echo -e '<summary><b style="font-size: 28px;">Open Update PRs</b></summary>\n' >> $OUTPUT_FILE
+echo -e '<summary><b>Open Update PRs</b></summary>\n' >> $OUTPUT_FILE
 
 echo "⏳ Checking for pending PRs..."
 FOUND_PR=false
@@ -80,7 +80,7 @@ echo -e "\n</details>" >> $OUTPUT_FILE
 #
 # Workflow Status Section
 echo -e "\n<details open>" >> $OUTPUT_FILE
-echo -e '<summary><b style="font-size: 28px;">Bump Automation Status</b></summary>\n' >> $OUTPUT_FILE
+echo -e '<summary><b>Bump Automation Status</b></summary>\n' >> $OUTPUT_FILE
 
 ACTIVE_COUNT=0
 MISSING_COUNT=0

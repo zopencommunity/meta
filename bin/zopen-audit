@@ -34,7 +34,7 @@ Options:
 Examples:
   zopen audit       check for vulnerabilities in all installed packages
 
-Report bugs at https://github.com/zopencommunity/meta/issues.
+Report bugs at https://github.com/zopencommunity/meta/issues
 
 HELPDOC
 }

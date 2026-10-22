@@ -1,0 +1,638 @@
+{
+  "general_topics": [
+    {
+      "topic": "Introduction",
+      "recordings": [],
+      "presentations": [
+        { "label": "Slide 1", "url": "https://github.com/ZOSOpenTools/meta/files/9364491/Open.Source.Guild.August.2022.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 1", "url": "https://github.com/orgs/zopencommunity/discussions/19" }
+      ]
+    },
+    {
+      "topic": "Background on z/OS Open Source Initiative",
+      "recordings": [],
+      "presentations": [
+        { "label": "Slide 1", "url": "https://github.com/ZOSOpenTools/meta/files/9364491/Open.Source.Guild.August.2022.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 1", "url": "https://github.com/orgs/zopencommunity/discussions/19" }
+      ]
+    },
+    {
+      "topic": "Getting Started",
+      "recordings": [],
+      "presentations": [
+        { "label": "Slide 1", "url": "https://github.com/ZOSOpenTools/meta/files/9364491/Open.Source.Guild.August.2022.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 1", "url": "https://github.com/orgs/zopencommunity/discussions/19" }
+      ]
+    },
+    {
+      "topic": "zOsTools Github Project",
+      "recordings": [],
+      "presentations": [
+        { "label": "Slide 2", "url": "https://github.com/ZOSOpenTools/meta/files/9618608/Open.Source.Guild.September.2022.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 2", "url": "https://github.com/orgs/zopencommunity/discussions/36" }
+      ]
+    },
+    {
+      "topic": "z/OS Open Source porting process",
+      "recordings": [],
+      "presentations": [
+        { "label": "Slide 2", "url": "https://github.com/ZOSOpenTools/meta/files/9618608/Open.Source.Guild.September.2022.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 2", "url": "https://github.com/orgs/zopencommunity/discussions/36" }
+      ]
+    },
+    {
+      "topic": "zopen framework",
+      "recordings": [
+        { "label": "Video 6", "url": "https://ibm.box.com/s/l795gouwio3vfj9ufv02imyc1uhrpw9e" },
+        { "label": "Video 8", "url": "https://ibm.ent.box.com/s/4s7mcf804opx5s9fm6qs2io9tgxveeor" },
+        { "label": "Video 13", "url": "https://ibm.webex.com/recordingservice/sites/ibm/recording/7e3af39e767c103cbdd7b2d802a53b90/playback", "pass": "9fVeMm93" },
+        { "label": "Video 7", "url": "https://ibm.webex.com/ibm/ldr.php?RCID=c428e59eca7aa0693719d12db97f4c09", "pass": "TgxgtgG5" },
+        { "label": "Video 15", "url": "https://ibm.webex.com/webappng/sites/ibm/recording/8983536fdef7103cbf7eba1ff7604edc/playback", "pass": "bEx9rpJH" },
+        { "label": "Video 16", "url": "https://ibm.webex.com/webappng/sites/ibm/recording/2b2b7b682b2a103dbadbe21cc7fa5c34/playback", "pass": "696UvgYv" },
+        { "label": "Video 18", "url": "https://ibm.box.com/s/d65zf3fzqr89jcsd0l3toqfu69r1hhnu" }
+      ],
+      "presentations": [
+        { "label": "Slide 6", "url": "https://github.com/ZOSOpenTools/meta/files/10502172/Open.Source.Guild.Jan.2023.pptx" },
+        { "label": "Slide 8", "url": "https://github.com/ZOSOpenTools/meta/files/11104125/Open.Source.Guild.Mar.2023_final.pptx" },
+        { "label": "Slide 13", "url": "https://github.com/ZOSOpenTools/meta/files/13594410/Open_Source_Guild_13_final.pptx" },
+        { "label": "Slide 7", "url": "https://github.com/ZOSOpenTools/meta/files/14694978/Open_Source_APAC_Guild_7.pptx" },
+        { "label": "Slide 15", "url": "https://github.com/ZOSOpenTools/meta/files/15017330/Open_Source_Guild_15.pptx" },
+        { "label": "Slide 16", "url": "https://github.com/user-attachments/files/16351612/Open_Source_Guild_16_final.pptx" },
+        { "label": "Slide 18", "url": "https://github.com/user-attachments/files/18771964/Open_Source_Guild_18_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 6", "url": "https://github.com/orgs/zopencommunity/discussions/107" },
+        { "label": "Guild 8", "url": "https://github.com/orgs/zopencommunity/discussions/237" },
+        { "label": "Guild 13", "url": "https://github.com/orgs/zopencommunity/discussions/603" },
+        { "label": "Guild 7", "url": "https://github.com/orgs/zopencommunity/discussions/728" },
+        { "label": "Guild 15", "url": "https://github.com/orgs/zopencommunity/discussions/751" },
+        { "label": "Guild 16", "url": "https://github.com/orgs/zopencommunity/discussions/837" },
+        { "label": "Guild 18", "url": "https://github.com/orgs/zopencommunity/discussions/956" }
+      ]
+    },
+    {
+      "topic": "Security and Vulnerability Scanning",
+      "recordings": [
+        { "label": "Video 21", "url": "https://ibm.box.com/s/y8qlyl0m5vy66sawxvaqyg9ip794hloq" }
+      ],
+      "presentations": [
+        { "label": "Slide 21", "url": "https://ibm.box.com/s/btaee2ap9iq9m8u9vr4gcicfvjmbrapd" }
+      ],
+      "discussions": [
+        { "label": "Guild 21", "url": "https://github.com/orgs/zopencommunity/discussions/1220" }
+      ]
+    }
+  ],
+  "tools_topics": [
+    {
+      "tool": "zoslib",
+      "recordings": [
+        { "label": "Video 3", "url": "https://ibm.box.com/s/felg3wa2bzwvgophibb7cqeplspl2p1k" },
+        { "label": "Video 8", "url": "https://ibm.ent.box.com/s/4s7mcf804opx5s9fm6qs2io9tgxveeor" }
+      ],
+      "presentations": [
+        { "label": "Slide 3", "url": "https://github.com/ZOSOpenTools/meta/files/9869973/Open.Source.Guild.October.2022.pptx" },
+        { "label": "Slide 8", "url": "https://github.com/ZOSOpenTools/meta/files/11104125/Open.Source.Guild.Mar.2023_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 3", "url": "https://github.com/orgs/zopencommunity/discussions/57" },
+        { "label": "Guild 8", "url": "https://github.com/orgs/zopencommunity/discussions/237" }
+      ]
+    },
+    {
+      "tool": "Git",
+      "recordings": [
+        { "label": "Video 4", "url": "https://ibm.box.com/s/xau73pn3emlf5nlyzn7aq198s11jj0w9" },
+        { "label": "Video 5", "url": "https://ibm.ent.box.com/s/tkc6u6k2l9iy87qxzzebi39ul1o56rpm" },
+        { "label": "Video 6", "url": "https://ibm.box.com/s/l795gouwio3vfj9ufv02imyc1uhrpw9e" }
+      ],
+      "presentations": [
+        { "label": "Slide 4", "url": "https://github.com/ZOSOpenTools/meta/files/10125732/Open.Source.Guild.November.2022_final.pptx" },
+        { "label": "Slide 5", "url": "https://github.com/ZOSOpenTools/meta/files/10239207/Open.Source.Guild.Dec.2022.1.pptx" },
+        { "label": "Slide 6", "url": "https://github.com/ZOSOpenTools/meta/files/10502172/Open.Source.Guild.Jan.2023.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 4", "url": "https://github.com/orgs/zopencommunity/discussions/78" },
+        { "label": "Guild 5", "url": "https://github.com/orgs/zopencommunity/discussions/93" },
+        { "label": "Guild 6", "url": "https://github.com/orgs/zopencommunity/discussions/107" }
+      ]
+    },
+    {
+      "tool": "Bash",
+      "recordings": [
+        { "label": "Video 4", "url": "https://ibm.box.com/s/xau73pn3emlf5nlyzn7aq198s11jj0w9" },
+        { "label": "Video 6", "url": "https://ibm.box.com/s/l795gouwio3vfj9ufv02imyc1uhrpw9e" },
+        { "label": "Video 10", "url": "https://ibm.ent.box.com/s/v0zgx1nobtx7c4txlm2m64mqhlruspvm" }
+      ],
+      "presentations": [
+        { "label": "Slide 4", "url": "https://github.com/ZOSOpenTools/meta/files/10125732/Open.Source.Guild.November.2022_final.pptx" },
+        { "label": "Slide 6", "url": "https://github.com/ZOSOpenTools/meta/files/10502172/Open.Source.Guild.Jan.2023.pptx" },
+        { "label": "Slide 10", "url": "https://github.com/ZOSOpenTools/meta/files/11765618/Open_Source_Guild_10.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 4", "url": "https://github.com/orgs/zopencommunity/discussions/78" },
+        { "label": "Guild 6", "url": "https://github.com/orgs/zopencommunity/discussions/107" },
+        { "label": "Guild 10", "url": "https://github.com/orgs/zopencommunity/discussions/324" }
+      ]
+    },
+    {
+      "tool": "Cmake",
+      "recordings": [
+        { "label": "Video 4", "url": "https://ibm.box.com/s/xau73pn3emlf5nlyzn7aq198s11jj0w9" },
+        { "label": "Video 5", "url": "https://ibm.ent.box.com/s/tkc6u6k2l9iy87qxzzebi39ul1o56rpm" }
+      ],
+      "presentations": [
+        { "label": "Slide 4", "url": "https://github.com/ZOSOpenTools/meta/files/10125732/Open.Source.Guild.November.2022_final.pptx" },
+        { "label": "Slide 5", "url": "https://github.com/ZOSOpenTools/meta/files/10239207/Open.Source.Guild.Dec.2022.1.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 4", "url": "https://github.com/orgs/zopencommunity/discussions/78" },
+        { "label": "Guild 5", "url": "https://github.com/orgs/zopencommunity/discussions/93" }
+      ]
+    },
+    {
+      "tool": "wget",
+      "recordings": [
+        { "label": "Video 4", "url": "https://ibm.box.com/s/xau73pn3emlf5nlyzn7aq198s11jj0w9" }
+      ],
+      "presentations": [
+        { "label": "Slide 4", "url": "https://github.com/ZOSOpenTools/meta/files/10125732/Open.Source.Guild.November.2022_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 4", "url": "https://github.com/orgs/zopencommunity/discussions/78" }
+      ]
+    },
+    {
+      "tool": "ncdu",
+      "recordings": [
+        { "label": "Video 4", "url": "https://ibm.box.com/s/xau73pn3emlf5nlyzn7aq198s11jj0w9" }
+      ],
+      "presentations": [
+        { "label": "Slide 4", "url": "https://github.com/ZOSOpenTools/meta/files/10125732/Open.Source.Guild.November.2022_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 4", "url": "https://github.com/orgs/zopencommunity/discussions/78" }
+      ]
+    },
+    {
+      "tool": "zip",
+      "recordings": [
+        { "label": "Video 4", "url": "https://ibm.box.com/s/xau73pn3emlf5nlyzn7aq198s11jj0w9" },
+        { "label": "Video 19", "url": "https://ibm.box.com/s/f4kfshmwll9lkhoou9i5ohba5xnbdyjl" }
+      ],
+      "presentations": [
+        { "label": "Slide 4", "url": "https://github.com/ZOSOpenTools/meta/files/10125732/Open.Source.Guild.November.2022_final.pptx" },
+        { "label": "Slide 19", "url": "https://ibm.box.com/s/y3kbjxx5fygrc2010vj0231csao500cc" }
+      ],
+      "discussions": [
+        { "label": "Guild 4", "url": "https://github.com/orgs/zopencommunity/discussions/78" },
+        { "label": "Guild 19", "url": "https://github.com/orgs/zopencommunity/discussions/983" }
+      ]
+    },
+    {
+      "tool": "unzip",
+      "recordings": [
+        { "label": "Video 19", "url": "https://ibm.box.com/s/f4kfshmwll9lkhoou9i5ohba5xnbdyjl" }
+      ],
+      "presentations": [
+        { "label": "Slide 19", "url": "https://ibm.box.com/s/y3kbjxx5fygrc2010vj0231csao500cc" }
+      ],
+      "discussions": [
+        { "label": "Guild 19", "url": "https://github.com/orgs/zopencommunity/discussions/983" }
+      ]
+    },
+    {
+      "tool": "zEDC Compression",
+      "recordings": [
+        { "label": "Video 19", "url": "https://ibm.box.com/s/f4kfshmwll9lkhoou9i5ohba5xnbdyjl" }
+      ],
+      "presentations": [
+        { "label": "Slide 19", "url": "https://ibm.box.com/s/y3kbjxx5fygrc2010vj0231csao500cc" }
+      ],
+      "discussions": [
+        { "label": "Guild 19", "url": "https://github.com/orgs/zopencommunity/discussions/983" }
+      ]
+    },
+    {
+      "tool": "autoconf",
+      "recordings": [
+        { "label": "Video 4", "url": "https://ibm.box.com/s/xau73pn3emlf5nlyzn7aq198s11jj0w9" }
+      ],
+      "presentations": [
+        { "label": "Slide 4", "url": "https://github.com/ZOSOpenTools/meta/files/10125732/Open.Source.Guild.November.2022_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 4", "url": "https://github.com/orgs/zopencommunity/discussions/78" }
+      ]
+    },
+    {
+      "tool": "vim",
+      "recordings": [
+        { "label": "Video 5", "url": "https://ibm.ent.box.com/s/tkc6u6k2l9iy87qxzzebi39ul1o56rpm" },
+        { "label": "Video 9", "url": "https://ibm.ent.box.com/s/a2ep0vyf03ogwmeesg61xnlcmsu99l47" },
+        { "label": "Video 15", "url": "https://ibm.webex.com/webappng/sites/ibm/recording/8983536fdef7103cbf7eba1ff7604edc/playback", "pass": "bEx9rpJH" },
+        { "label": "Video 17", "url": "https://ibm.box.com/s/yq3wmuq5brgjyxitd7zfoavf6s2ezmnp" }
+      ],
+      "presentations": [
+        { "label": "Slide 5", "url": "https://github.com/ZOSOpenTools/meta/files/10239207/Open.Source.Guild.Dec.2022.1.pptx" },
+        { "label": "Slide 9", "url": "https://ibm.box.com/s/w5hsh14n3ymcdx66l6zjq91k3kjmw9lp" },
+        { "label": "Slide 15", "url": "https://github.com/ZOSOpenTools/meta/files/15017330/Open_Source_Guild_15.pptx" },
+        { "label": "Slide 17", "url": "https://github.com/user-attachments/files/16970105/Open_Source_Guild_Editor_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 5", "url": "https://github.com/orgs/zopencommunity/discussions/93" },
+        { "label": "Guild 9", "url": "https://github.com/orgs/zopencommunity/discussions/867" },
+        { "label": "Guild 15", "url": "https://github.com/orgs/zopencommunity/discussions/751" },
+        { "label": "Guild 17", "url": "https://github.com/orgs/zopencommunity/discussions/857" }
+      ]
+    },
+    {
+      "tool": "Ninja Builds",
+      "recordings": [
+        { "label": "Video 5", "url": "https://ibm.ent.box.com/s/tkc6u6k2l9iy87qxzzebi39ul1o56rpm" }
+      ],
+      "presentations": [
+        { "label": "Slide 5", "url": "https://github.com/ZOSOpenTools/meta/files/10239207/Open.Source.Guild.Dec.2022.1.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 5", "url": "https://github.com/orgs/zopencommunity/discussions/93" }
+      ]
+    },
+    {
+      "tool": "mandb",
+      "recordings": [
+        { "label": "Video 7", "url": "https://ibm.box.com/s/eslnwo94gqhmjkjqnlu87advg2r0qk4x" },
+        { "label": "Video 10", "url": "https://ibm.ent.box.com/s/v0zgx1nobtx7c4txlm2m64mqhlruspvm" }
+      ],
+      "presentations": [
+        { "label": "Slide 7", "url": "https://github.com/ZOSOpenTools/meta/files/10807356/Open.Source.Guild.Feb.2023_final.pptx" },
+        { "label": "Slide 10", "url": "https://github.com/ZOSOpenTools/meta/files/11765618/Open_Source_Guild_10.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 7", "url": "https://github.com/orgs/zopencommunity/discussions/186" },
+        { "label": "Guild 10", "url": "https://github.com/orgs/zopencommunity/discussions/324" }
+      ]
+    },
+    {
+      "tool": "zigi",
+      "recordings": [
+        { "label": "Video 7", "url": "https://ibm.box.com/s/eslnwo94gqhmjkjqnlu87advg2r0qk4x" }
+      ],
+      "presentations": [
+        { "label": "Slide 7", "url": "https://github.com/ZOSOpenTools/meta/files/10807356/Open.Source.Guild.Feb.2023_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 7", "url": "https://github.com/orgs/zopencommunity/discussions/186" }
+      ]
+    },
+    {
+      "tool": "Go",
+      "recordings": [
+        { "label": "Video 9", "url": "https://ibm.box.com/s/to20m76h2m42c2w9w5a4lo77w2a3nec3" }
+      ],
+      "presentations": [
+        { "label": "Slide 9", "url": "https://github.com/ZOSOpenTools/meta/files/11389761/Open_Source_Guild_9_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 9", "url": "https://github.com/orgs/zopencommunity/discussions/274" }
+      ]
+    },
+    {
+      "tool": "Clang",
+      "recordings": [
+        { "label": "Video 9", "url": "https://ibm.box.com/s/to20m76h2m42c2w9w5a4lo77w2a3nec3" }
+      ],
+      "presentations": [
+        { "label": "Slide 9", "url": "https://github.com/ZOSOpenTools/meta/files/11389761/Open_Source_Guild_9_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 9", "url": "https://github.com/orgs/zopencommunity/discussions/274" }
+      ]
+    },
+    {
+      "tool": "gpg",
+      "recordings": [
+        { "label": "Video 10", "url": "https://ibm.ent.box.com/s/v0zgx1nobtx7c4txlm2m64mqhlruspvm" },
+        { "label": "Video 9", "url": "https://ibm.ent.box.com/s/a2ep0vyf03ogwmeesg61xnlcmsu99l47" }
+      ],
+      "presentations": [
+        { "label": "Slide 10", "url": "https://github.com/ZOSOpenTools/meta/files/11765618/Open_Source_Guild_10.pptx" },
+        { "label": "Slide 9", "url": "https://ibm.box.com/s/w5hsh14n3ymcdx66l6zjq91k3kjmw9lp" }
+      ],
+      "discussions": [
+        { "label": "Guild 10", "url": "https://github.com/orgs/zopencommunity/discussions/324" },
+        { "label": "Guild 9", "url": "https://github.com/orgs/zopencommunity/discussions/867" }
+      ]
+    },
+    {
+      "tool": "sudo",
+      "recordings": [
+        { "label": "Video 10", "url": "https://ibm.ent.box.com/s/v0zgx1nobtx7c4txlm2m64mqhlruspvm" }
+      ],
+      "presentations": [
+        { "label": "Slide 10", "url": "https://github.com/ZOSOpenTools/meta/files/11765618/Open_Source_Guild_10.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 10", "url": "https://github.com/orgs/zopencommunity/discussions/324" }
+      ]
+    },
+    {
+      "tool": "iconv",
+      "recordings": [
+        { "label": "Video 10", "url": "https://ibm.ent.box.com/s/v0zgx1nobtx7c4txlm2m64mqhlruspvm" }
+      ],
+      "presentations": [
+        { "label": "Slide 10", "url": "https://github.com/ZOSOpenTools/meta/files/11765618/Open_Source_Guild_10.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 10", "url": "https://github.com/orgs/zopencommunity/discussions/324" }
+      ]
+    },
+    {
+      "tool": "1 Password Teams",
+      "recordings": [
+        { "label": "Video 11", "url": "https://ibm.ent.box.com/s/rdrfp4v1t1rsgzzfliwleytdfwyt0qn4" }
+      ],
+      "presentations": [
+        { "label": "Slide 11", "url": "https://github.com/ZOSOpenTools/meta/files/12003556/Open_Source_Guild_11_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 11", "url": "https://github.com/orgs/zopencommunity/discussions/351" }
+      ]
+    },
+    {
+      "tool": "powerline-go",
+      "recordings": [
+        { "label": "Video 11", "url": "https://ibm.ent.box.com/s/rdrfp4v1t1rsgzzfliwleytdfwyt0qn4" }
+      ],
+      "presentations": [
+        { "label": "Slide 11", "url": "https://github.com/ZOSOpenTools/meta/files/12003556/Open_Source_Guild_11_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 11", "url": "https://github.com/orgs/zopencommunity/discussions/351" }
+      ]
+    },
+    {
+      "tool": "direnv",
+      "recordings": [
+        { "label": "Video 11", "url": "https://ibm.ent.box.com/s/rdrfp4v1t1rsgzzfliwleytdfwyt0qn4" }
+      ],
+      "presentations": [
+        { "label": "Slide 11", "url": "https://github.com/ZOSOpenTools/meta/files/12003556/Open_Source_Guild_11_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 11", "url": "https://github.com/orgs/zopencommunity/discussions/351" }
+      ]
+    },
+    {
+      "tool": "screen",
+      "recordings": [
+        { "label": "Video 11", "url": "https://ibm.ent.box.com/s/rdrfp4v1t1rsgzzfliwleytdfwyt0qn4" }
+      ],
+      "presentations": [
+        { "label": "Slide 11", "url": "https://github.com/ZOSOpenTools/meta/files/12003556/Open_Source_Guild_11_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 11", "url": "https://github.com/orgs/zopencommunity/discussions/351" }
+      ]
+    },
+    {
+      "tool": "c3270",
+      "recordings": [
+        { "label": "Video 11", "url": "https://ibm.ent.box.com/s/rdrfp4v1t1rsgzzfliwleytdfwyt0qn4" }
+      ],
+      "presentations": [
+        { "label": "Slide 11", "url": "https://github.com/ZOSOpenTools/meta/files/12003556/Open_Source_Guild_11_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 11", "url": "https://github.com/orgs/zopencommunity/discussions/351" }
+      ]
+    },
+    {
+      "tool": "bump",
+      "recordings": [
+        { "label": "Video 11", "url": "https://ibm.ent.box.com/s/rdrfp4v1t1rsgzzfliwleytdfwyt0qn4" }
+      ],
+      "presentations": [
+        { "label": "Slide 11", "url": "https://github.com/ZOSOpenTools/meta/files/12003556/Open_Source_Guild_11_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 11", "url": "https://github.com/orgs/zopencommunity/discussions/351" }
+      ]
+    },
+    {
+      "tool": "GitHub CLI",
+      "recordings": [
+        { "label": "Video 13", "url": "https://ibm.webex.com/recordingservice/sites/ibm/recording/7e3af39e767c103cbdd7b2d802a53b90/playback", "pass": "9fVeMm93" }
+      ],
+      "presentations": [
+        { "label": "Slide 13", "url": "https://github.com/ZOSOpenTools/meta/files/13594410/Open_Source_Guild_13_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 13", "url": "https://github.com/orgs/zopencommunity/discussions/603" }
+      ]
+    },
+    {
+      "tool": "Zos Code Page Tools",
+      "recordings": [
+        { "label": "Video 13", "url": "https://ibm.webex.com/recordingservice/sites/ibm/recording/7e3af39e767c103cbdd7b2d802a53b90/playback", "pass": "9fVeMm93" }
+      ],
+      "presentations": [
+        { "label": "Slide 13", "url": "https://github.com/ZOSOpenTools/meta/files/13594410/Open_Source_Guild_13_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 13", "url": "https://github.com/orgs/zopencommunity/discussions/603" }
+      ]
+    },
+    {
+      "tool": "pstree",
+      "recordings": [
+        { "label": "Video 13", "url": "https://ibm.webex.com/recordingservice/sites/ibm/recording/7e3af39e767c103cbdd7b2d802a53b90/playback", "pass": "9fVeMm93" }
+      ],
+      "presentations": [
+        { "label": "Slide 13", "url": "https://github.com/ZOSOpenTools/meta/files/13594410/Open_Source_Guild_13_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 13", "url": "https://github.com/orgs/zopencommunity/discussions/603" }
+      ]
+    },
+    {
+      "tool": "nano",
+      "recordings": [
+        { "label": "Video 6", "url": "https://ibm.webex.com/ibm/ldr.php?RCID=22de531d2bab214aa629203a04d7aa3d", "pass": "YiNv9aHy" },
+        { "label": "Video 9", "url": "https://ibm.ent.box.com/s/a2ep0vyf03ogwmeesg61xnlcmsu99l47" },
+        { "label": "Video 17", "url": "https://ibm.box.com/s/yq3wmuq5brgjyxitd7zfoavf6s2ezmnp" }
+      ],
+      "presentations": [
+        { "label": "Slide 6", "url": "https://github.com/ZOSOpenTools/meta/files/14040065/Open_Source_APAC_Guild_6.pptx" },
+        { "label": "Slide 9", "url": "https://ibm.box.com/s/w5hsh14n3ymcdx66l6zjq91k3kjmw9lp" },
+        { "label": "Slide 17", "url": "https://github.com/user-attachments/files/16970105/Open_Source_Guild_Editor_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 6", "url": "https://github.com/orgs/zopencommunity/discussions/664" },
+        { "label": "Guild 9", "url": "https://github.com/orgs/zopencommunity/discussions/867" },
+        { "label": "Guild 17", "url": "https://github.com/orgs/zopencommunity/discussions/857" }
+      ]
+    },
+    {
+      "tool": "neovim",
+      "recordings": [
+        { "label": "Video 19", "url": "https://ibm.box.com/s/f4kfshmwll9lkhoou9i5ohba5xnbdyjl" },
+        { "label": "Video 20", "url": "https://ibm.box.com/shared/static/sdy7gwp0zy6a9hbkkisd6qmr818bp2f1.mp4" }
+      ],
+      "presentations": [
+        { "label": "Slide 19", "url": "https://ibm.box.com/s/y3kbjxx5fygrc2010vj0231csao500cc" },
+        { "label": "Slide 20", "url": "https://ibm.box.com/s/41c3loj6ue23fd9jl8nwwe40hywsv8ks" }
+      ],
+      "discussions": [
+        { "label": "Guild 19", "url": "https://github.com/orgs/zopencommunity/discussions/983" },
+        { "label": "Guild 20", "url": "https://github.com/orgs/zopencommunity/discussions/1162" }
+      ]
+    },
+    {
+      "tool": "tree",
+      "recordings": [
+        { "label": "Video 6", "url": "https://ibm.webex.com/ibm/ldr.php?RCID=22de531d2bab214aa629203a04d7aa3d", "pass": "YiNv9aHy" }
+      ],
+      "presentations": [
+        { "label": "Slide 6", "url": "https://github.com/ZOSOpenTools/meta/files/14040065/Open_Source_APAC_Guild_6.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 6", "url": "https://github.com/orgs/zopencommunity/discussions/664" }
+      ]
+    },
+    {
+      "tool": "Usage Statistics",
+      "recordings": [
+        { "label": "Video 6", "url": "https://ibm.webex.com/ibm/ldr.php?RCID=22de531d2bab214aa629203a04d7aa3d", "pass": "YiNv9aHy" }
+      ],
+      "presentations": [
+        { "label": "Slide 6", "url": "https://github.com/ZOSOpenTools/meta/files/14040065/Open_Source_APAC_Guild_6.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 6", "url": "https://github.com/orgs/zopencommunity/discussions/664" }
+      ]
+    },
+    {
+      "tool": "shdoc",
+      "recordings": [
+        { "label": "Video 6", "url": "https://ibm.webex.com/ibm/ldr.php?RCID=22de531d2bab214aa629203a04d7aa3d", "pass": "YiNv9aHy" }
+      ],
+      "presentations": [
+        { "label": "Slide 6", "url": "https://github.com/ZOSOpenTools/meta/files/14040065/Open_Source_APAC_Guild_6.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 6", "url": "https://github.com/orgs/zopencommunity/discussions/664" }
+      ]
+    },
+    {
+      "tool": "Documentation Enhancement",
+      "recordings": [
+        { "label": "Video 6", "url": "https://ibm.webex.com/ibm/ldr.php?RCID=22de531d2bab214aa629203a04d7aa3d", "pass": "YiNv9aHy" }
+      ],
+      "presentations": [
+        { "label": "Slide 6", "url": "https://github.com/ZOSOpenTools/meta/files/14040065/Open_Source_APAC_Guild_6.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 6", "url": "https://github.com/orgs/zopencommunity/discussions/664" }
+      ]
+    },
+    {
+      "tool": "Terraform",
+      "recordings": [
+        { "label": "Video 7", "url": "https://ibm.webex.com/ibm/ldr.php?RCID=c428e59eca7aa0693719d12db97f4c09", "pass": "TgxgtgG5" }
+      ],
+      "presentations": [
+        { "label": "Slide 7", "url": "https://github.com/ZOSOpenTools/meta/files/14694978/Open_Source_APAC_Guild_7.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 7", "url": "https://github.com/orgs/zopencommunity/discussions/728" }
+      ]
+    },
+    {
+      "tool": "Maven",
+      "recordings": [
+        { "label": "Video 7", "url": "https://ibm.webex.com/ibm/ldr.php?RCID=c428e59eca7aa0693719d12db97f4c09", "pass": "TgxgtgG5" }
+      ],
+      "presentations": [
+        { "label": "Slide 7", "url": "https://github.com/ZOSOpenTools/meta/files/14694978/Open_Source_APAC_Guild_7.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 7", "url": "https://github.com/orgs/zopencommunity/discussions/728" }
+      ]
+    },
+    {
+      "tool": "Doxygen",
+      "recordings": [
+        { "label": "Video 7", "url": "https://ibm.webex.com/ibm/ldr.php?RCID=c428e59eca7aa0693719d12db97f4c09", "pass": "TgxgtgG5" }
+      ],
+      "presentations": [
+        { "label": "Slide 7", "url": "https://github.com/ZOSOpenTools/meta/files/14694978/Open_Source_APAC_Guild_7.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 7", "url": "https://github.com/orgs/zopencommunity/discussions/728" }
+      ]
+    },
+    {
+      "tool": "V8 Javascript Engine",
+      "recordings": [
+        { "label": "Video 16", "url": "https://ibm.webex.com/webappng/sites/ibm/recording/2b2b7b682b2a103dbadbe21cc7fa5c34/playback", "pass": "696UvgYv" }
+      ],
+      "presentations": [
+        { "label": "Slide 16", "url": "https://github.com/user-attachments/files/16351612/Open_Source_Guild_16_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 16", "url": "https://github.com/orgs/zopencommunity/discussions/837" }
+      ]
+    },
+    {
+      "tool": "Boost",
+      "recordings": [
+        { "label": "Video 16", "url": "https://ibm.webex.com/webappng/sites/ibm/recording/2b2b7b682b2a103dbadbe21cc7fa5c34/playback", "pass": "696UvgYv" }
+      ],
+      "presentations": [
+        { "label": "Slide 16", "url": "https://github.com/user-attachments/files/16351612/Open_Source_Guild_16_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 16", "url": "https://github.com/orgs/zopencommunity/discussions/837" }
+      ]
+    },
+    {
+      "tool": "Emacs",
+      "recordings": [
+        { "label": "Video 9", "url": "https://ibm.ent.box.com/s/a2ep0vyf03ogwmeesg61xnlcmsu99l47" },
+        { "label": "Video 17", "url": "https://ibm.box.com/s/yq3wmuq5brgjyxitd7zfoavf6s2ezmnp" }
+      ],
+      "presentations": [
+        { "label": "Slide 9", "url": "https://ibm.box.com/s/w5hsh14n3ymcdx66l6zjq91k3kjmw9lp" },
+        { "label": "Slide 17", "url": "https://github.com/user-attachments/files/16970105/Open_Source_Guild_Editor_final.pptx" }
+      ],
+      "discussions": [
+        { "label": "Guild 9", "url": "https://github.com/orgs/zopencommunity/discussions/867" },
+        { "label": "Guild 17", "url": "https://github.com/orgs/zopencommunity/discussions/857" }
+      ]
+    },
+    {
+      "tool": "RPM / DNF",
+      "recordings": [
+        { "label": "Video 20", "url": "https://ibm.box.com/shared/static/sdy7gwp0zy6a9hbkkisd6qmr818bp2f1.mp4" }
+      ],
+      "presentations": [
+        { "label": "Slide 20", "url": "https://ibm.box.com/s/41c3loj6ue23fd9jl8nwwe40hywsv8ks" }
+      ],
+      "discussions": [
+        { "label": "Guild 20", "url": "https://github.com/orgs/zopencommunity/discussions/1162" }
+      ]
+    }
+  ]
+}

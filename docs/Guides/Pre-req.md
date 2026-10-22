@@ -4,9 +4,9 @@ Before you begin, make sure you have access to a z/OS UNIX environment and that 
 
 ## Setting up your z/OS environment
 
-z/OS Open Source tools require [z/OS Enhanced ASCII support](https://www.ibm.com/docs/en/zos/3.1.0?topic=pages-enhanced-ascii). This support enables automatic conversion between codepages for tagged files. To take advantage of this support, you need to set the following environment variables:
+z/OS Open Source tools require [z/OS Enhanced ASCII support](https://www.ibm.com/docs/en/zos/3.1.0?topic=pages-enhanced-ascii). This support enables automatic conversion between codepages for tagged files. To take advantage of this support, set the following environment variables:
 
-```
+```bash
 export _BPXK_AUTOCVT=ON
 export _CEE_RUNOPTS="$_CEE_RUNOPTS FILETAG(AUTOCVT,AUTOTAG) POSIX(ON)"
 export _TAG_REDIR_ERR=txt
@@ -20,15 +20,13 @@ We recommend adding these environment variables to your `.profile` or `.bashrc` 
 
 To consume zopen community, all you need is a z/OS UNIX system and unrestricted access to github.com.
 
-### If you want to contribute and improve the z/OS Open Source Tools 
+### If you want to contribute and improve the z/OS Open Source Tools
 
 You will need the IBM C/C++ compiler on your system. There are two options:
-- Clang
-  - The default compiler is clang. You can download the pax edition from IBM at https://epwt-www.mybluemix.net/software/support/trial/cst/programwebsite.wss?siteId=1803. This version may be used for development of open source software. Alternatively, if you have IBM Open XL C/C++ installed, you can use it instead of clang.
-- XL Clang 
-  - You can download it as a web deliverable add-on feature to your XL C/C++ compiler 
-[here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
 
-If you are building Go projects, you will need the IBM Open Enterprise SDK for Go compiler installed. You can obtain it here: https://www.ibm.com/products/open-enterprise-sdk-go-zos
+- **Clang** — The default compiler. Download the pax edition from IBM at [https://epwt-www.mybluemix.net/software/support/trial/cst/programwebsite.wss?siteId=1803](https://epwt-www.mybluemix.net/software/support/trial/cst/programwebsite.wss?siteId=1803). This version may be used for development of open source software. Alternatively, if you have IBM Open XL C/C++ installed, you can use it instead of clang.
+- **XL Clang** — Download it as a web deliverable add-on feature to your XL C/C++ compiler [here](https://www.ibm.com/servers/resourcelink/svc00100.nsf/pages/xlCC++V241ForZOsV24).
+
+If you are building Go projects, you will need the IBM Open Enterprise SDK for Go compiler installed. You can obtain it [here](https://www.ibm.com/products/open-enterprise-sdk-go-zos).
 
 For more details on porting, visit the [porting to z/OS guide](Porting).

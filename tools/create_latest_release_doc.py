@@ -6,17 +6,22 @@ The resulting markdown will be added to the zopen community docs
 import json
 import os
 import requests
+
 from datetime import datetime, timedelta
 import argparse
 from collections import defaultdict
 
 def generate_markdown(data, output_file):
     release_info = defaultdict(lambda: defaultdict(list))
+    one_year_ago = datetime.utcnow() - timedelta(days=365)
 
     for tool, releases in data.items():
         for release in releases:
             # Correct format string for "YYYY-MM-DDTHH:MM:SSZ"
             release_date = datetime.strptime(release['date'], "%Y-%m-%dT%H:%M:%SZ")
+            # Skip releases older than one year
+            if release_date < one_year_ago:
+                continue
             # Calculate the start of the week for the release date (Monday as the first day of the week)
             week_start = release_date - timedelta(days=release_date.weekday())
             week_start_str = week_start.strftime('%Y-%m-%d')
@@ -62,5 +67,5 @@ if __name__ == '__main__':
         with open(args.input, 'r', encoding='utf-8') as f:
             data = json.load(f)['release_data']
 
-    generate_markdown(data, args.output)
 
+    generate_markdown(data, args.output)
