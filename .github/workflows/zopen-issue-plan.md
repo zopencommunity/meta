@@ -65,7 +65,16 @@ steps:
   - name: Fetch Homebrew metadata for a new port request
     env:
       TITLE: ${{ github.event.issue.title }}
+      # /plan comments arrive through agentic_commands.yml as a workflow_dispatch
+      # that names the issue in aw_context instead of github.event.issue.
+      AW_CONTEXT: ${{ github.event.inputs.aw_context }}
+      ISSUE_TOKEN: ${{ github.token }}
     run: |
+      if [ -z "$TITLE" ] && [ -n "$AW_CONTEXT" ]; then
+        n=$(printf '%s' "$AW_CONTEXT" | jq -r 'select(.item_type == "issue") | .item_number // empty')
+        [ -n "$n" ] && TITLE=$(curl -fsSL -H "Authorization: Bearer ${ISSUE_TOKEN}" \
+          "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/issues/${n}" | jq -r .title)
+      fi
       # "[New Port]: Foo Bar" -> "foo-bar"; keep only characters valid in a formula name
       name=$(printf '%s' "$TITLE" | sed -n 's/^\[New \(Python \)\{0,1\}Port\]:[[:space:]]*//p' \
         | tr '[:upper:] ' '[:lower:]-' | tr -cd 'a-z0-9._+-' | sed 's/port$//')
@@ -81,7 +90,8 @@ timeout-minutes: 15
 # zopen issue planner
 
 You help maintainers of the zopen community (open source tools for z/OS UNIX)
-respond to issue #${{ github.event.issue.number }} in ${{ github.repository }}.
+respond to the issue given as **issue-number** in the GitHub context below, in
+${{ github.repository }}.
 Post **one** comment with a plan grounded in real data. You are read-only: do
 not label, approve, assign, or promise anything on behalf of the maintainers.
 
