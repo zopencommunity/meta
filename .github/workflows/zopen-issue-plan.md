@@ -37,11 +37,12 @@ permissions:
 network: defaults
 
 # COPILOT_GITHUB_TOKEN is a Copilot Free token for now. gh-aw resolves "auto" to
-# a model Free doesn't include, so name one that Free does (it is what Copilot's
-# own auto picks on Free). Switch back to the default once the org pays for Copilot.
+# a model Free doesn't include, and Free only accepts gpt-4.1 when a model is
+# named (others are reachable only through Copilot's own auto selection).
+# Switch back to the default once the org pays for Copilot.
 engine:
   id: copilot
-  model: gpt-6-luna
+  model: gpt-4.1
 
 tools:
   github:
@@ -58,7 +59,7 @@ safe-outputs:
   # Failures show up in the Actions tab; don't open "[aw]" issues in meta for them.
   report-failure-as-issue: false
   threat-detection:
-    model: gpt-6-luna
+    model: gpt-4.1
     report-as-issue: false
 
 steps:
