@@ -316,7 +316,7 @@ for dir in bin altbin lib libexec include etc share man doc docs scripts data; d
         esac
         echo "Installing $dir/ -> $dest"
         mkdir -p "$dest"
-        (cd "$dir" && pax -rw -p p . "$dest/") || { echo "ERROR: failed to install $dir/ -> $dest" >&2; exit 1; }
+        (cd "$dir" && pax -rw -p pe . "$dest/") || { echo "ERROR: failed to install $dir/ -> $dest" >&2; exit 1; }
     fi
 done
 
@@ -330,7 +330,7 @@ for item in *; do
     if [ -e "$item" ]; then
         echo "Installing misc item: $item -> %{_miscdir}"
         mkdir -p "%{buildroot}%{_miscdir}"
-        pax -rw -p p "$item" "%{buildroot}%{_miscdir}/" || { echo "ERROR: failed to install misc item $item" >&2; exit 1; }
+        pax -rw -p pe "$item" "%{buildroot}%{_miscdir}/" || { echo "ERROR: failed to install misc item $item" >&2; exit 1; }
     fi
 done
 
@@ -338,7 +338,7 @@ done
 for docfile in README* LICENSE* COPYING* CHANGELOG* AUTHORS* INSTALL* NEWS*; do
     if [ -f "$docfile" ]; then
         mkdir -p %{buildroot}%{_docdir}
-        pax -rw -p p "$docfile" %{buildroot}%{_docdir}/ || { echo "ERROR: failed to install doc file $docfile" >&2; exit 1; }
+        pax -rw -p pe "$docfile" %{buildroot}%{_docdir}/ || { echo "ERROR: failed to install doc file $docfile" >&2; exit 1; }
     fi
 done
 
@@ -508,13 +508,13 @@ EOF
         *.pax.Z)
             cat >> "$output_file" << EOF
 # Extract compressed pax archive
-pax -r -p p -zf %{_sourcedir}/$(basename "$source_file")
+pax -r -p pe -zf %{_sourcedir}/$(basename "$source_file")
 EOF
             ;;
         *)
             cat >> "$output_file" << EOF
 # Extract pax archive
-pax -r -p p -f %{_sourcedir}/$(basename "$source_file")
+pax -r -p pe -f %{_sourcedir}/$(basename "$source_file")
 EOF
             ;;
     esac

@@ -3184,6 +3184,11 @@ getProjectName()
     return 0
   fi
 
+  # Strip a trailing -DEV suffix before any further processing so that a
+  # dev-build name like "check_python-DEV" yields "check_python" as the
+  # project name rather than the full string (DEV is not a version number).
+  package="${package%-DEV}"
+
   # Intelligent fallback: try to extract raw version and derive name
   rawVersion=$(extractRawVersionFromPackage "$package")
   if [ -n "$rawVersion" ]; then
