@@ -148,16 +148,21 @@ github-release release \
   --description "$DESCRIPTION"
 
 echo "Waiting for GitHub to process release..."
-sleep 5
-
-# --- VALIDATE RELEASE (FIXES YOUR ERROR) ---
-github-release info \
-  -u "$GITHUB_ORGANIZATION" \
-  -r "$GITHUB_REPO" \
-  --tag "$TAG" || {
-    echo "ERROR: Release creation failed"
-    exit 1
-}
+# Retry validation with backoff - GitHub sometimes takes longer than 5s to
+# make a freshly created release visible via the API.
+_validated=false
+for _wait in 5 10 20 30; do
+  sleep "${_wait}"
+  if github-release info -u "$GITHUB_ORGANIZATION" -r "$GITHUB_REPO" --tag "$TAG" &>/dev/null; then
+    _validated=true
+    break
+  fi
+  echo "Release not visible yet, retrying in ${_wait}s..."
+done
+if ! ${_validated}; then
+  echo "ERROR: Release creation failed"
+  exit 1
+fi
 
 # --- UPLOAD TO GITHUB RELEASES ---
 github-release upload \
