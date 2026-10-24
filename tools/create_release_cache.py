@@ -473,22 +473,28 @@ def process_asset(asset):
         response = requests.get(download_url, timeout=90) # Generous timeout for download
         response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
         logger.debug(f"Successfully downloaded {asset.name} from {download_url}")
+        
         # Decode content, assuming UTF-8 which is standard for JSON
         metadata_content = response.content.decode('utf-8')
 
         # Parse metadata information from JSON content
-        metadata_full = json.loads(metadata_content)
+        try:
+            metadata_full = json.loads(metadata_content)
+        except json.JSONDecodeError as e:
+            logger.warning(f"Failed to parse JSON from {asset.name} (URL: {download_url}): {e}")
+            return None
+
         # Expecting structure like {"product": {...}} containing the details
         metadata = metadata_full.get("product", {})
         if not isinstance(metadata, dict) or not metadata:
             logger.warning(f"Metadata file {asset.name} (URL: {download_url}) lacks 'product' key or it's not a dictionary.")
-            raise ValueError(f"Metadata file {asset.name} lacks 'product' key or it's not a dictionary.")
+            return None
 
         # Check for mandatory 'pax' key within 'product' which names the actual artifact
         pax_file_name = metadata.get("pax")
         if not pax_file_name:
              logger.warning(f"Skipping asset {asset.name} (URL: {download_url}): Required 'pax' key missing in metadata['product']")
-             raise ValueError(f"Required 'pax' key missing in metadata['product']")
+             return None
 
         # Construct URL for the actual pax file (assumed relative to the release download URL)
         base_url = download_url.rsplit('/', 1)[0] + '/' # Get base URL of the release assets
@@ -541,11 +547,11 @@ def process_asset(asset):
     except json.JSONDecodeError as e:
         # Handle cases where the downloaded file is not valid JSON
         logger.warning(f"Failed to parse JSON from {asset.name} (URL: {download_url}): {e}")
-        raise
+        return None
     except Exception as e:
         # Catch-all for any other unexpected errors during asset processing
         logger.error(f"Unexpected error processing asset {asset.name} (URL: {download_url}): {e}", exc_info=should_log_tracebacks())
-        raise
+        return None
 
 # Process a single GitHub release object
 def process_release(repo_name, release_obj):
@@ -1098,8 +1104,12 @@ if repo_release_fetch_failures > 0:
 
 if skipped_failed_futures > 0:
     if args.single_repo:
-        logger.error(f"Fatal: Targeted mode encountered {skipped_failed_futures} failed release processing tasks for {args.single_repo}.")
-        is_fatal_failure = True
+        target_releases = release_data.get(target_project_name, [])
+        if not target_releases:
+            logger.error(f"Fatal: Targeted mode encountered {skipped_failed_futures} failed release processing tasks and 0 valid releases were produced for {args.single_repo}.")
+            is_fatal_failure = True
+        else:
+            logger.warning(f"Targeted mode encountered {skipped_failed_futures} failed release processing tasks for {args.single_repo}, but {len(target_releases)} valid releases were successfully included for {target_project_name}.")
     else:
         # In full rebuild mode, tolerate minor release task failures if error rate is low (< 5%)
         # and valid releases were successfully included.
