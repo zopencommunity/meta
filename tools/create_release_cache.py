@@ -473,29 +473,33 @@ def process_asset(asset):
         response = requests.get(download_url, timeout=90) # Generous timeout for download
         response.raise_for_status() # Raise HTTPError for bad responses (4xx or 5xx)
         logger.debug(f"Successfully downloaded {asset.name} from {download_url}")
+        
         # Decode content, assuming UTF-8 which is standard for JSON
         metadata_content = response.content.decode('utf-8')
 
-        # Parse metadata information from JSON content
+        # Parse metadata information from JSON content (propagates JSONDecodeError on invalid JSON)
         metadata_full = json.loads(metadata_content)
+
         # Expecting structure like {"product": {...}} containing the details
-        metadata = metadata_full.get("product", {})
+        metadata = metadata_full.get("product")
         if not isinstance(metadata, dict) or not metadata:
-            logger.warning(f"Metadata file {asset.name} (URL: {download_url}) lacks 'product' key or it's not a dictionary.")
-            raise ValueError(f"Metadata file {asset.name} lacks 'product' key or it's not a dictionary.")
+            logger.warning(f"Skipping asset {asset.name} (URL: {download_url}): Lacks 'product' dictionary.")
+            return None
 
         # Check for mandatory 'pax' key within 'product' which names the actual artifact
         pax_file_name = metadata.get("pax")
         if not pax_file_name:
              logger.warning(f"Skipping asset {asset.name} (URL: {download_url}): Required 'pax' key missing in metadata['product']")
-             raise ValueError(f"Required 'pax' key missing in metadata['product']")
+             return None
 
         # Construct URL for the actual pax file (assumed relative to the release download URL)
         base_url = download_url.rsplit('/', 1)[0] + '/' # Get base URL of the release assets
         full_pax_url = urllib.parse.urljoin(base_url, pax_file_name)
 
         # Extract other relevant info safely using .get() with defaults
-        test_status = metadata.get("test_status", {})
+        test_status = metadata.get("test_status")
+        if not isinstance(test_status, dict):
+            test_status = {}
         total_tests = test_status.get("total_tests", -1) # Use -1 or None to indicate missing data
         passed_tests = test_status.get("total_success", -1)
 
@@ -503,7 +507,9 @@ def process_asset(asset):
         # Get commit SHA only if source type is GIT
         sha = metadata.get("community_commitsha") if source_type == "GIT" else None
 
-        runtime_dependencies_list = metadata.get("runtime_dependencies", [])
+        runtime_dependencies_list = metadata.get("runtime_dependencies")
+        if not isinstance(runtime_dependencies_list, list):
+            runtime_dependencies_list = []
         # Extract names, ensuring list items are dicts and have 'name' key
         runtime_dependency_names = [
             dep.get("name") for dep in runtime_dependencies_list
@@ -721,6 +727,8 @@ if args.single_repo:
 total_repos_processed = 0
 skipped_old_releases = 0
 skipped_failed_futures = 0
+unrecovered_failed_futures = 0
+target_repo_release_count = 0
 repo_release_fetch_failures = 0
 output_write_failures = 0
 
@@ -845,6 +853,8 @@ try:
             
             uncached_submitted = 0
             release_count_in_repo = len(releases)
+            if args.single_repo and project_name == target_project_name:
+                target_repo_release_count = release_count_in_repo
             
             for release in releases:
                 release_tag = release.tag_name
@@ -907,6 +917,8 @@ try:
                     if prior_cached and repo_name_fut:
                         logger.warning(f"Preserving prior valid cached release for {repo_name_fut} tag {tag_name_fut} after task failure.")
                         add_release_to_data(prior_cached, repo_name_fut)
+                    else:
+                        unrecovered_failed_futures += 1
                     continue
 
                 if not filtered_release_dict:
@@ -924,6 +936,8 @@ try:
                  if prior_cached and repo_name_fut:
                      logger.warning(f"Preserving prior valid cached release for {repo_name_fut} tag {tag_name_fut} after task cancellation.")
                      add_release_to_data(prior_cached, repo_name_fut)
+                 else:
+                     unrecovered_failed_futures += 1
             except Exception as e:
                 logger.error(f"Error retrieving result from a release processing future for {repo_name_fut} tag {tag_name_fut}: {e}", exc_info=should_log_tracebacks())
                 skipped_failed_futures += 1
@@ -931,6 +945,8 @@ try:
                 if prior_cached and repo_name_fut:
                     logger.warning(f"Preserving prior valid cached release for {repo_name_fut} tag {tag_name_fut} after task error.")
                     add_release_to_data(prior_cached, repo_name_fut)
+                else:
+                    unrecovered_failed_futures += 1
 
         logger.info(f"Finished processing futures. Skipped {skipped_old_releases} releases published before {args.min_year}. Encountered {skipped_failed_futures} failed release tasks.")
 
@@ -1096,20 +1112,28 @@ if repo_release_fetch_failures > 0:
     logger.error(f"Fatal: {repo_release_fetch_failures} repository release listing failures occurred.")
     is_fatal_failure = True
 
-if skipped_failed_futures > 0:
-    if args.single_repo:
-        logger.error(f"Fatal: Targeted mode encountered {skipped_failed_futures} failed release processing tasks for {args.single_repo}.")
+if args.single_repo:
+    target_releases = release_data.get(target_project_name, [])
+    # Target validity: a repository with releases on GitHub must not produce 0 valid releases
+    if target_repo_release_count > 0 and len(target_releases) == 0:
+        logger.error(f"Fatal: Targeted mode for '{args.single_repo}' produced 0 valid releases despite having {target_repo_release_count} releases on GitHub.")
         is_fatal_failure = True
-    else:
-        # In full rebuild mode, tolerate minor release task failures if error rate is low (< 5%)
-        # and valid releases were successfully included.
-        total_tasks = len(release_futures)
-        failure_rate = (skipped_failed_futures / total_tasks * 100) if total_tasks > 0 else 0
-        if failure_rate > 5.0 or total_releases_included == 0:
-            logger.error(f"Fatal: Release failure rate {failure_rate:.1f}% ({skipped_failed_futures}/{total_tasks}) exceeded 5% threshold.")
-            is_fatal_failure = True
-        else:
-            logger.warning(f"Tolerating {skipped_failed_futures} failed release tasks ({failure_rate:.2f}% of {total_tasks}) in full rebuild mode.")
+    # Fresh/unrecovered failure: failing to process a release that has no valid cached fallback
+    elif unrecovered_failed_futures > 0:
+        logger.error(f"Fatal: Targeted mode encountered {unrecovered_failed_futures} failed release task(s) without valid cached fallback for '{args.single_repo}'.")
+        is_fatal_failure = True
+    elif skipped_failed_futures > 0:
+        logger.warning(f"Targeted mode encountered {skipped_failed_futures} failed release processing task(s) for '{args.single_repo}', but valid cached fallbacks were preserved ({len(target_releases)} releases included for '{target_project_name}').")
+else:
+    # In full rebuild mode, tolerate minor release task failures if error rate is low (< 5%)
+    # and valid releases were successfully included.
+    total_tasks = len(release_futures)
+    failure_rate = (skipped_failed_futures / total_tasks * 100) if total_tasks > 0 else 0
+    if failure_rate > 5.0 or total_releases_included == 0:
+        logger.error(f"Fatal: Release failure rate {failure_rate:.1f}% ({skipped_failed_futures}/{total_tasks}) exceeded 5% threshold.")
+        is_fatal_failure = True
+    elif skipped_failed_futures > 0:
+        logger.warning(f"Tolerating {skipped_failed_futures} failed release tasks ({failure_rate:.2f}% of {total_tasks}) in full rebuild mode.")
 
 if not is_fatal_failure:
     logger.info("Script finished successfully.")
