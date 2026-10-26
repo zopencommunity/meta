@@ -50,6 +50,18 @@ This directory contains the Jenkins Pipeline scripts (Groovy) used to orchestrat
 
 ---
 
+## Website catalog updates
+
+The Jenkins `Port-Update-Release` job runs `cicd/on_release.sh`, which generates
+the Python package catalog from release metadata and the live wheel index, then
+uploads `python_packages.json` to the `api-cache` GitHub release.
+
+The Pages workflow runs nightly at 02:00 UTC or manually. Before VitePress builds,
+`cicd/generate_docs.sh` downloads that catalog into `docs/api/python_packages.json`
+so the Python packages page embeds the published data. A failed download stops
+the build instead of deploying the snapshot committed in Git. After updating
+`api-cache`, run the Pages workflow manually for an immediate website update.
+
 ## RPM Pipelines
 
 ### 1. Orchestrator Pipeline (`rpm_pipeline.jenkins`)
