@@ -2,6 +2,7 @@
 #
 # Script to generate all documentation pages and assets required by VitePress.
 # Output:
+#   - docs/api/python_packages.json (from the api-cache release)
 #   - docs/updatestatus.md
 #   - docs/upstreamstatus.md and docs/images/upstream/*
 #   - docs/Latest.md and docs/Progress.md
@@ -27,6 +28,16 @@ echo "=== Generating VitePress Documentation Pages ==="
 
 mkdir -p docs/reference
 mkdir -p docs/images/upstream
+
+# VitePress embeds this catalog at build time. Port-Update-Release publishes
+# fresh data to api-cache without updating the snapshot committed in Git.
+# Fail if the download fails so a deployment cannot silently use stale data.
+echo "Downloading the published Python package catalog..."
+mkdir -p docs/api
+curl --fail --location --silent --show-error \
+  --retry 3 --connect-timeout 10 --max-time 120 \
+  --output docs/api/python_packages.json \
+  https://github.com/zopencommunity/meta/releases/download/api-cache/python_packages.json
 
 # 1. Generate the currency status (docs/updatestatus.md)
 echo "Generating currency status..."
