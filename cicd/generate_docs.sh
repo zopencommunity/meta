@@ -3,6 +3,7 @@
 # Script to generate all documentation pages and assets required by VitePress.
 # Output:
 #   - docs/api/python_packages.json (from the api-cache release)
+#   - docs/api/rpm_packages.json (from the api-cache release)
 #   - docs/updatestatus.md
 #   - docs/upstreamstatus.md and docs/images/upstream/*
 #   - docs/Latest.md and docs/Progress.md
@@ -38,6 +39,12 @@ curl --fail --location --silent --show-error \
   --retry 3 --connect-timeout 10 --max-time 120 \
   --output docs/api/python_packages.json \
   https://github.com/zopencommunity/meta/releases/download/api-cache/python_packages.json
+
+echo "Downloading the published RPM package catalog..."
+curl --fail --location --silent --show-error \
+  --retry 3 --connect-timeout 10 --max-time 120 \
+  --output docs/api/rpm_packages.json \
+  https://github.com/zopencommunity/meta/releases/download/api-cache/rpm_packages.json
 
 # 1. Generate the currency status (docs/updatestatus.md)
 echo "Generating currency status..."
