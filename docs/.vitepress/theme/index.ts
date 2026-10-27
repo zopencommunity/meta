@@ -7,6 +7,7 @@ import PackageRequests from './components/PackageRequests.vue'
 import PackageRequestsAdmin from './components/PackageRequestsAdmin.vue'
 import PackageRequestDetail from './components/PackageRequestDetail.vue'
 import PythonPackages from './components/PythonPackages.vue'
+import PackagesTutorial from './components/PackagesTutorial.vue'
 import CustomNotFound from './components/CustomNotFound.vue'
 
 export default {
@@ -23,6 +24,7 @@ export default {
     app.component('PackageRequestsAdmin', PackageRequestsAdmin)
     app.component('PackageRequestDetail', PackageRequestDetail)
     app.component('PythonPackages', PythonPackages)
+    app.component('PackagesTutorial', PackagesTutorial)
   }
 } satisfies Theme
 

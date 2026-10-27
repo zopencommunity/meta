@@ -168,7 +168,10 @@ export default defineConfig({
       {
         text: "Workshops",
         collapsed: true,
-        items: [{ text: "Beginner", link: "/workshop/workshop" }],
+        items: [
+          { text: "Beginner", link: "/workshop/workshop" },
+          { text: "RPM and Python Packages", link: "/workshop/packages" },
+        ],
       },
       {
         text: "Resources",
