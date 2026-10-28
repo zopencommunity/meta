@@ -95,7 +95,22 @@ jobs:
 
           # Poll the Jenkins queue API until the job moves from queue to running
           while true; do
-            BUILD_NUMBER=$(curl -k -s --header 'Cache-Control: no-cache' --header 'Accept: application/json' "${{ vars.JENKINS_HOST_URL }}/queue/item/${QUEUE_NUMBER}/api/json" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" | jq -r '.executable.number')
+            set +e
+            QUEUE_OUTPUT=$(curl -k -s --fail --header 'Cache-Control: no-cache' --header 'Accept: application/json' "${{ vars.JENKINS_HOST_URL }}/queue/item/${QUEUE_NUMBER}/api/json" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}")
+            CURL_EXIT=$?
+            set -e
+            if [ $CURL_EXIT -ne 0 ]; then
+              QUEUE_FAILURES=$((${QUEUE_FAILURES:-0} + 1))
+              if [ "$QUEUE_FAILURES" -ge 3 ]; then
+                echo "Queue API request failed after ${QUEUE_FAILURES} attempts (curl exit ${CURL_EXIT})" >&2
+                exit "$CURL_EXIT"
+              fi
+              echo "Queue API request failed, retrying..."
+              sleep 10
+              continue
+            fi
+            QUEUE_FAILURES=0
+            BUILD_NUMBER=$(echo "${QUEUE_OUTPUT}" | jq -r '.executable.number')
             [ "${BUILD_NUMBER}" != "null" ] && break
             echo "Job is waiting in the queue..."
             sleep 10
@@ -141,8 +156,11 @@ jobs:
         run: |
           if [ -n "${{ env.JENKINS_BUILD_NUMBER }}" ]; then
             echo "Cancelling Jenkins job ${{ env.JENKINS_BUILD_NUMBER }}..."
-            curl -k -X POST -s -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" \
-              "${{ vars.JENKINS_HOST_URL }}/job/Port-Build/${{ env.JENKINS_BUILD_NUMBER }}/term"
+            curl -k -X POST -s --fail -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" \
+              "${{ vars.JENKINS_HOST_URL }}/job/Port-Build/${{ env.JENKINS_BUILD_NUMBER }}/stop"
+            echo "Jenkins job ${{ env.JENKINS_BUILD_NUMBER }} stop requested"
+          else
+            echo "No Jenkins build number available, nothing to cancel"
           fi
 
       - name: Set final commit status
