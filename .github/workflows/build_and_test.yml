@@ -100,10 +100,16 @@ jobs:
             CURL_EXIT=$?
             set -e
             if [ $CURL_EXIT -ne 0 ]; then
-              echo "Queue API request failed (transient error), retrying..."
+              QUEUE_FAILURES=$((${QUEUE_FAILURES:-0} + 1))
+              if [ "$QUEUE_FAILURES" -ge 3 ]; then
+                echo "Queue API request failed after ${QUEUE_FAILURES} attempts (curl exit ${CURL_EXIT})" >&2
+                exit "$CURL_EXIT"
+              fi
+              echo "Queue API request failed, retrying..."
               sleep 10
               continue
             fi
+            QUEUE_FAILURES=0
             BUILD_NUMBER=$(echo "${QUEUE_OUTPUT}" | jq -r '.executable.number')
             [ "${BUILD_NUMBER}" != "null" ] && break
             echo "Job is waiting in the queue..."
