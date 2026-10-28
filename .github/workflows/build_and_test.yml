@@ -28,6 +28,10 @@ on:
         required: true
       JENKINS_API_TOKEN:
         required: true
+concurrency:
+  group: build-and-test-${{ github.repository }}-${{ github.event.pull_request.number || github.event.issue.number }}
+  cancel-in-progress: true
+
 jobs:
   trigger-jenkins-job:
     runs-on: ubuntu-latest
@@ -104,6 +108,7 @@ jobs:
           # Retrieve the build URL once the job has started
           BUILD_NUMBER=$(curl -k -s --header 'Accept: application/json' "${{ vars.JENKINS_HOST_URL }}/queue/item/${BUILD_NUMBER}/api/json" -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" | jq -r '.executable.number')
           echo "Job Number: $BUILD_NUMBER"
+          echo "JENKINS_BUILD_NUMBER=${BUILD_NUMBER}" >> $GITHUB_ENV
 
           echo "Build in progress..."
           echo "See ${{ vars.JENKINS_HOST_URL }}/job/Port-Build/${BUILD_NUMBER}/console for more details (if you have access)"
@@ -138,6 +143,15 @@ jobs:
             exit 1
           fi
           exit 0
+
+      - name: Cancel Jenkins Job on GHA cancellation
+        if: cancelled()
+        run: |
+          if [ -n "${{ env.JENKINS_BUILD_NUMBER }}" ]; then
+            echo "Cancelling Jenkins job ${{ env.JENKINS_BUILD_NUMBER }}..."
+            curl -k -X POST -s -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" \
+              "${{ vars.JENKINS_HOST_URL }}/job/Port-Build/${{ env.JENKINS_BUILD_NUMBER }}/stop"
+          fi
 
       - name: Set final commit status
         uses: myrotvorets/set-commit-status-action@v2.0.1
