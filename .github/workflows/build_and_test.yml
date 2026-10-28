@@ -141,8 +141,19 @@ jobs:
         run: |
           if [ -n "${{ env.JENKINS_BUILD_NUMBER }}" ]; then
             echo "Cancelling Jenkins job ${{ env.JENKINS_BUILD_NUMBER }}..."
-            curl -k -X POST -s -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" \
-              "${{ vars.JENKINS_HOST_URL }}/job/Port-Build/${{ env.JENKINS_BUILD_NUMBER }}/term"
+            for endpoint in term kill stop; do
+              echo "Trying /${endpoint}..."
+              HTTP_CODE=$(curl -k -X POST -s -o /dev/null -w "%{http_code}" \
+                -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_API_TOKEN }}" \
+                "${{ vars.JENKINS_HOST_URL }}/job/Port-Build/${{ env.JENKINS_BUILD_NUMBER }}/${endpoint}")
+              echo "HTTP ${HTTP_CODE} from /${endpoint}"
+              if [ "${HTTP_CODE}" = "200" ] || [ "${HTTP_CODE}" = "302" ]; then
+                echo "Jenkins job ${{ env.JENKINS_BUILD_NUMBER }} cancelled via /${endpoint}"
+                break
+              fi
+            done
+          else
+            echo "No Jenkins build number available, nothing to cancel"
           fi
 
       - name: Set final commit status
