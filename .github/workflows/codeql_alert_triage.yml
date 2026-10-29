@@ -1,0 +1,135 @@
+name: "CodeQL Alert Triage & Remediation"
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: 'Repository to analyze (e.g., curlport or zopencommunity/curlport)'
+        required: true
+        type: string
+      alert_number:
+        description: 'Specific alert number to triage (optional, default: top open alerts)'
+        required: false
+        type: string
+        default: ''
+      target_issue:
+        description: 'Issue/PR number to post report to (optional)'
+        required: false
+        type: string
+        default: ''
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+  security-events: read
+
+jobs:
+  triage:
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issue_comment' && (
+        startsWith(github.event.comment.body, '/codeql') ||
+        startsWith(github.event.comment.body, '/analyze-codeql')
+      ))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Copilot CLI
+        run: npm install -g @github/copilot@1.0.102
+
+      - name: Gather CodeQL Alert Facts
+        id: gather
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO_INPUT: ${{ inputs.repo }}
+          ALERT_INPUT: ${{ inputs.alert_number }}
+          TARGET_ISSUE_INPUT: ${{ inputs.target_issue }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          mkdir -p /tmp/codeql
+          
+          # Determine target repo and alert number
+          TARGET_REPO="${REPO_INPUT}"
+          ALERT_NO="${ALERT_INPUT}"
+          TARGET_ISSUE="${TARGET_ISSUE_INPUT}"
+          
+          if [ -n "$COMMENT_BODY" ]; then
+            # Parse from slash command comment
+            TARGET_REPO=$(python3 -c "import sys, re; m=re.search(r'/(?:analyze-codeql|codeql)\s+([a-zA-Z0-9_\-\.\/]+)', sys.argv[1]); print(m.group(1) if m else '')" "$COMMENT_BODY" 2>/dev/null || true)
+            ALERT_NO=$(python3 -c "import sys, re; m=re.search(r'alert:?(\d+)', sys.argv[1]); print(m.group(1) if m else '')" "$COMMENT_BODY" 2>/dev/null || true)
+            TARGET_ISSUE="${ISSUE_NUMBER}"
+          fi
+          
+          # Default fallback
+          [ -z "$TARGET_REPO" ] && TARGET_REPO="${{ github.repository }}"
+          
+          echo "target_repo=${TARGET_REPO}" >> $GITHUB_OUTPUT
+          echo "target_issue=${TARGET_ISSUE}" >> $GITHUB_OUTPUT
+          
+          python3 tools/codeql_alert_triage.py \
+            --repo "${TARGET_REPO}" \
+            ${ALERT_NO:+--alert-number "$ALERT_NO"} \
+            ${TARGET_ISSUE:+--issue "$TARGET_ISSUE"} \
+            --output /tmp/codeql/triage_facts.md
+          
+          cat /tmp/codeql/triage_facts.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Run AI Security Triage
+        id: ai_triage
+        env:
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_TOKEN || secrets.GITHUB_TOKEN }}
+          TARGET_REPO: ${{ steps.gather.outputs.target_repo }}
+        run: |
+          cat << 'EOF' > /tmp/codeql/prompt.md
+          You are a senior security engineer and C/C++/Python systems programmer for the zopen community (porting open source tools to z/OS UNIX).
+          
+          Analyze the CodeQL alerts and code snippets in /tmp/codeql/triage_facts.md:
+          1. Determine if each alert is a [FALSE POSITIVE] or [TRUE POSITIVE - ACTION REQUIRED].
+          2. Check z/OS specifics (EBCDIC/ASCII encodings, Enhanced ASCII runtime, 64-bit addressing, #ifdef __MVS__).
+          3. For True Positives, generate a copy-pasteable unified diff patch or C/C++ fix.
+          4. For False Positives, provide clear technical rationale why it is safe.
+          5. Start with a summary table (Alert #, Rule ID, Severity, Verdict), then provide detailed analysis per alert.
+          EOF
+          
+          if [ -n "$COPILOT_GITHUB_TOKEN" ] && command -v copilot >/dev/null 2>&1; then
+            copilot exec --prompt "$(cat /tmp/codeql/prompt.md)" --context-file /tmp/codeql/triage_facts.md > /tmp/codeql/triage_report.md || true
+          fi
+          
+          if [ ! -s /tmp/codeql/triage_report.md ]; then
+            echo "## CodeQL Alert Triage Facts" > /tmp/codeql/triage_report.md
+            cat /tmp/codeql/triage_facts.md >> /tmp/codeql/triage_report.md
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## AI Triage Report" >> $GITHUB_STEP_SUMMARY
+          cat /tmp/codeql/triage_report.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Post Comment to Target Issue
+        if: steps.gather.outputs.target_issue != ''
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const issueNumber = parseInt('${{ steps.gather.outputs.target_issue }}');
+            if (issueNumber && !isNaN(issueNumber)) {
+              const body = fs.readFileSync('/tmp/codeql/triage_report.md', 'utf8');
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: body
+              });
+            }
