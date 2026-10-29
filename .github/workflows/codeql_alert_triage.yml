@@ -29,10 +29,14 @@ jobs:
   triage:
     if: |
       github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'issue_comment' && (
-        startsWith(github.event.comment.body, '/codeql') ||
-        startsWith(github.event.comment.body, '/analyze-codeql')
-      ))
+      (
+        github.event_name == 'issue_comment' &&
+        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association) &&
+        (
+          startsWith(github.event.comment.body, '/codeql') ||
+          startsWith(github.event.comment.body, '/analyze-codeql')
+        )
+      )
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +55,7 @@ jobs:
       - name: Gather CodeQL Alert Facts
         id: gather
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           REPO_INPUT: ${{ inputs.repo }}
           ALERT_INPUT: ${{ inputs.alert_number }}
           TARGET_ISSUE_INPUT: ${{ inputs.target_issue }}
@@ -89,13 +93,13 @@ jobs:
       - name: Run AI Security Triage
         id: ai_triage
         env:
-          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_TOKEN || secrets.GITHUB_TOKEN }}
+          COPILOT_GITHUB_TOKEN: ${{ secrets.COPILOT_TOKEN }}
           TARGET_REPO: ${{ steps.gather.outputs.target_repo }}
         run: |
           cat << 'EOF' > /tmp/codeql/prompt.md
           You are a senior security engineer and C/C++/Python systems programmer for the zopen community (porting open source tools to z/OS UNIX).
           
-          Analyze the CodeQL alerts and code snippets in /tmp/codeql/triage_facts.md:
+          Analyze the CodeQL alerts and code snippets in the input:
           1. Determine if each alert is a [FALSE POSITIVE] or [TRUE POSITIVE - ACTION REQUIRED].
           2. Check z/OS specifics (EBCDIC/ASCII encodings, Enhanced ASCII runtime, 64-bit addressing, #ifdef __MVS__).
           3. For True Positives, generate a copy-pasteable unified diff patch or C/C++ fix.
@@ -104,7 +108,17 @@ jobs:
           EOF
           
           if [ -n "$COPILOT_GITHUB_TOKEN" ] && command -v copilot >/dev/null 2>&1; then
-            copilot exec --prompt "$(cat /tmp/codeql/prompt.md)" --context-file /tmp/codeql/triage_facts.md > /tmp/codeql/triage_report.md || true
+            echo "Running Copilot AI triage..."
+            {
+              cat /tmp/codeql/prompt.md
+              echo ""
+              echo "### Input Facts and Code Snippets:"
+              cat /tmp/codeql/triage_facts.md
+            } | copilot -s --no-color --available-tools > /tmp/codeql/ai_output.md 2>/tmp/codeql/copilot_err.log || true
+            
+            if [ -s /tmp/codeql/ai_output.md ]; then
+              cp /tmp/codeql/ai_output.md /tmp/codeql/triage_report.md
+            fi
           fi
           
           if [ ! -s /tmp/codeql/triage_report.md ]; then
