@@ -86,6 +86,9 @@ docs/.vitepress/cache/
 docs/updatestatus.md
 docs/upstreamstatus.md
 docs/images/upstream/
+docs/images/progress.png
+docs/images/quality.png
+docs/images/quality_part_*.png
 docs/Latest.md
 docs/Progress.md
 docs/Vulnerabilities.md

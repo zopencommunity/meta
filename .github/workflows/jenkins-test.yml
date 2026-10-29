@@ -11,11 +11,15 @@ on:
       - created
   pull_request_target:
     types: [opened, synchronize, reopened]
-    paths-ignore:
-      - 'cicd*.groovy'
-      - '**/LICENSE'
-      - 'docs/**'
-      - 'README.md'
+    paths:
+      # Files and folders copied by metaport's buildenv (zopen_install)
+      - 'bin/**'
+      - 'include/**'
+      - 'data/**'
+      - 'patch-utils/**'
+      - '.env'
+      - 'cacert.pem'
+      - 'LICENSE'
   workflow_dispatch:
 
 jobs:
