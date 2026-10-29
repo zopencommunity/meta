@@ -2,8 +2,7 @@
 #
 # Script to generate all documentation pages and assets required by VitePress.
 # Output:
-#   - docs/api/python_packages.json (from the api-cache release)
-#   - docs/api/rpm_packages.json (from the api-cache release)
+#   - docs/api/*.json (downloaded from the api-cache release)
 #   - docs/updatestatus.md
 #   - docs/upstreamstatus.md and docs/images/upstream/*
 #   - docs/Latest.md and docs/Progress.md
@@ -30,21 +29,33 @@ echo "=== Generating VitePress Documentation Pages ==="
 mkdir -p docs/reference
 mkdir -p docs/images/upstream
 
-# VitePress embeds this catalog at build time. Port-Update-Release publishes
-# fresh data to api-cache without updating the snapshot committed in Git.
-# Fail if the download fails so a deployment cannot silently use stale data.
-echo "Downloading the published Python package catalog..."
+# The docs/api/*.json files are generated and published to the api-cache release
+# by the Port-Update-Release and nightly jobs; they are not committed in Git.
+# Fail if a required download fails so a deployment cannot silently use stale data.
+API_CACHE_URL="https://github.com/zopencommunity/meta/releases/download/api-cache"
 mkdir -p docs/api
-curl --fail --location --silent --show-error \
-  --retry 3 --connect-timeout 10 --max-time 120 \
-  --output docs/api/python_packages.json \
-  https://github.com/zopencommunity/meta/releases/download/api-cache/python_packages.json
 
-echo "Downloading the published RPM package catalog..."
+for file in \
+  python_packages.json \
+  rpm_packages.json \
+  zopen_files.json \
+  zopen_releases.json \
+  zopen_releases_latest.json \
+  zopen_releases_descriptions.json; do
+  echo "Downloading the published ${file}..."
+  curl --fail --location --silent --show-error \
+    --retry 3 --connect-timeout 10 --max-time 120 \
+    --output "docs/api/${file}" \
+    "${API_CACHE_URL}/${file}"
+done
+
+# Only uploaded when available; the consuming tools fall back to the remote URL.
+echo "Downloading the published zopen_vulnerability.json (optional)..."
 curl --fail --location --silent --show-error \
   --retry 3 --connect-timeout 10 --max-time 120 \
-  --output docs/api/rpm_packages.json \
-  https://github.com/zopencommunity/meta/releases/download/api-cache/rpm_packages.json
+  --output docs/api/zopen_vulnerability.json \
+  "${API_CACHE_URL}/zopen_vulnerability.json" \
+  || echo "Warning: zopen_vulnerability.json not available; continuing."
 
 # 1. Generate the currency status (docs/updatestatus.md)
 echo "Generating currency status..."
