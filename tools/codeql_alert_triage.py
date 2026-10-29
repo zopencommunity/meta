@@ -177,7 +177,20 @@ def main() -> int:
     
     alerts_data = []
     fetch_error = None
-    if alert_no:
+
+    # Validate target repository belongs to allowed organization
+    if owner.lower() != ORG.lower():
+        fetch_error = f"Target repository '{owner}/{repo_name}' is outside the '{ORG}' organization"
+        sys.stderr.write(f"Error: {fetch_error}\n")
+    else:
+        # Verify repository visibility
+        repo_info, repo_err = github_request(f"repos/{owner}/{repo_name}", token)
+        if repo_err:
+            fetch_error = f"Cannot verify repository '{owner}/{repo_name}': {repo_err}"
+        elif isinstance(repo_info, dict) and repo_info.get("private", False):
+            fetch_error = f"Repository '{owner}/{repo_name}' is private. Security triage is restricted to public repositories."
+
+    if not fetch_error and alert_no:
         endpoint = f"repos/{owner}/{repo_name}/code-scanning/alerts/{alert_no}"
         single_alert, err = github_request(endpoint, token)
         if single_alert and isinstance(single_alert, dict) and "number" in single_alert:
@@ -185,7 +198,7 @@ def main() -> int:
         else:
             fetch_error = err or f"Alert #{alert_no} not found"
             sys.stderr.write(f"Alert #{alert_no} not found or inaccessible in {owner}/{repo_name}: {fetch_error}\n")
-    else:
+    elif not fetch_error:
         endpoint = f"repos/{owner}/{repo_name}/code-scanning/alerts?state=open&per_page={args.max_alerts}"
         res, err = github_request(endpoint, token)
         if isinstance(res, list):

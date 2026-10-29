@@ -47,7 +47,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install Copilot CLI
         run: npm install -g @github/copilot@1.0.102
@@ -70,9 +70,13 @@ jobs:
           TARGET_ISSUE="${TARGET_ISSUE_INPUT}"
           
           if [ -n "$COMMENT_BODY" ]; then
-            # Parse from slash command comment
-            TARGET_REPO=$(python3 -c "import sys, re; m=re.search(r'/(?:analyze-codeql|codeql)\s+([a-zA-Z0-9_\-\.\/]+)', sys.argv[1]); print(m.group(1) if m else '')" "$COMMENT_BODY" 2>/dev/null || true)
-            ALERT_NO=$(python3 -c "import sys, re; m=re.search(r'alert:?(\d+)', sys.argv[1]); print(m.group(1) if m else '')" "$COMMENT_BODY" 2>/dev/null || true)
+            # Use Python argument parser for reliable argument extraction
+            PARSED=$(python3 -c "import sys; from tools.codeql_alert_triage import parse_slash_command_args; r, a = parse_slash_command_args(sys.argv[1]); print(f'{r or \"\"}\t{a or \"\"}')" "$COMMENT_BODY" 2>/dev/null || true)
+            PARSED_REPO=$(printf '%s' "$PARSED" | cut -f1)
+            PARSED_ALERT=$(printf '%s' "$PARSED" | cut -f2)
+            
+            [ -n "$PARSED_REPO" ] && TARGET_REPO="$PARSED_REPO"
+            [ -n "$PARSED_ALERT" ] && ALERT_NO="$PARSED_ALERT"
             TARGET_ISSUE="${ISSUE_NUMBER}"
           fi
           
@@ -107,21 +111,25 @@ jobs:
           5. Start with a summary table (Alert #, Rule ID, Severity, Verdict), then provide detailed analysis per alert.
           EOF
           
+          AI_SUCCESS=false
           if [ -n "$COPILOT_GITHUB_TOKEN" ] && command -v copilot >/dev/null 2>&1; then
             echo "Running Copilot AI triage..."
-            {
+            if {
               cat /tmp/codeql/prompt.md
               echo ""
               echo "### Input Facts and Code Snippets:"
               cat /tmp/codeql/triage_facts.md
-            } | copilot -s --no-color --available-tools > /tmp/codeql/ai_output.md 2>/tmp/codeql/copilot_err.log || true
-            
-            if [ -s /tmp/codeql/ai_output.md ]; then
-              cp /tmp/codeql/ai_output.md /tmp/codeql/triage_report.md
+            } | copilot -s --no-color --available-tools > /tmp/codeql/ai_output.md 2>/tmp/codeql/copilot_err.log; then
+              if [ -s /tmp/codeql/ai_output.md ]; then
+                cp /tmp/codeql/ai_output.md /tmp/codeql/triage_report.md
+                AI_SUCCESS=true
+              fi
+            else
+              echo "::warning::Copilot CLI exited with failure; falling back to facts report."
             fi
           fi
           
-          if [ ! -s /tmp/codeql/triage_report.md ]; then
+          if [ "$AI_SUCCESS" != "true" ]; then
             echo "## CodeQL Alert Triage Facts" > /tmp/codeql/triage_report.md
             cat /tmp/codeql/triage_facts.md >> /tmp/codeql/triage_report.md
           fi
@@ -139,7 +147,13 @@ jobs:
             const fs = require('fs');
             const issueNumber = parseInt('${{ steps.gather.outputs.target_issue }}');
             if (issueNumber && !isNaN(issueNumber)) {
-              const body = fs.readFileSync('/tmp/codeql/triage_report.md', 'utf8');
+              let body = fs.readFileSync('/tmp/codeql/triage_report.md', 'utf8');
+              const MAX_LEN = 65000;
+              if (body.length > MAX_LEN) {
+                const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+                const truncatedHeader = `## ⚠️ CodeQL Alert Triage Report (Summary)\n\nThe complete triage report exceeds GitHub's comment character limit (${body.length} characters).\n\n👉 **[View the Complete Report in GitHub Actions Job Summary](${runUrl})**\n\n---\n\n`;
+                body = truncatedHeader + body.substring(0, MAX_LEN - 1000) + '\n\n... *(truncated - view link above for full details)*';
+              }
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
