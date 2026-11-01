@@ -33,7 +33,7 @@ def get_token(args_token: str | None) -> str:
     return token.strip()
 
 
-def github_request(endpoint: str, token: str) -> dict | list | None:
+def github_request(endpoint: str, token: str) -> tuple[dict | list | None, str | None]:
     url = f"{API}/{endpoint.lstrip('/')}"
     headers = {
         "Accept": "application/vnd.github+json",
@@ -53,18 +53,20 @@ def github_request(endpoint: str, token: str) -> dict | list | None:
     try:
         with urllib.request.urlopen(req, timeout=30, context=ctx) as resp:
             data = resp.read()
-            return json.loads(data.decode("utf-8"))
+            return json.loads(data.decode("utf-8")), None
     except urllib.error.HTTPError as e:
+        msg = f"HTTP {e.code} ({e.reason})"
         sys.stderr.write(f"HTTPError {e.code} fetching {url}: {e.reason}\n")
-        return None
+        return None, msg
     except Exception as e:
+        msg = str(e)
         sys.stderr.write(f"Error fetching {url}: {e}\n")
-        return None
+        return None, msg
 
 
 def fetch_raw_file(owner: str, repo: str, path: str, ref: str, token: str) -> str | None:
     endpoint = f"repos/{owner}/{repo}/contents/{urllib.parse.quote(path)}?ref={urllib.parse.quote(ref)}"
-    res = github_request(endpoint, token)
+    res, _ = github_request(endpoint, token)
     if isinstance(res, dict) and "content" in res:
         encoding = res.get("encoding", "")
         if encoding == "base64":
@@ -174,18 +176,35 @@ def main() -> int:
     print(f"Fetching CodeQL alerts for {owner}/{repo_name}...")
     
     alerts_data = []
-    if alert_no:
+    fetch_error = None
+
+    # Validate target repository belongs to allowed organization
+    if owner.lower() != ORG.lower():
+        fetch_error = f"Target repository '{owner}/{repo_name}' is outside the '{ORG}' organization"
+        sys.stderr.write(f"Error: {fetch_error}\n")
+    else:
+        # Verify repository visibility
+        repo_info, repo_err = github_request(f"repos/{owner}/{repo_name}", token)
+        if repo_err:
+            fetch_error = f"Cannot verify repository '{owner}/{repo_name}': {repo_err}"
+        elif isinstance(repo_info, dict) and repo_info.get("private", False):
+            fetch_error = f"Repository '{owner}/{repo_name}' is private. Security triage is restricted to public repositories."
+
+    if not fetch_error and alert_no:
         endpoint = f"repos/{owner}/{repo_name}/code-scanning/alerts/{alert_no}"
-        single_alert = github_request(endpoint, token)
+        single_alert, err = github_request(endpoint, token)
         if single_alert and isinstance(single_alert, dict) and "number" in single_alert:
             alerts_data = [single_alert]
         else:
-            sys.stderr.write(f"Alert #{alert_no} not found or inaccessible in {owner}/{repo_name}\n")
-    else:
+            fetch_error = err or f"Alert #{alert_no} not found"
+            sys.stderr.write(f"Alert #{alert_no} not found or inaccessible in {owner}/{repo_name}: {fetch_error}\n")
+    elif not fetch_error:
         endpoint = f"repos/{owner}/{repo_name}/code-scanning/alerts?state=open&per_page={args.max_alerts}"
-        res = github_request(endpoint, token)
+        res, err = github_request(endpoint, token)
         if isinstance(res, list):
             alerts_data = res
+        elif err:
+            fetch_error = err
 
     # Build facts document
     lines = []
@@ -196,8 +215,16 @@ def main() -> int:
     lines.append(f"- **Alerts Processed:** {len(alerts_data)}")
     lines.append("")
 
+    if fetch_error:
+        lines.append(f"> ❌ **Error accessing CodeQL alerts:** `{fetch_error}`.")
+        lines.append("> Please verify that `REPO_GITHUB_TOKEN` is configured with `security-events: read` access for sibling repositories.")
+        lines.append("")
+        out_path.write_text("\n".join(lines), encoding="utf-8")
+        print(f"Wrote {len(lines)} lines to {out_path}")
+        return 0
+
     if not alerts_data:
-        lines.append("> ℹ️ **No open CodeQL alerts found** for this repository (or insufficient permissions to read code scanning alerts).")
+        lines.append("> ℹ️ **No open CodeQL alerts found** for this repository.")
         lines.append("")
         out_path.write_text("\n".join(lines), encoding="utf-8")
         print(f"Wrote {len(lines)} lines to {out_path}")
