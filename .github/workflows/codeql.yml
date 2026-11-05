@@ -63,25 +63,29 @@ jobs:
         id: repo-info
         run: |
           repo="${{ inputs.repo }}"
-          if [ -z "${repo}" ]; then
-            repo="${{ github.repository }}"
-          fi
-          branch="${{ inputs.branch }}"
-          if [ -z "${branch}" ]; then
-            if [ "${{ github.event_name }}" == "pull_request" ] || [ "${{ github.event_name }}" == "pull_request_target" ]; then
-              branch="${{ github.head_ref }}"
-            else
-              branch="${{ github.ref_name }}"
+          ref="${{ inputs.branch }}"
+          if [ "${{ github.event_name }}" == "pull_request" ] || [ "${{ github.event_name }}" == "pull_request_target" ]; then
+            # For PRs, check out the exact head commit from the source fork:
+            # the branch name (github.head_ref) may only exist on the fork,
+            # not on this repository, which would make the fetch fail.
+            repo="${{ github.event.pull_request.head.repo.full_name }}"
+            ref="${{ github.event.pull_request.head.sha }}"
+          else
+            if [ -z "${repo}" ]; then
+              repo="${{ github.repository }}"
+            fi
+            if [ -z "${ref}" ]; then
+              ref="${{ github.ref_name }}"
             fi
           fi
           echo "repo=${repo}" >> $GITHUB_OUTPUT
-          echo "branch=${branch}" >> $GITHUB_OUTPUT
+          echo "ref=${ref}" >> $GITHUB_OUTPUT
 
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           repository: ${{ steps.repo-info.outputs.repo }}
-          ref: ${{ steps.repo-info.outputs.branch }}
+          ref: ${{ steps.repo-info.outputs.ref }}
 
       - name: Download and setup metaport
         run: |
