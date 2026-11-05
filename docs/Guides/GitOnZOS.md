@@ -31,6 +31,38 @@ To find out all of the supported encodings by git, run `iconv -l` on z/OS.
 
 When adding files, you need to make sure that both the file contents and the z/OS file tag matches the `working-tree-encoding`. Otherwise, you may encounter an error.
 
+### .gitattributes pattern ordering
+
+**Important:** Rules at the BOTTOM of `.gitattributes` take precedence over rules at the TOP. Place **generic/wildcard rules at the TOP** and **specific exceptions at the BOTTOM**.
+
+Correct order (wildcard first, specific last):
+
+```gitattributes
+# General default for all files
+* zos-working-tree-encoding=ibm-1047
+
+# Specific exceptions
+.gitattributes zos-working-tree-encoding=iso8859-1
+.gitignore zos-working-tree-encoding=iso8859-1
+*.xml zos-working-tree-encoding=utf-8
+```
+
+Result: `.gitattributes` and `.gitignore` will be ISO8859-1, `*.xml` files will be UTF-8, and all other files will be IBM-1047.
+
+## Transliteration fallback
+
+When Git converts between encodings (e.g. UTF-8 to IBM-1047), it may encounter characters that cannot be exactly represented in the target encoding, such as the non-breaking hyphen (U+2011) or certain accented characters. The `core.iconvtranslit` setting controls how Git handles these:
+
+- **`false` (default)** — strict mode: Git stops with an error identifying the file, line, and character that could not be converted.
+- **`true`** — Git uses iconv's transliteration to substitute a similar-looking character (`café` → `cafe`, `€` → `EUR`) and prints a warning identifying each file and character that was approximated. It is never silent.
+
+```bash
+git config --global core.iconvtranslit true   # persistent
+export GIT_ICONV_TRANSLIT=1                   # per-session (takes precedence)
+```
+
+Encoding conversion and file tagging are applied consistently across working-tree operations — checkout, merge, `git apply --3way`, cherry-pick, rebase, and stash — so these behave like standard Git operations with EBCDIC files.
+
 ## Binary files
 
 Another important aspect of Git on z/OS is its handling of binary files. Binary files, such as images, can be specified using the `binary` attribute in the `.gitattributes` file. For example, if you want all png files to be treated as binary files, you would use the following line in your .gitattributes file:
@@ -83,7 +115,7 @@ This will disable the file tag verification for all of the repositories on your 
 For a local repository effect, you can use the following command inside your repository:
 
 ```bash
-git config core.ignoretags false
+git config core.ignorefiletags true
 ```
 
 This will only disable the file tag verification for the specific repository you are currently in.
