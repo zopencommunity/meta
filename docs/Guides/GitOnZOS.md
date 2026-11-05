@@ -54,7 +54,7 @@ Result: `.gitattributes` and `.gitignore` will be ISO8859-1, `*.xml` files will 
 When Git converts between encodings (e.g. UTF-8 to IBM-1047), it may encounter characters that cannot be exactly represented in the target encoding, such as the non-breaking hyphen (U+2011) or certain accented characters. The `core.iconvtranslit` setting controls how Git handles these:
 
 - **`false` (default)** — strict mode: Git stops with an error identifying the file, line, and character that could not be converted.
-- **`true`** — Git uses iconv's transliteration to substitute a similar-looking character (`café` → `cafe`, `€` → `EUR`) and prints a warning identifying each file and character that was approximated. It is never silent.
+- **`true`** — Git retries failed conversions using iconv's transliteration to substitute a similar-looking character (`café` → `cafe`, `€` → `EUR`). Each fallback conversion prints a warning identifying the file and the first failing location (line, column, and source byte), rather than listing every substitution — so the conversion is never silent.
 
 ```bash
 git config --global core.iconvtranslit true   # persistent
