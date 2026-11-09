@@ -1518,14 +1518,27 @@ downloadJSONCache()
     fi
 
     JSON_CACHE_TMP="${JSON_CACHE}.tmp"
-    if ! curlout=$(curlCmd -f -L --no-progress-meter -o "${JSON_CACHE_TMP}" "${ZOPEN_JSON_CACHE_URL}"); then
+    # Retry a few times as the asset server can intermittently return gateway errors (eg. 504)
+    jsonCacheAttempts=3
+    jsonCacheAttempt=1
+    jsonCacheDownloaded=false
+    while [ "${jsonCacheAttempt}" -le "${jsonCacheAttempts}" ]; do
+      if curlout=$(curlCmd -f -L --no-progress-meter -o "${JSON_CACHE_TMP}" "${ZOPEN_JSON_CACHE_URL}"); then
+        chtag -tc 819 "${JSON_CACHE_TMP}"
+        if jq -e empty "${JSON_CACHE_TMP}" >/dev/null 2>&1; then
+          jsonCacheDownloaded=true
+          break
+        fi
+        printWarning "Attempt ${jsonCacheAttempt}/${jsonCacheAttempts}: downloaded json cache from ${ZOPEN_JSON_CACHE_URL} is not valid JSON."
+      else
+        printWarning "Attempt ${jsonCacheAttempt}/${jsonCacheAttempts}: failed to download json cache from ${ZOPEN_JSON_CACHE_URL}; ${curlout}"
+      fi
       rm -f "${JSON_CACHE_TMP}"
-      printError "Failed to obtain json cache from ${ZOPEN_JSON_CACHE_URL}; ${curlout}"
-    fi
-    chtag -tc 819 "${JSON_CACHE_TMP}"
-    if ! jq -e empty "${JSON_CACHE_TMP}" >/dev/null 2>&1; then
-      rm -f "${JSON_CACHE_TMP}"
-      printError "Downloaded json cache from ${ZOPEN_JSON_CACHE_URL} is not valid JSON - the server may be temporarily unavailable (eg. a gateway timeout). Retry later."
+      jsonCacheAttempt=$((jsonCacheAttempt + 1))
+      [ "${jsonCacheAttempt}" -le "${jsonCacheAttempts}" ] && sleep 5
+    done
+    if ! ${jsonCacheDownloaded}; then
+      printError "Failed to obtain a valid json cache from ${ZOPEN_JSON_CACHE_URL} after ${jsonCacheAttempts} attempts - the server may be temporarily unavailable (eg. a gateway timeout). Retry later."
     fi
     mv -f "${JSON_CACHE_TMP}" "${JSON_CACHE}"
   fi
