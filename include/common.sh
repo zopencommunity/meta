@@ -1493,9 +1493,13 @@ downloadJSONCache()
     cacheIsCurrent=false
     if [ -n "$from_readonly" ]; then
       if [ -r "$JSON_CACHE" ] && [ ! -w "$JSON_CACHE" ]; then
-        # Skip the download for read only operations when you know you can't write to it,
-        # but still validate the cache below before trusting it
-        cacheIsCurrent=true
+        # Skip the download for read only operations when you know you can't write to it;
+        # validate and return here, before the write-permission checks and network requests,
+        # so a shared read-only cache still works for zopen query/info etc.
+        if ! validateJSONFile "${JSON_CACHE}"; then
+          printError "Json cache '${JSON_CACHE}' is not valid JSON - it may be corrupted by a previously failed download. Remove it and retry."
+        fi
+        return
       fi
     fi
   
