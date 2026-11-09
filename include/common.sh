@@ -1500,7 +1500,8 @@ downloadJSONCache()
     fi
 
     JSON_SHA256_URL="${ZOPEN_JSON_CACHE_URL}.sha256"
-    if curlCmd -s -L --no-progress-meter "${JSON_SHA256_URL}" -o "${JSON_TIMESTAMP_CURRENT}" 2>/dev/null && [ -s "${JSON_TIMESTAMP_CURRENT}" ]; then
+    # -f ensures HTTP error pages (eg. 504 gateway timeouts) are not saved as the checksum
+    if curlCmd -s -f -L --no-progress-meter "${JSON_SHA256_URL}" -o "${JSON_TIMESTAMP_CURRENT}" 2>/dev/null && [ -s "${JSON_TIMESTAMP_CURRENT}" ] && grep -qE '^[0-9a-fA-F]{64}$' "${JSON_TIMESTAMP_CURRENT}"; then
       chtag -tc 819 "${JSON_TIMESTAMP_CURRENT}"
       if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && [ "$(cat "${JSON_TIMESTAMP_CURRENT}")" = "$(cat "${JSON_TIMESTAMP}")" ]; then
         return
@@ -1516,14 +1517,25 @@ downloadJSONCache()
       mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
     fi
 
-    if ! curlout=$(curlCmd -L --no-progress-meter -o "${JSON_CACHE}" "${ZOPEN_JSON_CACHE_URL}"); then
+    JSON_CACHE_TMP="${JSON_CACHE}.tmp"
+    if ! curlout=$(curlCmd -f -L --no-progress-meter -o "${JSON_CACHE_TMP}" "${ZOPEN_JSON_CACHE_URL}"); then
+      rm -f "${JSON_CACHE_TMP}"
       printError "Failed to obtain json cache from ${ZOPEN_JSON_CACHE_URL}; ${curlout}"
     fi
-    chtag -tc 819 "${JSON_CACHE}"
+    chtag -tc 819 "${JSON_CACHE_TMP}"
+    if ! jq -e empty "${JSON_CACHE_TMP}" >/dev/null 2>&1; then
+      rm -f "${JSON_CACHE_TMP}"
+      printError "Downloaded json cache from ${ZOPEN_JSON_CACHE_URL} is not valid JSON - the server may be temporarily unavailable (eg. a gateway timeout). Retry later."
+    fi
+    mv -f "${JSON_CACHE_TMP}" "${JSON_CACHE}"
   fi
 
   if [ ! -f "${JSON_CACHE}" ]; then
     printError "Could not download json cache from ${ZOPEN_JSON_CACHE_URL}"
+  fi
+
+  if ! jq -e empty "${JSON_CACHE}" >/dev/null 2>&1; then
+    printError "Json cache '${JSON_CACHE}' is not valid JSON - it may be corrupted by a previously failed download. Remove it and retry."
   fi
 }
 
