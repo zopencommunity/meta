@@ -1471,6 +1471,14 @@ syslog()
   echo "$(date +"%F %T") $(id | cut -d' ' -f1)::${module}:${type}:${categories}:${location}:${msg}" >> "${fd}"
 }
 
+# Validate that a file contains parseable, non-empty JSON.
+# Note: use 'jq empty' without -e: '-e empty' always exits 4 since 'empty' produces no output.
+validateJSONFile()
+{
+  fileToCheck=$1
+  [ -s "${fileToCheck}" ] && jq empty "${fileToCheck}" >/dev/null 2>&1
+}
+
 downloadJSONCache()
 {
   from_readonly=$1
@@ -1482,9 +1490,12 @@ downloadJSONCache()
     JSON_TIMESTAMP="${cachedir}/zopen_releases.timestamp"
     JSON_TIMESTAMP_CURRENT="${cachedir}/zopen_releases.timestamp.current"
 
+    cacheIsCurrent=false
     if [ -n "$from_readonly" ]; then
       if [ -r "$JSON_CACHE" ] && [ ! -w "$JSON_CACHE" ]; then
-        return; # Skip the download for read only operations when you know you can't write to it
+        # Skip the download for read only operations when you know you can't write to it,
+        # but still validate the cache below before trusting it
+        cacheIsCurrent=true
       fi
     fi
   
@@ -1501,23 +1512,29 @@ downloadJSONCache()
 
     JSON_SHA256_URL="${ZOPEN_JSON_CACHE_URL}.sha256"
     # -f ensures HTTP error pages (eg. 504 gateway timeouts) are not saved as the checksum
+    # When the cache is current (checksum or ETag matches) fall through to validation of
+    # the existing cache below rather than returning early, so a cache previously poisoned
+    # by a failed download is still detected.
     if curlCmd -s -f -L --no-progress-meter "${JSON_SHA256_URL}" -o "${JSON_TIMESTAMP_CURRENT}" 2>/dev/null && [ -s "${JSON_TIMESTAMP_CURRENT}" ] && grep -qE '^[0-9a-fA-F]{64}$' "${JSON_TIMESTAMP_CURRENT}"; then
       chtag -tc 819 "${JSON_TIMESTAMP_CURRENT}"
       if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && [ "$(cat "${JSON_TIMESTAMP_CURRENT}")" = "$(cat "${JSON_TIMESTAMP}")" ]; then
-        return
+        cacheIsCurrent=true
+      else
+        printVerbose "Replacing old sha256 checksum with latest."
+        mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
       fi
-      printVerbose "Replacing old sha256 checksum with latest."
-      mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
     elif curlout=$(curlCmd -L --no-progress-meter -I "${ZOPEN_JSON_CACHE_URL}" -o "${JSON_TIMESTAMP_CURRENT}") && grep -q 'ETag' "${JSON_TIMESTAMP_CURRENT}"; then
       chtag -tc 819 "${JSON_TIMESTAMP_CURRENT}"
       if [ -f "${JSON_CACHE}" ] && [ -f "${JSON_TIMESTAMP}" ] && [ "$(grep 'ETag' "${JSON_TIMESTAMP_CURRENT}")" = "$(grep 'ETag' "${JSON_TIMESTAMP}")" ]; then
-        return
+        cacheIsCurrent=true
+      else
+        printVerbose "Replacing old timestamp with latest."
+        mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
       fi
-      printVerbose "Replacing old timestamp with latest."
-      mv -f "${JSON_TIMESTAMP_CURRENT}" "${JSON_TIMESTAMP}"
     fi
 
-    JSON_CACHE_TMP="${JSON_CACHE}.tmp"
+    if ! ${cacheIsCurrent}; then
+      JSON_CACHE_TMP="${JSON_CACHE}.tmp"
     # Retry a few times as the asset server can intermittently return gateway errors (eg. 504)
     jsonCacheAttempts=3
     jsonCacheAttempt=1
@@ -1525,7 +1542,7 @@ downloadJSONCache()
     while [ "${jsonCacheAttempt}" -le "${jsonCacheAttempts}" ]; do
       if curlout=$(curlCmd -f -L --no-progress-meter -o "${JSON_CACHE_TMP}" "${ZOPEN_JSON_CACHE_URL}"); then
         chtag -tc 819 "${JSON_CACHE_TMP}"
-        if jq -e empty "${JSON_CACHE_TMP}" >/dev/null 2>&1; then
+        if validateJSONFile "${JSON_CACHE_TMP}"; then
           jsonCacheDownloaded=true
           break
         fi
@@ -1541,13 +1558,13 @@ downloadJSONCache()
       printError "Failed to obtain a valid json cache from ${ZOPEN_JSON_CACHE_URL} after ${jsonCacheAttempts} attempts - the server may be temporarily unavailable (eg. a gateway timeout). Retry later."
     fi
     mv -f "${JSON_CACHE_TMP}" "${JSON_CACHE}"
+    fi
   fi
-
   if [ ! -f "${JSON_CACHE}" ]; then
     printError "Could not download json cache from ${ZOPEN_JSON_CACHE_URL}"
   fi
 
-  if ! jq -e empty "${JSON_CACHE}" >/dev/null 2>&1; then
+  if ! validateJSONFile "${JSON_CACHE}"; then
     printError "Json cache '${JSON_CACHE}' is not valid JSON - it may be corrupted by a previously failed download. Remove it and retry."
   fi
 }

@@ -462,7 +462,7 @@ handlePackageInstall()
     printError "Could not download from ${metadataJSONURL}. Correct any errors and potentially retry."
     continue
   fi
-  if ! jq -e empty "${metadataFile}" >/dev/null 2>&1; then
+  if ! { [ -s "${metadataFile}" ] && jq empty "${metadataFile}" >/dev/null 2>&1; }; then
     printError "Downloaded metadata from ${metadataJSONURL} is not valid JSON - the server may be temporarily unavailable (eg. a gateway timeout). Retry later."
     continue
   fi
