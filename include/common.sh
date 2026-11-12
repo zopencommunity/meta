@@ -459,11 +459,23 @@ darkbackground() {
 defineANSI()
 {
   # Standard tty codes
-  # Use different escape character for OS/390 (EBCDIC \047) vs other platforms (ASCII \033)
-  if [ "$(uname -s)" = "OS/390" ]; then
-    ESC="\047"
+  # Determine the escape character as a real byte, independent of which
+  # printf (shell builtin, native z/OS /bin/printf, or the GNU coreutils
+  # printf that --override-zos-tools puts first on PATH) ends up
+  # interpreting octal escapes.
+  # In an ASCII codeset ESC is \033; in EBCDIC (native z/OS tools) ESC is
+  # \047 (byte 0x27). Probe the active printf's codeset by comparing two
+  # outputs of the same printf, so the test does not depend on how the
+  # shell itself encodes string literals:
+  #   ASCII:    printf '\101' -> 0x41 == printf 'A' -> 0x41
+  #   EBCDIC:   printf '\101' -> 0x41 != printf 'A' -> 0xC1
+  # The previous implementation keyed off `uname -s`, which is
+  # PATH-dependent and mismatches the printf actually in use, causing
+  # literal "'[0m"/"'[4m" sequences to appear in table headers.
+  if [ "$(printf '\101')" = "$(printf 'A')" ]; then
+    ESC="$(printf '\033')"
   else
-    ESC="\033"
+    ESC="$(printf '\047')"
   fi
   # shellcheck disable=SC2034
   ERASELINE="${ESC}[2K"
@@ -542,7 +554,22 @@ getScreenCols()
   # If stdout/stderr are associated with a tty terminal
   if  [ -t 1 ] && [ -t 2 ]; then
     # Note tput does not handle ssh sessions too well...
-    stty | awk -F'[/=;]' '/columns/ { print $4}' | tr -d " "
+    # Prefer the native z/OS stty: with --override-zos-tools the GNU
+    # coreutils stty resolves first and its output format differs
+    # ("speed N baud; rows R; columns C; line = 0;" vs "columns = C"),
+    # which broke the previous `awk -F'[/=;]' {print $4}` parsing and
+    # produced a different (bogus) screen width depending on PATH.
+    sttycmd="stty"
+    [ -x /bin/stty ] && sttycmd="/bin/stty"
+    # Handle "columns = 80", "columns: 80" and "columns 80" formats
+    cols=$(${sttycmd} 2>/dev/null | sed -n 's/.*columns[ =:]*\([0-9][0-9]*\).*/\1/p' | tr -d ' ')
+    if [ -n "${cols}" ]; then
+      echo "${cols}"
+    elif [ ! -z "${COLUMNS}" ]; then
+      echo "${COLUMNS}"
+    else
+      echo "$(tput cols)"
+    fi
   elif [ ! -z "${COLUMNS}" ]; then
     echo "${COLUMNS}"
   else
