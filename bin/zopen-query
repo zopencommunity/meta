@@ -243,20 +243,23 @@ printInstalledEntries()
       continue
     fi
 
+    # Use shell builtins (read) instead of spawning cat per package: with
+    # --override-zos-tools, cat resolves to the GNU coreutils binary whose
+    # process startup cost on z/OS caused a visible pause per table row
     if [ -e "${pkghome}/.releaseinfo" ]; then
-      originalTag=$(cat "${pkghome}/.releaseinfo")
+      read -r originalTag < "${pkghome}/.releaseinfo"
     else
       originalTag="N/A"
     fi
     if [ -e "${pkghome}/.version" ]; then
-      dotversion=$(cat "${pkghome}/.version")
+      read -r dotversion < "${pkghome}/.version"
     else
       dotversion="N/A"
     fi
 
     releaseline=""
     if [ -e "${pkghome}/.releaseline" ]; then
-      releaseline=$(cat "${pkghome}/.releaseline")
+      read -r releaseline < "${pkghome}/.releaseline"
     fi
     if [ -z "${releaseline}" ]; then
       releaseline="n/a"
@@ -266,7 +269,10 @@ printInstalledEntries()
     if [ -z "$1" ]; then
       printInfo "${originalTag}"
     else
-      fileversion="$(cd "${ZOPEN_PKGINSTALL}/${repo}/${repo}" > /dev/null 2>&1 && pwd -P | xargs basename)"
+      # Avoid xargs/basename spawns per package (GNU coreutils startup
+      # cost); strip the directory with parameter expansion instead
+      fileversion="$(cd "${ZOPEN_PKGINSTALL}/${repo}/${repo}" > /dev/null 2>&1 && pwd -P)"
+      fileversion="${fileversion##*/}"
       printf "%-${colwidth}s %-${colwidth}s %-${colwidth}s %-${colwidth}s" "${repo}" "${dotversion}" "${fileversion}" "${releaseline}"
       if [ "${details}" -eq 1 ]; then
         # Extra headers: disk size and quality
