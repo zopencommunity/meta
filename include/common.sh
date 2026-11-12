@@ -442,6 +442,47 @@ deref()
   fi
 }
 
+# Print all path aliases of a physical absolute path (one per line),
+# formed by replacing leading components with symlinks that resolve to
+# the same directory (eg. /jenkins/usr/local/zopen for /data/usr/local/zopen
+# when /jenkins is a symlink to /data). This is the reverse of deref():
+# given the physical path, find the symlinked paths that deref to it,
+# regardless of how the path was originally referenced.
+# inputs: $1 - physical absolute path
+# return: 0 for success (aliases, including the physical path itself,
+#             printed one per line to stdout)
+#         !0 if the path cannot be resolved
+derefAliases()
+{
+  path="$1"
+  if [ -z "${path}" ]; then
+    return 1
+  fi
+  if [ "${path}" = "/" ]; then
+    echo "/"
+    return 0
+  fi
+  parent=$(dirname "${path}")
+  base=$(basename "${path}")
+  for apath in $(derefAliases "${parent}"); do
+    apath="${apath%/}"
+    if [ -e "${apath}/${base}" ]; then
+      resolved=$(cd "${apath}/${base}" > /dev/null 2>&1 && pwd -P)
+      if [ "${resolved}" = "${path}" ]; then
+        echo "${apath}/${base}"
+      fi
+    fi
+    # check for sibling symlinks that point to this directory
+    for link in "${apath}"/*; do
+      [ -L "${link}" ] || continue
+      resolved=$(cd "${link}" > /dev/null 2>&1 && pwd -P)
+      if [ "${resolved}" = "${path}" ]; then
+        echo "${link}"
+      fi
+    done
+  done
+}
+
 #return 1 if brightness is dark, 0 if light, and 255 if unknown (considered to be dark as default)
 darkbackground() {
   if [ "${#COLORFGBG}" -ge 3 ]; then
