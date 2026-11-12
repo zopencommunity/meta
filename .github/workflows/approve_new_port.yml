@@ -1,9 +1,17 @@
 name: Create New Port Repository
 
 permissions:
-  contents: write
   issues: write
-  actions: read
+
+# Maintainer setup (not verified by this workflow):
+# Install zopen-mergebot on zopencommunity with All repositories access, including
+# newly created repositories. Approve repository Administration: write (creation
+# and collaborator admin grants), beyond any existing merging permissions.
+# Make MERGE_APP_ID and MERGE_APP_PRIVATE_KEY secrets accessible to meta.
+# Issue comments use GITHUB_TOKEN; the App does not need Issues: write.
+# repository_creation: write is a newer creation-only alternative, not needed
+# alongside Administration: write and not an input supported by action v3.3.0.
+# API: https://docs.github.com/en/rest/repos/repos#create-an-organization-repository
   
 on:
   issues:
@@ -14,35 +22,37 @@ jobs:
   create-repo:
     if: github.event.label.name == 'approved'
     runs-on: ubuntu-latest
+    env:
+      ORGANIZATION: zopencommunity
+      ISSUE_NUMBER: ${{ github.event.issue.number }}
     
     steps:
-    - uses: actions/checkout@v3
     - name: Extract Port Name
       run: |
-        echo "PORT_NAME=$(echo "${GITHUB_EVENT_ISSUE_TITLE}" | cut -d: -f2- | tr -d ' ' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        PORT_NAME=$(printf '%s' "$GITHUB_EVENT_ISSUE_TITLE" | cut -d: -f2- | tr -d ' ' | tr '[:upper:]' '[:lower:]')
+        if [[ ! "$PORT_NAME" =~ ^[a-z0-9._-]+$ ]] || [ "${#PORT_NAME}" -gt 96 ]; then
+          echo "::error::Port name must contain only letters, digits, dots, underscores or hyphens, and fit a 100-character repository name with the port suffix."
+          exit 1
+        fi
+        printf 'PORT_NAME=%s\n' "$PORT_NAME" >> "$GITHUB_ENV"
       env:
         GITHUB_EVENT_ISSUE_TITLE: ${{ github.event.issue.title }}
+
+    - name: Generate Repository Creation Token
+      id: app-token
+      uses: actions/create-github-app-token@v3.3.0
+      with:
+        app-id: ${{ secrets.MERGE_APP_ID }}
+        private-key: ${{ secrets.MERGE_APP_PRIVATE_KEY }}
+        owner: zopencommunity
+        permission-administration: write
         
     - name: Check if Repository Exists
       env:
-        ORGANIZATION: zopencommunity
-        GH_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
-        PORT_NAME: ${{ env.PORT_NAME }}
-        ISSUE_NUMBER: ${{ github.event.issue.number }}
+        GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        COMMENT_TOKEN: ${{ github.token }}
       run: |
         REPO_NAME="${PORT_NAME}port"
-
-        if [ -z "${GH_TOKEN:-}" ]; then
-          echo "::error::REPO_GITHUB_TOKEN secret is missing or unavailable to this workflow."
-          exit 1
-        fi
-
-        # Validate the token before doing any repository operations
-        if ! AUTH_OUTPUT=$(gh api user --jq .login 2>&1); then
-          echo "::error::REPO_GITHUB_TOKEN is invalid or expired (authentication failed): $AUTH_OUTPUT"
-          exit 1
-        fi
-        echo "Authenticated to GitHub as '$AUTH_OUTPUT'."
 
         # Check repository existence; only a 404 means the repository does not exist
         REPO_CHECK_OUTPUT=$(gh api --include "repos/$ORGANIZATION/$REPO_NAME" 2>&1) || true
@@ -50,7 +60,7 @@ jobs:
 
         if [ "$HTTP_STATUS" = "200" ]; then
           echo "Repository '$ORGANIZATION/$REPO_NAME' already exists."
-          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository already exists: https://github.com/$ORGANIZATION/$REPO_NAME"
+          GH_TOKEN="$COMMENT_TOKEN" gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository already exists: https://github.com/$ORGANIZATION/$REPO_NAME"
           exit 1
         elif [ "$HTTP_STATUS" != "404" ]; then
           echo "::error::Unable to determine whether '$ORGANIZATION/$REPO_NAME' exists (HTTP status: ${HTTP_STATUS:-unknown})."
@@ -58,11 +68,26 @@ jobs:
           exit 1
         else
           echo "Repository '$ORGANIZATION/$REPO_NAME' does not exist. Proceeding to create it."
-          gh repo create "$ORGANIZATION/$REPO_NAME" --public
-          
-          # Assign the issue creator as the admin
-          gh api --method PUT "repos/$ORGANIZATION/$REPO_NAME/collaborators/${{ github.event.issue.user.login }}" -f permission=admin
-
-          # Comment on an issue
-          gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository created: https://github.com/$ORGANIZATION/$REPO_NAME"
+          gh api --method POST "orgs/$ORGANIZATION/repos" -f name="$REPO_NAME" -F private=false
         fi
+
+    # Mint after creation so collaborator access does not rely on an earlier
+    # token gaining access to repositories added to the installation later.
+    - name: Generate Collaborator Token
+      id: collaborator-token
+      uses: actions/create-github-app-token@v3.3.0
+      with:
+        app-id: ${{ secrets.MERGE_APP_ID }}
+        private-key: ${{ secrets.MERGE_APP_PRIVATE_KEY }}
+        owner: zopencommunity
+        permission-administration: write
+
+    - name: Assign Admin and Comment
+      env:
+        GH_TOKEN: ${{ steps.collaborator-token.outputs.token }}
+        COMMENT_TOKEN: ${{ github.token }}
+        ISSUE_CREATOR: ${{ github.event.issue.user.login }}
+      run: |
+        REPO_NAME="${PORT_NAME}port"
+        gh api --method PUT "repos/$ORGANIZATION/$REPO_NAME/collaborators/$ISSUE_CREATOR" -f permission=admin
+        GH_TOKEN="$COMMENT_TOKEN" gh issue comment "$ISSUE_NUMBER" --repo "$ORGANIZATION/meta" --body "Repository created: https://github.com/$ORGANIZATION/$REPO_NAME"
