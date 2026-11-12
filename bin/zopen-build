@@ -2899,12 +2899,33 @@ replaceHardcodedPaths()
   fi
   ZOPEN_INSTALL_PREFIX="${ZOPEN_INSTALL_DIR}/../../"
   ZOPEN_INSTALL_PREFIX=$(cd "${ZOPEN_INSTALL_PREFIX}" > /dev/null 2>&1 && pwd -P)
+  # Files can contain any alias of the prefix formed via symlinks
+  # (eg. /jenkins/usr/local/zopen when /jenkins is a symlink to /data),
+  # regardless of whether the build was invoked via the symlink or the
+  # physical path, so discover all aliases and replace each one.
+  ZOPEN_REPLACE_PREFIXES=$(derefAliases "${ZOPEN_INSTALL_PREFIX}")
+  # derefAliases cannot discover symlinks outside the ancestor chain of
+  # the prefix, so also include the logical (invocation) prefix, which
+  # may traverse such symlinks.
+  ZOPEN_INSTALL_PREFIX_LOGICAL=$(cd "${ZOPEN_INSTALL_DIR}/../../" > /dev/null 2>&1 && pwd)
+  if [ -n "${ZOPEN_INSTALL_PREFIX_LOGICAL}" ] && [ "${ZOPEN_INSTALL_PREFIX_LOGICAL}" != "${ZOPEN_INSTALL_PREFIX}" ]; then
+    ZOPEN_REPLACE_PREFIXES=$(printf '%s\n%s\n' "${ZOPEN_REPLACE_PREFIXES}" "${ZOPEN_INSTALL_PREFIX_LOGICAL}" | sort -u)
+  else
+    ZOPEN_REPLACE_PREFIXES=$(printf '%s\n' "${ZOPEN_REPLACE_PREFIXES}" | sort -u)
+  fi
 
-  printHeader "Replacing hardcoded ${ZOPEN_INSTALL_PREFIX} path"
-  for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${ZOPEN_INSTALL_PREFIX}" 2> /dev/null); do
-    hasHardcodedPaths=true
-    replaceHardcodedPath "${ZOPEN_INSTALL_PREFIX}" "ZOPEN_INSTALL_PREFIX" "${f}"
+  printHeader "Replacing hardcoded paths: ${ZOPEN_REPLACE_PREFIXES}"
+  # iterate line by line so that aliases containing whitespace are preserved
+  oldIFS="${IFS}"
+  IFS="
+"
+  for prefix in ${ZOPEN_REPLACE_PREFIXES}; do
+    for f in $(find ${ZOPEN_INSTALL_DIR}/ -type f | xargs grep -l "${prefix}" 2> /dev/null); do
+      hasHardcodedPaths=true
+      replaceHardcodedPath "${prefix}" "ZOPEN_INSTALL_PREFIX" "${f}"
+    done
   done
+  IFS="${oldIFS}"
 }
 
 createEnvAndSetup()

@@ -442,6 +442,128 @@ deref()
   fi
 }
 
+# Print all path aliases of a physical absolute path (one per line),
+# formed via symlinks that resolve to the same directory:
+# - component-wise, where leading components of the path are replaced
+#   by symlinks (eg. /jenkins/usr/local/zopen for /data/usr/local/zopen
+#   when /jenkins is a symlink to /data), including hidden symlinks
+#   (eg. /.jenkins)
+# - via deeper symlinks, where a symlink in an ancestor directory
+#   resolves to the path or to an ancestor of the path, combined with
+#   the component-wise aliases of the remaining suffix (eg. /jl/zopen
+#   and /jl/zp for /data/usr/local/zopen when /jl is a symlink to
+#   /data/usr/local and /data/usr/local/zp is a symlink to
+#   /data/usr/local/zopen; /zopen when /zopen is a symlink to
+#   /data/usr/local/zopen)
+# This is the reverse of deref(): given the physical path, find the
+# symlinked paths that deref to it, regardless of how the path was
+# originally referenced.
+# Note: symlinks in directories that are not ancestors of the path
+# (eg. /build/jenkins -> /data) are not discovered; callers that know
+# additional logical prefixes should check them separately.
+# inputs: $1 - physical absolute path
+# return: 0 for success (aliases, including the physical path itself,
+#             printed one per line to stdout)
+#         !0 if the path cannot be resolved
+derefAliases()
+{
+  target="$1"
+  if [ -z "${target}" ]; then
+    return 1
+  fi
+  if [ "${target}" = "/" ]; then
+    echo "/"
+    return 0
+  fi
+
+  # component-wise aliases (symlinks along the ancestor chain)
+  derefChainAliases "${target}"
+
+  # aliases via symlinks in ancestor directories that resolve to the
+  # target or to an ancestor of the target; combine each such symlink
+  # with every component-wise alias of the remaining suffix and
+  # validate the result
+  chainaliases=$(derefChainAliases "${target}")
+  oldIFS="${IFS}"
+  IFS="
+"
+  path="/"
+  while [ "${path}" != "${target}" ]; do
+    rest="${target#"${path}"}"
+    base="${rest#/}"
+    base="${base%%/*}"
+    child="${path%/}/${base}"
+    for aliasdir in $(derefChainAliases "${path}"); do
+      for link in "${aliasdir}"/* "${aliasdir}"/.[!.]* "${aliasdir}"/..?*; do
+        [ -L "${link}" ] || continue
+        resolved=$(cd "${link}" > /dev/null 2>&1 && pwd -P)
+        [ -n "${resolved}" ] || continue
+        case "${target}" in
+          "${resolved}"|"${resolved}"/*)
+            for alias in ${chainaliases}; do
+              case "${alias}" in
+                "${resolved}"|"${resolved}"/*)
+                  candidate="${link}${alias#"${resolved}"}"
+                  cres=$(cd "${candidate}" > /dev/null 2>&1 && pwd -P)
+                  if [ "${cres}" = "${target}" ]; then
+                    echo "${candidate}"
+                  fi
+                  ;;
+              esac
+            done
+            ;;
+        esac
+      done
+    done
+    path="${child}"
+  done
+  IFS="${oldIFS}"
+}
+
+# Helper for derefAliases: print component-wise aliases of a physical
+# absolute path (one per line), where leading path components are
+# replaced by symlinks that resolve to the same directories. Not
+# intended to be called directly; use derefAliases.
+# inputs: $1 - physical absolute path
+# return: 0 for success, !0 if the path cannot be resolved
+derefChainAliases()
+{
+  path="$1"
+  if [ "${path}" = "/" ]; then
+    echo "/"
+    return 0
+  fi
+  parent=$(dirname "${path}")
+  base=$(basename "${path}")
+  # capture the recursive output and iterate line by line (IFS set to
+  # newline so directory names containing whitespace are preserved);
+  # a pipeline is not used here because recursive functions on the
+  # left-hand side of a pipe are unreliable in some /bin/sh
+  # implementations
+  parentaliases=$(derefChainAliases "${parent}")
+  oldIFS="${IFS}"
+  IFS="
+"
+  for apath in ${parentaliases}; do
+    apath="${apath%/}"
+    if [ -e "${apath}/${base}" ]; then
+      resolved=$(cd "${apath}/${base}" > /dev/null 2>&1 && pwd -P)
+      if [ "${resolved}" = "${path}" ]; then
+        echo "${apath}/${base}"
+      fi
+    fi
+    # check for sibling symlinks (including hidden ones) that resolve to this directory
+    for link in "${apath}"/* "${apath}"/.[!.]* "${apath}"/..?*; do
+      [ -L "${link}" ] || continue
+      resolved=$(cd "${link}" > /dev/null 2>&1 && pwd -P)
+      if [ "${resolved}" = "${path}" ]; then
+        echo "${link}"
+      fi
+    done
+  done
+  IFS="${oldIFS}"
+}
+
 #return 1 if brightness is dark, 0 if light, and 255 if unknown (considered to be dark as default)
 darkbackground() {
   if [ "${#COLORFGBG}" -ge 3 ]; then
