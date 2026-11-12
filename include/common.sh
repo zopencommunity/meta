@@ -449,8 +449,12 @@ deref()
 #   when /jenkins is a symlink to /data), including hidden symlinks
 #   (eg. /.jenkins)
 # - via deeper symlinks, where a symlink in an ancestor directory
-#   resolves to an ancestor of the path (eg. /jl/zopen for
-#   /data/usr/local/zopen when /jl is a symlink to /data/usr/local)
+#   resolves to the path or to an ancestor of the path, combined with
+#   the component-wise aliases of the remaining suffix (eg. /jl/zopen
+#   and /jl/zp for /data/usr/local/zopen when /jl is a symlink to
+#   /data/usr/local and /data/usr/local/zp is a symlink to
+#   /data/usr/local/zopen; /zopen when /zopen is a symlink to
+#   /data/usr/local/zopen)
 # This is the reverse of deref(): given the physical path, find the
 # symlinked paths that deref to it, regardless of how the path was
 # originally referenced.
@@ -475,32 +479,45 @@ derefAliases()
   # component-wise aliases (symlinks along the ancestor chain)
   derefChainAliases "${target}"
 
-  # aliases via symlinks in ancestor directories that resolve to an
-  # ancestor of the target; append the remaining suffix and validate
+  # aliases via symlinks in ancestor directories that resolve to the
+  # target or to an ancestor of the target; combine each such symlink
+  # with every component-wise alias of the remaining suffix and
+  # validate the result
+  chainaliases=$(derefChainAliases "${target}")
+  oldIFS="${IFS}"
+  IFS="
+"
   path="/"
   while [ "${path}" != "${target}" ]; do
     rest="${target#"${path}"}"
     base="${rest#/}"
     base="${base%%/*}"
     child="${path%/}/${base}"
-    derefChainAliases "${path}" | while IFS= read -r aliasdir; do
+    for aliasdir in $(derefChainAliases "${path}"); do
       for link in "${aliasdir}"/* "${aliasdir}"/.[!.]* "${aliasdir}"/..?*; do
         [ -L "${link}" ] || continue
         resolved=$(cd "${link}" > /dev/null 2>&1 && pwd -P)
         [ -n "${resolved}" ] || continue
         case "${target}" in
-          "${resolved}"/*)
-            candidate="${link}${target#"${resolved}"}"
-            cres=$(cd "${candidate}" > /dev/null 2>&1 && pwd -P)
-            if [ "${cres}" = "${target}" ]; then
-              echo "${candidate}"
-            fi
+          "${resolved}"|"${resolved}"/*)
+            for alias in ${chainaliases}; do
+              case "${alias}" in
+                "${resolved}"|"${resolved}"/*)
+                  candidate="${link}${alias#"${resolved}"}"
+                  cres=$(cd "${candidate}" > /dev/null 2>&1 && pwd -P)
+                  if [ "${cres}" = "${target}" ]; then
+                    echo "${candidate}"
+                  fi
+                  ;;
+              esac
+            done
             ;;
         esac
       done
     done
     path="${child}"
   done
+  IFS="${oldIFS}"
 }
 
 # Helper for derefAliases: print component-wise aliases of a physical
@@ -518,7 +535,16 @@ derefChainAliases()
   fi
   parent=$(dirname "${path}")
   base=$(basename "${path}")
-  derefChainAliases "${parent}" | while IFS= read -r apath; do
+  # capture the recursive output and iterate line by line (IFS set to
+  # newline so directory names containing whitespace are preserved);
+  # a pipeline is not used here because recursive functions on the
+  # left-hand side of a pipe are unreliable in some /bin/sh
+  # implementations
+  parentaliases=$(derefChainAliases "${parent}")
+  oldIFS="${IFS}"
+  IFS="
+"
+  for apath in ${parentaliases}; do
     apath="${apath%/}"
     if [ -e "${apath}/${base}" ]; then
       resolved=$(cd "${apath}/${base}" > /dev/null 2>&1 && pwd -P)
@@ -535,6 +561,7 @@ derefChainAliases()
       fi
     done
   done
+  IFS="${oldIFS}"
 }
 
 #return 1 if brightness is dark, 0 if light, and 255 if unknown (considered to be dark as default)
