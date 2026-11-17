@@ -26,6 +26,7 @@ import urllib.request
 ORG = "zopencommunity"
 API = os.environ.get("GITHUB_API_URL", "https://api.github.com")
 CONTEXT_WINDOW = 25  # Number of lines before and after the alert line
+REPO_NAME_RE = re.compile(r"^[a-zA-Z0-9_.-]+$")
 
 
 def get_token(args_token: str | None) -> str:
@@ -33,7 +34,7 @@ def get_token(args_token: str | None) -> str:
     return token.strip()
 
 
-def github_request(endpoint: str, token: str) -> dict | list | None:
+def github_request(endpoint: str, token: str) -> tuple[dict | list | None, str | None]:
     url = f"{API}/{endpoint.lstrip('/')}"
     headers = {
         "Accept": "application/vnd.github+json",
@@ -53,18 +54,20 @@ def github_request(endpoint: str, token: str) -> dict | list | None:
     try:
         with urllib.request.urlopen(req, timeout=30, context=ctx) as resp:
             data = resp.read()
-            return json.loads(data.decode("utf-8"))
+            return json.loads(data.decode("utf-8")), None
     except urllib.error.HTTPError as e:
+        msg = f"HTTP {e.code} ({e.reason})"
         sys.stderr.write(f"HTTPError {e.code} fetching {url}: {e.reason}\n")
-        return None
+        return None, msg
     except Exception as e:
+        msg = str(e)
         sys.stderr.write(f"Error fetching {url}: {e}\n")
-        return None
+        return None, msg
 
 
 def fetch_raw_file(owner: str, repo: str, path: str, ref: str, token: str) -> str | None:
     endpoint = f"repos/{owner}/{repo}/contents/{urllib.parse.quote(path)}?ref={urllib.parse.quote(ref)}"
-    res = github_request(endpoint, token)
+    res, _ = github_request(endpoint, token)
     if isinstance(res, dict) and "content" in res:
         encoding = res.get("encoding", "")
         if encoding == "base64":
@@ -98,8 +101,9 @@ def extract_code_snippet(file_content: str, start_line: int, end_line: int) -> s
 def parse_repo_name(raw_repo: str) -> tuple[str, str]:
     raw = raw_repo.strip().strip("/")
     if "/" in raw:
-        parts = raw.split("/", 1)
-        return parts[0], parts[1]
+        parts = raw.split("/")
+        if len(parts) == 2 and parts[0] and parts[1]:
+            return parts[0], parts[1]
     return ORG, raw
 
 
@@ -122,7 +126,7 @@ def parse_slash_command_args(comment_body: str) -> tuple[str | None, int | None]
                 alert_no = int(num_str)
         elif part.isdigit():
             alert_no = int(part)
-        elif not repo and re.match(r"^[a-zA-Z0-9_\-\.\/]+$", part):
+        elif not repo and re.match(r"^[a-zA-Z0-9_.-]+(?:/[a-zA-Z0-9_.-]+)?$", part):
             repo = part
             
     return repo, alert_no
@@ -164,7 +168,7 @@ def main() -> int:
         return 1
 
     owner, repo_name = parse_repo_name(target_repo)
-    if not repo_name.endswith("port") and not "/" in target_repo and repo_name != "meta":
+    if not repo_name.endswith("port") and "/" not in target_repo and repo_name != "meta":
         # If user passed "curl", check if "curlport" exists
         repo_name = f"{repo_name}port"
 
@@ -174,18 +178,44 @@ def main() -> int:
     print(f"Fetching CodeQL alerts for {owner}/{repo_name}...")
     
     alerts_data = []
-    if alert_no:
+    fetch_error = None
+
+    # Strictly validate repository owner and name format
+    if not REPO_NAME_RE.match(owner) or not REPO_NAME_RE.match(repo_name):
+        fetch_error = f"Invalid repository name '{target_repo}'. Owner and repository name must contain only alphanumeric characters, '-', '_', and '.'."
+        sys.stderr.write(f"Error: {fetch_error}\n")
+    elif owner.lower() != ORG.lower():
+        fetch_error = f"Target repository '{owner}/{repo_name}' is outside the '{ORG}' organization"
+        sys.stderr.write(f"Error: {fetch_error}\n")
+    else:
+        # Strictly verify repository metadata: must be a dict, full_name must match, private must be explicitly False, and visibility must be 'public'
+        repo_info, repo_err = github_request(f"repos/{owner}/{repo_name}", token)
+        if repo_err:
+            fetch_error = f"Cannot verify repository '{owner}/{repo_name}': {repo_err}"
+        elif not isinstance(repo_info, dict):
+            fetch_error = f"Invalid repository metadata response for '{owner}/{repo_name}'"
+        elif repo_info.get("full_name", "").lower() != f"{owner}/{repo_name}".lower():
+            fetch_error = f"Repository full_name mismatch: expected '{owner}/{repo_name}', got '{repo_info.get('full_name')}'"
+        elif repo_info.get("private") is not False:
+            fetch_error = f"Repository '{owner}/{repo_name}' is private. Security triage is restricted to public repositories."
+        elif repo_info.get("visibility") != "public":
+            fetch_error = f"Repository '{owner}/{repo_name}' visibility is not public ({repo_info.get('visibility')}). Security triage is restricted to public repositories."
+
+    if not fetch_error and alert_no:
         endpoint = f"repos/{owner}/{repo_name}/code-scanning/alerts/{alert_no}"
-        single_alert = github_request(endpoint, token)
+        single_alert, err = github_request(endpoint, token)
         if single_alert and isinstance(single_alert, dict) and "number" in single_alert:
             alerts_data = [single_alert]
         else:
-            sys.stderr.write(f"Alert #{alert_no} not found or inaccessible in {owner}/{repo_name}\n")
-    else:
+            fetch_error = err or f"Alert #{alert_no} not found"
+            sys.stderr.write(f"Alert #{alert_no} not found or inaccessible in {owner}/{repo_name}: {fetch_error}\n")
+    elif not fetch_error:
         endpoint = f"repos/{owner}/{repo_name}/code-scanning/alerts?state=open&per_page={args.max_alerts}"
-        res = github_request(endpoint, token)
+        res, err = github_request(endpoint, token)
         if isinstance(res, list):
             alerts_data = res
+        elif err:
+            fetch_error = err
 
     # Build facts document
     lines = []
@@ -196,8 +226,16 @@ def main() -> int:
     lines.append(f"- **Alerts Processed:** {len(alerts_data)}")
     lines.append("")
 
+    if fetch_error:
+        lines.append(f"> ❌ **Error accessing CodeQL alerts:** `{fetch_error}`.")
+        lines.append("> Please verify that `REPO_GITHUB_TOKEN` is configured with `security-events: read` access for sibling repositories.")
+        lines.append("")
+        out_path.write_text("\n".join(lines), encoding="utf-8")
+        print(f"Wrote {len(lines)} lines to {out_path}")
+        return 0
+
     if not alerts_data:
-        lines.append("> ℹ️ **No open CodeQL alerts found** for this repository (or insufficient permissions to read code scanning alerts).")
+        lines.append("> ℹ️ **No open CodeQL alerts found** for this repository.")
         lines.append("")
         out_path.write_text("\n".join(lines), encoding="utf-8")
         print(f"Wrote {len(lines)} lines to {out_path}")
