@@ -31,10 +31,5 @@ if [ -n "$existing" ]; then
   exit 0
 fi
 
-if [ -z "${REPOSITORY:-}" ]; then
-  echo "ERROR: REPOSITORY is not set; cannot fill in the advisory link" >&2
-  exit 1
-fi
-
-sed "s|{{REPOSITORY}}|${REPOSITORY}|g" "$SECURITY_TEMPLATE" > SECURITY.md
-echo "OK: wrote SECURITY.md in ${REPOSITORY}"
+cp "$SECURITY_TEMPLATE" SECURITY.md
+echo "OK: wrote SECURITY.md in ${REPOSITORY:-<unknown>}"
