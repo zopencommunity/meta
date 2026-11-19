@@ -1,0 +1,73 @@
+name: "Rollout SECURITY.md"
+
+# Opens a PR in each zopencommunity repo adding SECURITY.md (with the CRA
+# stewardship statement) from data/SECURITY.md. Repos that already have a
+# SECURITY.md (root, docs/ or .github/) are skipped, so this is safe to re-run.
+
+on:
+  workflow_dispatch:
+    inputs:
+      repos:
+        description: 'Space-separated repo names to roll out to, or "all" for every non-fork repo in zopencommunity'
+        required: true
+        type: string
+        default: 'all'
+      dry_run:
+        description: 'Show what would change without opening PRs'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  multi-gitter:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.CODEQL_APP_ID }}
+          private-key: ${{ secrets.CODEQL_APP_PRIVATE_KEY }}
+          owner: zopencommunity
+
+      - uses: ./actions/multi-gitter-action
+
+      - name: Rollout SECURITY.md to repos
+        env:
+          # Uses GitHub App token to push to and open PRs on other repos
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          # Absolute path so the script doesn't resolve it relative to BASH_SOURCE[0]
+          SECURITY_TEMPLATE: ${{ github.workspace }}/data/SECURITY.md
+          REPOS: ${{ inputs.repos }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          # cicd/multi-gitter-config is not used: it is limited to *port repos
+          # and skips some of them, but SECURITY.md applies to every repo.
+          if [ "$REPOS" = "all" ]; then
+            targets="--org=zopencommunity --skip-forks"
+          else
+            targets=""
+            for repo in $REPOS; do
+              targets="$targets --repo=zopencommunity/$repo"
+            done
+          fi
+          # shellcheck disable=SC2086 # targets is a list of flags
+          multi-gitter \
+            --platform github \
+            --git-type cmd \
+            --base-branch main \
+            --conflict-strategy skip \
+            --concurrent 5 \
+            --fork=false \
+            $targets \
+            --dry-run="$DRY_RUN" \
+            --branch "security-policy" \
+            --author-name "zopen-bot" \
+            --author-email "zosopentools@ibm.com" \
+            --pr-title "Add SECURITY.md with CRA stewardship statement" \
+            --pr-body "Adds SECURITY.md from meta/data/SECURITY.md: how to report vulnerabilities privately, plus the Linux Foundation CRA stewardship statement. Repos that already have a SECURITY.md are not touched. Rolled out with meta/.github/workflows/rollout_security_md.yml." \
+            run ./bulk-utils/rollout_security_md.sh
