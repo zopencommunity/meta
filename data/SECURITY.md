@@ -23,9 +23,10 @@ reproduce it if possible.
 ## Escalation
 
 If you learn of an actively exploited vulnerability or a severe incident (for
-example, compromise of the release process), maintainers must notify the LF
-Steward CRA immediately at steward@linuxfoundation.org while the problem is
-being fixed, never instead of fixing it.
+example, compromise of the release process), report it through the private
+channel above and say clearly that it is being actively exploited or is a
+severe incident. Maintainers will notify the CRA steward immediately, while
+the problem is being fixed and never instead of fixing it.
 
 ## Supported versions
 
