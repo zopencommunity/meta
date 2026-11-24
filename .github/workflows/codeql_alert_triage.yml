@@ -23,6 +23,7 @@ on:
 permissions:
   contents: read
   issues: write
+  pull-requests: write
   security-events: read
 
 jobs:
@@ -56,6 +57,7 @@ jobs:
         id: gather
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
+          WORKFLOW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO_INPUT: ${{ inputs.repo }}
           ALERT_INPUT: ${{ inputs.alert_number }}
           TARGET_ISSUE_INPUT: ${{ inputs.target_issue }}
