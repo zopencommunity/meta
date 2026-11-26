@@ -50,14 +50,21 @@ jobs:
         with:
           node-version: 24
 
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.CODEQL_APP_ID }}
+          private-key: ${{ secrets.CODEQL_APP_PRIVATE_KEY }}
+          owner: zopencommunity
+
       - name: Install Copilot CLI
         run: npm install -g @github/copilot@1.0.102
 
       - name: Gather CodeQL Alert Facts
         id: gather
         env:
-          GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
-          WORKFLOW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           REPO_INPUT: ${{ inputs.repo }}
           ALERT_INPUT: ${{ inputs.alert_number }}
           TARGET_ISSUE_INPUT: ${{ inputs.target_issue }}

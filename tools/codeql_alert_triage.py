@@ -36,50 +36,33 @@ def get_token(args_token: str | None) -> str:
 
 def github_request(endpoint: str, token: str) -> tuple[dict | list | None, str | None]:
     url = f"{API}/{endpoint.lstrip('/')}"
-    tokens_to_try = []
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "zopen-codeql-triage",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
     if token:
-        tokens_to_try.append(token)
-    workflow_token = os.environ.get("WORKFLOW_TOKEN", "").strip()
-    if workflow_token and workflow_token not in tokens_to_try:
-        tokens_to_try.append(workflow_token)
-    # Also allow unauthenticated fallback for public endpoints (such as public repo metadata)
-    if "" not in tokens_to_try:
-        tokens_to_try.append("")
+        headers["Authorization"] = f"Bearer {token}"
 
+    req = urllib.request.Request(url, headers=headers)
     ctx = None
     cert_path = Path(__file__).resolve().parent.parent / "cacert.pem"
     if cert_path.exists():
         import ssl
         ctx = ssl.create_default_context(cafile=str(cert_path))
 
-    last_error = None
-    for cur_token in tokens_to_try:
-        headers = {
-            "Accept": "application/vnd.github+json",
-            "User-Agent": "zopen-codeql-triage",
-            "X-GitHub-Api-Version": "2022-11-28",
-        }
-        if cur_token:
-            headers["Authorization"] = f"Bearer {cur_token}"
-
-        req = urllib.request.Request(url, headers=headers)
-        try:
-            with urllib.request.urlopen(req, timeout=30, context=ctx) as resp:
-                data = resp.read()
-                return json.loads(data.decode("utf-8")), None
-        except urllib.error.HTTPError as e:
-            last_error = f"HTTP {e.code} ({e.reason})"
-            if e.code == 401:
-                sys.stderr.write(f"Credential returned HTTP 401 for {url}, attempting fallback credential...\n")
-                continue
-            sys.stderr.write(f"HTTPError {e.code} fetching {url}: {e.reason}\n")
-            return None, last_error
-        except Exception as e:
-            last_error = str(e)
-            sys.stderr.write(f"Error fetching {url}: {e}\n")
-            return None, last_error
-
-    return None, last_error
+    try:
+        with urllib.request.urlopen(req, timeout=30, context=ctx) as resp:
+            data = resp.read()
+            return json.loads(data.decode("utf-8")), None
+    except urllib.error.HTTPError as e:
+        msg = f"HTTP {e.code} ({e.reason})"
+        sys.stderr.write(f"HTTPError {e.code} fetching {url}: {e.reason}\n")
+        return None, msg
+    except Exception as e:
+        msg = str(e)
+        sys.stderr.write(f"Error fetching {url}: {e}\n")
+        return None, msg
 
 
 def fetch_raw_file(owner: str, repo: str, path: str, ref: str, token: str) -> str | None:
@@ -245,7 +228,7 @@ def main() -> int:
 
     if fetch_error:
         lines.append(f"> ❌ **Error accessing CodeQL alerts:** `{fetch_error}`.")
-        lines.append("> Please verify that `REPO_GITHUB_TOKEN` is configured with `security-events: read` access for sibling repositories.")
+        lines.append("> Please verify that the `zopen-codeql` GitHub App is installed on the target repository with `security-events: read` access.")
         lines.append("")
         out_path.write_text("\n".join(lines), encoding="utf-8")
         print(f"Wrote {len(lines)} lines to {out_path}")
