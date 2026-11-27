@@ -1,0 +1,129 @@
+name: Copilot Plan Command
+
+# Comment-driven planning assistant for issues and pull requests:
+#   /plan <optional instructions> -> Copilot drafts a grounded implementation plan
+#                                    and posts it directly back as a comment.
+
+on:
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      number:
+        description: "Issue or Pull Request number"
+        required: true
+        type: number
+      is_pr:
+        description: "Target is a pull request"
+        type: boolean
+        required: false
+        default: false
+      prompt:
+        description: "Extra instructions after /plan"
+        required: false
+        type: string
+        default: ""
+      include_code:
+        description: "Include concrete code diffs and patch snippets"
+        type: boolean
+        required: false
+        default: true
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+# Prevent duplicate concurrent executions on the same issue/PR
+concurrency:
+  group: copilot-plan-${{ github.event.issue.number || github.event.inputs.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  plan:
+    name: Generate Implementation Plan
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.state == 'open' &&
+       startsWith(github.event.comment.body, '/plan') &&
+       contains(fromJSON('["OWNER","MEMBER","COLLABORATOR","CONTRIBUTOR"]'), github.event.comment.author_association))
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build and packaging dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pax ncompress curl git
+
+      # React with 👀 to signal that the command is being processed
+      - name: Acknowledge command (👀)
+        if: github.event_name == 'issue_comment'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --method POST \
+            "repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions" \
+            -f content=eyes || true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Extract Command Arguments
+        id: parse
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "number=${{ github.event.inputs.number }}" >> $GITHUB_OUTPUT
+            echo "is_pr=${{ github.event.inputs.is_pr }}" >> $GITHUB_OUTPUT
+            echo "prompt=${{ github.event.inputs.prompt }}" >> $GITHUB_OUTPUT
+            echo "no_code=${{ github.event.inputs.include_code == false && '--no-code' || '' }}" >> $GITHUB_OUTPUT
+          else
+            echo "number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+            IS_PR="false"
+            if [ -n "${{ github.event.issue.pull_request.url }}" ]; then
+              IS_PR="true"
+            fi
+            echo "is_pr=${IS_PR}" >> $GITHUB_OUTPUT
+            
+            # Check if user passed '--no-code' in comment
+            NO_CODE=""
+            if echo "${{ github.event.comment.body }}" | grep -q -- "--no-code"; then
+              NO_CODE="--no-code"
+            fi
+            echo "no_code=${NO_CODE}" >> $GITHUB_OUTPUT
+
+            # Extract text following '/plan'
+            PROMPT=$(python3 -c "
+import sys
+comment = '''${{ github.event.comment.body }}'''
+parts = comment.split('/plan', 1)
+clean = parts[1].replace('--no-code', '').strip() if len(parts) > 1 else ''
+print(clean)
+")
+            echo "prompt=${PROMPT}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate and Post Plan
+        env:
+          COPILOT_TOKEN: ${{ secrets.COPILOT_TOKEN || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PATH: ${{ github.workspace }}/bin:${{ env.PATH }}
+        run: |
+          python3 tools/copilot_plan.py \
+            --repo "${{ github.repository }}" \
+            --number "${{ steps.parse.outputs.number }}" \
+            ${{ steps.parse.outputs.is_pr == 'true' && '--is-pr' || '' }} \
+            --prompt "${{ steps.parse.outputs.prompt }}" \
+            ${{ steps.parse.outputs.no_code }} \
+            --output "$GITHUB_WORKSPACE/plan.md" \
+            --post \
+            --print
+
+      - name: Append to Job Summary
+        run: |
+          cat "$GITHUB_WORKSPACE/plan.md" >> "$GITHUB_STEP_SUMMARY"
